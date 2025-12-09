@@ -89,6 +89,27 @@ O site estará disponível em: http://localhost:3001
 
 > **Observação:** O Docker está configurado com hot-reload, ou seja, as alterações no código serão automaticamente refletidas no site.
 
+## 📝 CMS - Gerenciamento de Conteúdo
+
+O projeto utiliza **Strapi** como CMS headless para gerenciar conteúdos dinâmicos.
+
+### Iniciar o Strapi
+
+```bash
+# Na raiz do projeto
+npm run cms:dev
+```
+
+Acesse o painel administrativo em: http://localhost:1337/admin
+
+### Primeiro Acesso
+
+1. No primeiro acesso, você precisará criar uma conta de administrador
+2. Configure os tipos de conteúdo (Content Types) conforme necessário
+3. Crie um API Token em **Settings → API Tokens** para integrar com o Next.js
+
+Para mais detalhes, consulte a [documentação do CMS](./cms/README.md).
+
 ## 🤝 Contribuidores
 
 Agradecemos a todas as pessoas que contribuíram para este projeto:
