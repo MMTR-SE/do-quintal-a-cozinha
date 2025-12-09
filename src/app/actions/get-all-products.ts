@@ -62,18 +62,35 @@ async function getProductsFromStrapi() {
       }
 
       // Extrair campos (Strapi v5 coloca diretamente no objeto)
-      const nome = item.nome || item.attributes?.nome;
+      // NOTA: Strapi pode criar campos com primeira letra maiúscula
+      const nome = item.Nome || item.nome || item.attributes?.nome || item.attributes?.Nome;
       const descricao = item.descricao || item.attributes?.descricao;
       const preco = item.preco || item.attributes?.preco;
-      const produtora = item.produtora || item.attributes?.produtora;
-      const imagem = item.imagem || item.attributes?.imagem;
+      const produtora = item.Produtora || item.produtora || item.attributes?.produtora || item.attributes?.Produtora;
+      const imagem = item.Imagem || item.imagem || item.attributes?.imagem || item.attributes?.Imagem;
 
       console.log('Campos extraídos:', { nome, descricao, preco, produtora, categoria: categoriaValue });
+
+      // Converter Rich Text para string simples
+      let descriptionText = null;
+      if (typeof descricao === 'string') {
+        descriptionText = descricao;
+      } else if (Array.isArray(descricao)) {
+        // Rich Text é um array de blocos
+        descriptionText = descricao
+          .map((block: any) => {
+            if (block.children) {
+              return block.children.map((child: any) => child.text || '').join('');
+            }
+            return '';
+          })
+          .join('\n');
+      }
 
       return {
         id: `strapi-${item.documentId || item.id}`,
         product_name: nome || 'Produto sem nome',
-        description: typeof descricao === 'string' ? descricao : null,
+        description: descriptionText,
         price: preco || null,
         category,
         profile: {
