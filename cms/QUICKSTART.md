@@ -51,7 +51,28 @@ Adicione os seguintes campos:
 - Number format: **decimal**
 - Clique em **Finish**
 
-#### Campo 4: Imagem (opcional)
+#### Campo 4: Categoria (opcional)
+- Clique em **+ Add another field**
+- Selecione **Enumeration**
+- Name: `categoria`
+- Values (um por linha):
+  ```
+  hortalicas
+  frutas
+  graos
+  processados
+  artesanato
+  outros
+  ```
+- Clique em **Finish**
+
+#### Campo 5: Produtora (opcional)
+- Clique em **+ Add another field**
+- Selecione **Text**
+- Name: `produtora`
+- Clique em **Finish**
+
+#### Campo 6: Imagem (opcional)
 - Clique em **+ Add another field**
 - Selecione **Media**
 - Name: `imagem`
@@ -99,8 +120,11 @@ STRAPI_API_TOKEN=seu_token_copiado_aqui
 3. Clique em **+ Create new entry**
 4. Preencha:
    - Nome: `Feijão Orgânico`
-   - Descrição: `Feijão cultivado sem agrotóxicos`
+   - Descrição: `Feijão cultivado sem agrotóxicos pelas mulheres do MMTR-SE`
    - Preço: `15.90`
+   - Categoria: `graos`
+   - Produtora: `Maria da Silva`
+   - Imagem: (opcional) faça upload de uma imagem
 5. Clique em **Save**
 6. Clique em **Publish** no canto superior direito
 
