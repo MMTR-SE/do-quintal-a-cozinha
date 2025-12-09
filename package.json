@@ -14,7 +14,10 @@
     "db:seed": "node prisma/seeds/main.js",
     "db:backfill-slugs": "node prisma/scripts/backfill-slugs.js",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "cms:dev": "cd cms && npm run develop",
+    "cms:build": "cd cms && npm run build",
+    "cms:start": "cd cms && npm run start"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
