@@ -38,10 +38,18 @@ async function getProductsFromStrapi() {
       return [];
     }
 
+    // Debug: log da estrutura do primeiro produto
+    if (strapiProducts.length > 0) {
+      console.log('Estrutura do produto Strapi:', JSON.stringify(strapiProducts[0], null, 2));
+    }
+
     return strapiProducts.map((item: any) => {
+      console.log('Item do Strapi:', item);
+      
       // Mapear categoria do Strapi para o enum Category do Prisma
       let category: Category = 'OUTROS';
-      if (item.categoria) {
+      const categoriaValue = item.categoria || item.attributes?.categoria;
+      if (categoriaValue) {
         const categoryMap: Record<string, Category> = {
           'hortalicas': 'HORTALICAS',
           'frutas': 'FRUTAS',
@@ -50,27 +58,36 @@ async function getProductsFromStrapi() {
           'artesanato': 'ARTESANATO',
           'outros': 'OUTROS'
         };
-        category = categoryMap[item.categoria.toLowerCase()] || 'OUTROS';
+        category = categoryMap[categoriaValue.toLowerCase()] || 'OUTROS';
       }
 
+      // Extrair campos (Strapi v5 coloca diretamente no objeto)
+      const nome = item.nome || item.attributes?.nome;
+      const descricao = item.descricao || item.attributes?.descricao;
+      const preco = item.preco || item.attributes?.preco;
+      const produtora = item.produtora || item.attributes?.produtora;
+      const imagem = item.imagem || item.attributes?.imagem;
+
+      console.log('Campos extraídos:', { nome, descricao, preco, produtora, categoria: categoriaValue });
+
       return {
-        id: `strapi-${item.documentId}`,
-        product_name: item.nome || 'Produto sem nome',
-        description: typeof item.descricao === 'string' ? item.descricao : null,
-        price: item.preco || null,
+        id: `strapi-${item.documentId || item.id}`,
+        product_name: nome || 'Produto sem nome',
+        description: typeof descricao === 'string' ? descricao : null,
+        price: preco || null,
         category,
         profile: {
-          name: item.produtora || 'MMTR-SE',
+          name: produtora || 'MMTR-SE',
           social_name: null,
           instagram: null,
         },
-        media: item.imagem?.url ? [{
+        media: imagem?.url ? [{
           media: {
-            url: `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${item.imagem.url}`,
+            url: `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imagem.url}`,
             media_type: 'IMAGE' as const
           },
-          mediaId: `strapi-media-${item.documentId}`,
-          productId: `strapi-${item.documentId}`
+          mediaId: `strapi-media-${item.documentId || item.id}`,
+          productId: `strapi-${item.documentId || item.id}`
         }] : []
       };
     });
