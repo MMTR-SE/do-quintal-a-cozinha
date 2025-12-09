@@ -39,7 +39,7 @@ Adicione os seguintes campos:
 
 #### Campo 2: Descrição
 - Clique em **+ Add another field**
-- Selecione **Text**
+- Selecione **Rich text**
 - Name: `descricao`
 - Type: **Long text**
 - Clique em **Finish**
