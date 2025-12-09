@@ -1,13 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import {
-  getCollection,
-  getStrapiField,
-  getStrapiMedia,
-  getStrapiMediaItems,
-  StrapiEntity,
-} from "@/lib/strapi";
+import { getCollection } from "@/lib/strapi";
 import { Category } from "@prisma/client";
 
 /**
@@ -49,72 +43,40 @@ async function getProductsFromStrapi() {
       return [];
     }
 
-    return strapiProducts.map((item: StrapiEntity) => {
+    return strapiProducts.map((item: any) => {
       // Mapear categoria do Strapi para o enum Category do Prisma
-      let category: Category = 'AGRICOLA';
-      const categoriaValue = getStrapiField<string>(item, 'categoria', 'Categoria');
-      if (categoriaValue) {
+      let category: Category = 'OUTROS';
+      if (item.categoria) {
         const categoryMap: Record<string, Category> = {
-          'agricola': 'AGRICOLA',
-          'hortalicas': 'AGRICOLA',
-          'frutas': 'AGRICOLA',
-          'graos': 'AGRICOLA',
-          'processados': 'PROCESSADO',
-          'processado': 'PROCESSADO',
+          'hortalicas': 'HORTALICAS',
+          'frutas': 'FRUTAS',
+          'graos': 'GRAOS',
+          'processados': 'PROCESSADOS',
           'artesanato': 'ARTESANATO',
-          'outros': 'AGRICOLA'
+          'outros': 'OUTROS'
         };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
-      }
-
-      const nome = getStrapiField<string>(item, 'Nome', 'nome');
-      const descricao = getStrapiField<any>(item, 'descricao');
-      const preco = getStrapiField<number>(item, 'preco');
-      const produtora = getStrapiField<string>(item, 'Produtora', 'produtora');
-      const telefone = getStrapiField<string>(item, 'telefone', 'Telefone');
-      const imagens = getStrapiMediaItems(getStrapiField(item, 'Imagem', 'imagem'));
-
-      // Converter Rich Text para string simples
-      let descriptionText = null;
-      if (typeof descricao === 'string') {
-        descriptionText = descricao;
-      } else if (Array.isArray(descricao)) {
-        // Rich Text é um array de blocos
-        descriptionText = descricao
-          .map((block: any) => {
-            if (block.children) {
-              return block.children.map((child: any) => child.text || '').join('');
-            }
-            return '';
-          })
-          .join('\n');
+        category = categoryMap[item.categoria.toLowerCase()] || 'OUTROS';
       }
 
       return {
-        id: `strapi-${item.documentId || item.id}`,
-        product_name: nome || 'Produto sem nome',
-        description: descriptionText,
-        price: preco ?? null,
+        id: `strapi-${item.documentId}`,
+        product_name: item.nome || 'Produto sem nome',
+        description: typeof item.descricao === 'string' ? item.descricao : null,
+        price: item.preco || null,
         category,
         profile: {
-          name: produtora || 'MMTR-SE',
+          name: item.produtora || 'MMTR-SE',
           social_name: null,
           instagram: null,
-          phone_number: telefone,
         },
-        media: imagens.flatMap((imagem, index) => {
-          const url = getStrapiMedia(imagem.url);
-          if (!url) return [];
-
-          return [{
-            media: {
-              url,
-              media_type: 'IMAGE' as const
-            },
-            mediaId: `strapi-media-${item.documentId || item.id}-${index}`,
-            productId: `strapi-${item.documentId || item.id}`
-          }];
-        })
+        media: item.imagem?.url ? [{
+          media: {
+            url: `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${item.imagem.url}`,
+            media_type: 'IMAGE' as const
+          },
+          mediaId: `strapi-media-${item.documentId}`,
+          productId: `strapi-${item.documentId}`
+        }] : []
       };
     });
   } catch (error) {
