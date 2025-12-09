@@ -23,7 +23,7 @@ interface Produto {
   id: number;
   documentId: string;
   nome: string;
-  descricao: string;
+  descricao: string | any; // Rich text pode ser string ou objeto
   preco: number;
   createdAt: string;
   updatedAt: string;
@@ -79,7 +79,11 @@ export default async function ExemploStrapiPage() {
               <h2 className="text-xl font-semibold mb-2">{produto.nome}</h2>
               
               {produto.descricao && (
-                <p className="text-gray-600 mb-4">{produto.descricao}</p>
+                <p className="text-gray-600 mb-4">
+                  {typeof produto.descricao === 'string' 
+                    ? produto.descricao 
+                    : JSON.stringify(produto.descricao)}
+                </p>
               )}
               
               {produto.preco && (

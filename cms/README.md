@@ -47,11 +47,13 @@ Para o projeto MMTR-SE, considere criar:
 
 ### 1. Produto
 - Nome (text)
-- Descrição (richtext)
+- Descrição (richtext ou text) *
 - Preço (decimal)
 - Imagens (media)
 - Categoria (relation)
 - Produtora (relation)
+
+_* Use "text" para descrições simples ou "richtext" para conteúdo formatado. Rich text retorna objetos JSON que precisam ser parseados._
 
 ### 2. Produtora
 - Nome (text)
