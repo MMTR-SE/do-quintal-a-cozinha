@@ -39,8 +39,9 @@ Adicione os seguintes campos:
 
 #### Campo 2: Descrição
 - Clique em **+ Add another field**
-- Selecione **Rich text**
+- Selecione **Text**
 - Name: `descricao`
+- Type: **Long text**
 - Clique em **Finish**
 
 #### Campo 3: Preço
