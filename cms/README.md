@@ -71,6 +71,7 @@ Para o projeto MMTR-SE, os seguintes tipos já estão configurados:
 
 Publique os registros no Content Manager para que apareçam no site.
 
+
 ## 🔗 Integração com Next.js
 
 ### Exemplo de Cliente API
@@ -86,7 +87,6 @@ export async function fetchAPI(path: string) {
       'Authorization': `Bearer ${STRAPI_TOKEN}`,
     },
   });
-
   return response.json();
 }
 
