@@ -568,7 +568,13 @@ export interface ApiProdutoraProdutora extends Struct.CollectionTypeSchema {
       'api::produtora.produtora'
     > &
       Schema.Attribute.Private;
-    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    nome: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     produtos: Schema.Attribute.Relation<'oneToMany', 'api::produto.produto'>;
     publishedAt: Schema.Attribute.DateTime;
     telefone: Schema.Attribute.String;

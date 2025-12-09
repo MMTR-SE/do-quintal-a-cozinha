@@ -74,62 +74,10 @@ export async function getAllProducts(options?: Options) {
         case "over-200":
           priceConditions.push({ price: { gt: 200 } });
           break;
-      }
-    }
-
-    if (priceConditions.length > 0) {
-      where.OR = priceConditions;
-    }
-  }
-
-  const products = await prisma.product.findMany({
-    select: {
-      id: true,
-      product_name: true,
-      description: true,
-      price: true,
-      category: true,
-      profile: {
-        select: {
-          name: true,
-          social_name: true,
-          instagram: true,
-        },
-      },
-      media: {
-        include: {
-          media: {
-            select: { url: true, media_type: true }
-          }
-        }
-      }
-    },
-    where
-  });
-
-  // Convert Decimal to number for client component serialization
-  return products.map(product => ({
-    ...product,
-    price: product.price ? Number(product.price) : null,
-    slug: buildProductSlug({
-      produtora: product.profile?.name,
-      nome: product.product_name,
-    }),
-  }));
+}
 
 /**
- * Retrieves all products with optional filtering.
- *
- * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
- * Price ranges: under-50, 50-100, 100-200, over-200
- *
- * NOTE: Combines products from both Prisma database and Strapi CMS.
- * Strapi products have IDs prefixed with 'strapi-'.
- *
- * Fonte unica: banco do site via Prisma.
- *
- * @param options - Filter options (search, categories, price ranges)
- * @returns Array of products matching the criteria
+ * Fetches products from Strapi CMS and converts them to Product format
  */
 export async function getAllProducts(options?: Options) {
   const where = {} as Where;
@@ -233,7 +181,6 @@ export async function getAllProducts(options?: Options) {
     if (options?.price && options.price.length > 0) {
       allProducts = allProducts.filter(p => {
         if (!p.price) return false;
-
         return options.price!.some(range => {
           switch (range) {
             case "under-50":
@@ -253,5 +200,4 @@ export async function getAllProducts(options?: Options) {
   }
 
   return allProducts;
->>>>>>> ab3e2d1 (feat: integrar receitas historias e produtos ao Strapi)
 }
