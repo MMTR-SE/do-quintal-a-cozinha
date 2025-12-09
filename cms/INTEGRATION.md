@@ -80,7 +80,7 @@ Produtos do Strapi possuem página de detalhes em `/nossa-producao/[id]`.
 O ID é prefixado com `strapi-` para que a aplicação saiba que deve consultar o CMS.
 
 ### 2. Imagens
-- O campo `imagem` aceita uma ou várias imagens
+- Apenas **uma imagem** por produto (campo `imagem`)
 - Imagens devem ser enviadas via painel do Strapi
 - URLs são automaticamente prefixadas com `NEXT_PUBLIC_STRAPI_URL`
 
