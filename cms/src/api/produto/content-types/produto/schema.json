@@ -44,13 +44,8 @@
       "type": "enumeration",
       "enum": [
         "agricola",
-        "hortalicas",
-        "frutas",
-        "graos",
         "processado",
-        "processados",
-        "artesanato",
-        "outros"
+        "artesanato"
       ],
       "pluginOptions": {
         "i18n": {
@@ -63,7 +58,12 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::produtora.produtora",
-      "inversedBy": "produtos"
+      "inversedBy": "produtos",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "imagem": {
       "type": "media",

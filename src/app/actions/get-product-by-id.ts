@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { Category } from "@prisma/client";
+import { getSingle } from "@/lib/strapi";
 import { buildProductSlug } from "@/lib/slug";
 
 /**
