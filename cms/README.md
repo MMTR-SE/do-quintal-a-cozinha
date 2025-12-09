@@ -45,15 +45,13 @@ Para consumir a API do Next.js:
 
 Para o projeto MMTR-SE, considere criar:
 
-### 1. Produto
-- Nome (text)
-- Descrição (richtext ou text) *
-- Preço (decimal)
-- Imagens (media)
-- Categoria (relation)
-- Produtora (relation)
-
-_* Use "text" para descrições simples ou "richtext" para conteúdo formatado. Rich text retorna objetos JSON que precisam ser parseados._
+### 1. Produto (já integrado com /nossa-producao)
+- nome (text) - Nome do produto
+- descricao (text - long) - Descrição do produto
+- preco (number - decimal) - Preço do produto
+- categoria (enumeration) - Categorias: hortalicas, frutas, graos, processados, artesanato, outros
+- produtora (text) - Nome da produtora
+- imagem (media - single) - Foto do produto
 
 ### 2. Produtora
 - Nome (text)
