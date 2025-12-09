@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Category } from "@prisma/client";
 import { buildProductSlug } from "@/lib/slug";
 
 /**
