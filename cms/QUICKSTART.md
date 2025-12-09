@@ -39,9 +39,8 @@ Adicione os seguintes campos:
 
 #### Campo 2: Descrição
 - Clique em **+ Add another field**
-- Selecione **Text**
+- Selecione **Rich text**
 - Name: `descricao`
-- Type: **Long text**
 - Clique em **Finish**
 
 #### Campo 3: Preço
@@ -51,28 +50,7 @@ Adicione os seguintes campos:
 - Number format: **decimal**
 - Clique em **Finish**
 
-#### Campo 4: Categoria (opcional)
-- Clique em **+ Add another field**
-- Selecione **Enumeration**
-- Name: `categoria`
-- Values (um por linha):
-  ```
-  hortalicas
-  frutas
-  graos
-  processados
-  artesanato
-  outros
-  ```
-- Clique em **Finish**
-
-#### Campo 5: Produtora (opcional)
-- Clique em **+ Add another field**
-- Selecione **Text**
-- Name: `produtora`
-- Clique em **Finish**
-
-#### Campo 6: Imagem (opcional)
+#### Campo 4: Imagem (opcional)
 - Clique em **+ Add another field**
 - Selecione **Media**
 - Name: `imagem`
@@ -87,7 +65,7 @@ Adicione os seguintes campos:
 1. No menu lateral, vá em **Settings** (ícone de engrenagem)
 2. Em **Users & Permissions Plugin**, clique em **Roles**
 3. Clique em **Public**
-4. Expanda **Produto**, **Receita** e **História**
+4. Expanda **Produto**
 5. Marque as seguintes permissões:
    - ✅ find
    - ✅ findOne
@@ -120,11 +98,8 @@ STRAPI_API_TOKEN=seu_token_copiado_aqui
 3. Clique em **+ Create new entry**
 4. Preencha:
    - Nome: `Feijão Orgânico`
-   - Descrição: `Feijão cultivado sem agrotóxicos pelas mulheres do MMTR-SE`
+   - Descrição: `Feijão cultivado sem agrotóxicos`
    - Preço: `15.90`
-   - Categoria: `graos`
-   - Produtora: `Maria da Silva`
-   - Imagem: (opcional) faça upload de uma imagem
 5. Clique em **Save**
 6. Clique em **Publish** no canto superior direito
 
