@@ -79,6 +79,24 @@ export async function getAllProducts(options?: Options) {
 /**
  * Fetches products from Strapi CMS and converts them to Product format
  */
+
+/**
+ * Retrieves all products with optional filtering.
+ *
+ * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
+ * Price ranges: under-50, 50-100, 100-200, over-200
+ * 
+ * NOTE: Combines products from both Prisma database and Strapi CMS.
+ * Strapi products have IDs prefixed with 'strapi-'.
+ *
+ * NOTE: Combines products from both Prisma database and Strapi CMS.
+ * Strapi products have IDs prefixed with 'strapi-'.
+ *
+ * Fonte unica: banco do site via Prisma.
+ *
+ * @param options - Filter options (search, categories, price ranges)
+ * @returns Array of products matching the criteria
+ */
 export async function getAllProducts(options?: Options) {
   const where = {} as Where;
 
