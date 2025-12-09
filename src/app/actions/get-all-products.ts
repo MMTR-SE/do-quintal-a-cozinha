@@ -4,10 +4,11 @@
 import { prisma } from "@/lib/prisma";
 import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
+import { getCollection } from "@/lib/strapi";
 
 interface Options {
   search?: string
-  categories?: string[]
+  categories?: Category[]
   price?: string[]
 }
 

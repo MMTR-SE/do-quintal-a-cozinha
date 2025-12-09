@@ -475,7 +475,6 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: true;
   };
-<<<<<<< HEAD
   pluginOptions: {
     i18n: {
       localized: true;
@@ -485,12 +484,8 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
     categoria: Schema.Attribute.Enumeration<
       [
         'agricola',
-        'hortalicas',
-        'frutas',
-        'graos',
         'processado',
         'artesanato',
-        'outros',
       ]
     > &
       Schema.Attribute.Required &
@@ -598,7 +593,12 @@ export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    descricao: Schema.Attribute.Text;
+    descricao: Schema.Attribute.Blocks &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     dificuldade: Schema.Attribute.Enumeration<
       ['facil', 'intermediaria', 'dificil']
     > &
@@ -617,22 +617,20 @@ export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
     tempo_cozimento: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     tempo_preparo: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     titulo: Schema.Attribute.String & Schema.Attribute.Required;
-=======
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    descricao: Schema.Attribute.Blocks;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::produto.produto'
-    > &
-      Schema.Attribute.Private;
-    Nome: Schema.Attribute.String & Schema.Attribute.Required;
-    preco: Schema.Attribute.Decimal;
+    Nome: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    preco: Schema.Attribute.Decimal &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
->>>>>>> 1f3ed36e (fix: corrigir erro de renderização de Rich Text do Strapi)
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1149,14 +1147,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-<<<<<<< HEAD
       'api::historia.historia': ApiHistoriaHistoria;
       'api::produto.produto': ApiProdutoProduto;
       'api::produtora.produtora': ApiProdutoraProdutora;
       'api::receita.receita': ApiReceitaReceita;
-=======
-      'api::produto.produto': ApiProdutoProduto;
->>>>>>> 1f3ed36e (fix: corrigir erro de renderização de Rich Text do Strapi)
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
