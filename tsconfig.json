@@ -38,6 +38,7 @@
   "exclude": [
     "node_modules",
     "**/*.stories.ts",
-    "vitest.config.ts"
+    "vitest.config.ts",
+    "cms"
   ]
 }
