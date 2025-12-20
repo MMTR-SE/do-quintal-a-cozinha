@@ -77,10 +77,6 @@ export async function getAllProducts(options?: Options) {
 }
 
 /**
- * Fetches products from Strapi CMS and converts them to Product format
- */
-
-/**
  * Retrieves all products with optional filtering.
  *
  * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
