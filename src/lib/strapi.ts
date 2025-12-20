@@ -12,7 +12,7 @@ const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
 
 interface FetchAPIOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  body?: any;
+  body?: Record<string, unknown>;
   cache?: RequestCache;
   next?: NextFetchRequestConfig;
 }
@@ -69,7 +69,7 @@ export async function fetchAPI(path: string, options: FetchAPIOptions = {}) {
  */
 export async function getCollection(
   collectionName: string,
-  params: Record<string, any> = {}
+  params: Record<string, string> = {}
 ) {
   const queryString = new URLSearchParams(params).toString();
   const path = `/${collectionName}${queryString ? `?${queryString}` : ''}`;
@@ -84,7 +84,7 @@ export async function getCollection(
 export async function getSingle(
   collectionName: string,
   id: string | number,
-  params: Record<string, any> = {}
+  params: Record<string, string> = {}
 ) {
   const queryString = new URLSearchParams(params).toString();
   const path = `/${collectionName}/${id}${queryString ? `?${queryString}` : ''}`;
