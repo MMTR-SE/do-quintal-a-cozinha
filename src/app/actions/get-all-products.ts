@@ -48,7 +48,32 @@ async function getProductsFromStrapi() {
       console.log('Estrutura do produto Strapi:', JSON.stringify(strapiProducts[0], null, 2));
     }
 
-    return strapiProducts.map((item: any) => {
+    interface StrapiProduct {
+      documentId?: string;
+      id?: string;
+      categoria?: string;
+      Nome?: string;
+      nome?: string;
+      descricao?: string | Array<{ children?: Array<{ text?: string }> }>;
+      preco?: number;
+      Produtora?: string;
+      produtora?: string;
+      Imagem?: { url?: string };
+      imagem?: { url?: string };
+      attributes?: {
+        categoria?: string;
+        nome?: string;
+        Nome?: string;
+        descricao?: string | Array<{ children?: Array<{ text?: string }> }>;
+        preco?: number;
+        produtora?: string;
+        Produtora?: string;
+        imagem?: { url?: string };
+        Imagem?: { url?: string };
+      };
+    }
+
+    return strapiProducts.map((item: StrapiProduct) => {
       console.log('Item do Strapi:', item);
       
       // Mapear categoria do Strapi para o enum Category do Prisma
@@ -83,9 +108,9 @@ async function getProductsFromStrapi() {
       } else if (Array.isArray(descricao)) {
         // Rich Text é um array de blocos
         descriptionText = descricao
-          .map((block: any) => {
+          .map((block: { children?: Array<{ text?: string }> }) => {
             if (block.children) {
-              return block.children.map((child: any) => child.text || '').join('');
+              return block.children.map((child: { text?: string }) => child.text || '').join('');
             }
             return '';
           })

@@ -48,9 +48,9 @@ export async function getProductById(options: Options) {
         descriptionText = descricao;
       } else if (Array.isArray(descricao)) {
         descriptionText = descricao
-          .map((block: any) => {
+          .map((block: { children?: Array<{ text?: string }> }) => {
             if (block.children) {
-              return block.children.map((child: any) => child.text || '').join('');
+              return block.children.map((child: { text?: string }) => child.text || '').join('');
             }
             return '';
           })

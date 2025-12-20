@@ -14,7 +14,7 @@
  * 5. Acesse http://localhost:3000/exemplo-strapi
  */
 
-import { getCollection, getStrapiMedia } from '@/lib/strapi';
+import { getCollection } from '@/lib/strapi';
 
 // Força revalidação a cada 60 segundos (ISR)
 export const revalidate = 60;
@@ -23,7 +23,7 @@ interface Produto {
   id: number;
   documentId: string;
   nome: string;
-  descricao: string | any; // Rich text pode ser string ou objeto
+  descricao: string | Record<string, unknown>; // Rich text pode ser string ou objeto
   preco: number;
   createdAt: string;
   updatedAt: string;
@@ -51,7 +51,7 @@ export default async function ExemploStrapiPage() {
           <strong>Erro:</strong> {error}
           <p className="mt-2 text-sm">
             Certifique-se de que o Strapi está rodando (<code>npm run cms:dev</code>) 
-            e que você criou o Content Type "produto".
+            e que você criou o Content Type &quot;produto&quot;.
           </p>
         </div>
       )}
