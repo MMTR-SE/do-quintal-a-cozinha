@@ -77,18 +77,18 @@ async function getProductsFromStrapi() {
       console.log('Item do Strapi:', item);
       
       // Mapear categoria do Strapi para o enum Category do Prisma
-      let category: Category = 'OUTROS';
+      let category: Category = 'AGRICOLA';
       const categoriaValue = item.categoria || item.attributes?.categoria;
       if (categoriaValue) {
         const categoryMap: Record<string, Category> = {
-          'hortalicas': 'HORTALICAS',
-          'frutas': 'FRUTAS',
-          'graos': 'GRAOS',
-          'processados': 'PROCESSADOS',
+          'hortalicas': 'AGRICOLA',
+          'frutas': 'AGRICOLA',
+          'graos': 'AGRICOLA',
+          'processados': 'PROCESSADO',
           'artesanato': 'ARTESANATO',
-          'outros': 'OUTROS'
+          'outros': 'AGRICOLA'
         };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'OUTROS';
+        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
       }
 
       // Extrair campos (Strapi v5 coloca diretamente no objeto)

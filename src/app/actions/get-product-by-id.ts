@@ -21,18 +21,18 @@ export async function getProductById(options: Options) {
       }
 
       // Mapear categoria
-      let category: Category = 'OUTROS';
+      let category: Category = 'AGRICOLA';
       const categoriaValue = strapiProduct.categoria || strapiProduct.Categoria;
       if (categoriaValue) {
         const categoryMap: Record<string, Category> = {
-          'hortalicas': 'HORTALICAS',
-          'frutas': 'FRUTAS',
-          'graos': 'GRAOS',
-          'processados': 'PROCESSADOS',
+          'hortalicas': 'AGRICOLA',
+          'frutas': 'AGRICOLA',
+          'graos': 'AGRICOLA',
+          'processados': 'PROCESSADO',
           'artesanato': 'ARTESANATO',
-          'outros': 'OUTROS'
+          'outros': 'AGRICOLA'
         };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'OUTROS';
+        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
       }
 
       // Extrair campos
