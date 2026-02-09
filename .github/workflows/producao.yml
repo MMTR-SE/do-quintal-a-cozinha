@@ -44,7 +44,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd $DEV_PATH
+            cd $PROD_PATH
             git checkout main
             git pull --rebase origin main
             cd ../caddy
