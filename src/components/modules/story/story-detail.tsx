@@ -1,9 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { ImageLightbox } from "@/components/ui/image-lightbox";
+import { useEffect, useState } from "react";
+import { ImageLightbox } from "@/components/image-lightbox";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import { Story } from "@/types/story";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { notFound } from "next/navigation";
@@ -19,6 +25,18 @@ interface StoryDetailProps {
  */
 export default function StoryDetail({ story, isLoading }: StoryDetailProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+    setCurrentIndex(carouselApi.selectedScrollSnap());
+    const onSelect = () => setCurrentIndex(carouselApi.selectedScrollSnap());
+    carouselApi.on("select", onSelect);
+    return () => {
+      carouselApi.off("select", onSelect);
+    };
+  }, [carouselApi]);
 
   if (isLoading) {
     return (
@@ -39,7 +57,7 @@ export default function StoryDetail({ story, isLoading }: StoryDetailProps) {
             <Skeleton className="h-5 w-32" />
           </div>
 
-          <Skeleton className="h-96 w-full rounded-lg" />
+          <Skeleton className="h-[28rem] w-full rounded-lg" />
 
           <div className="space-y-4">
             {Array.from({ length: 4 }).map((_, index) => (
@@ -91,19 +109,65 @@ export default function StoryDetail({ story, isLoading }: StoryDetailProps) {
           </div>
 
           {images.length > 0 && (
-            <button
-              onClick={() => setLightboxOpen(true)}
-              className="relative h-96 rounded-lg overflow-hidden cursor-zoom-in group w-full"
-              aria-label="Ver imagem em tamanho completo"
+            <Carousel
+              setApi={setCarouselApi}
+              opts={{ loop: false }}
+              className="relative w-full"
             >
-              <Image
-                src={images[0].url}
-                alt={images[0].alt}
-                fill
-                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 768px) 100vw, 768px"
-              />
-            </button>
+              <CarouselContent>
+                {images.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <button
+                      onClick={() => setLightboxOpen(true)}
+                      className="relative h-[28rem] w-full rounded-lg overflow-hidden cursor-zoom-in group bg-muted"
+                      aria-label={`Ver imagem ${index + 1} em tamanho completo`}
+                    >
+                      <Image
+                        src={image.url}
+                        alt=""
+                        aria-hidden
+                        fill
+                        className="object-cover scale-110 blur-2xl opacity-50"
+                        sizes="(max-width: 768px) 100vw, 768px"
+                      />
+                      <Image
+                        src={image.url}
+                        alt={image.alt}
+                        fill
+                        className="object-contain group-hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 768px) 100vw, 768px"
+                      />
+                    </button>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              {images.length > 1 && (
+                <>
+                  <div className="pointer-events-none absolute top-3 right-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
+                    {currentIndex + 1} / {images.length}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => carouselApi?.scrollPrev()}
+                    disabled={!carouselApi?.canScrollPrev()}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed p-2 text-white transition-colors"
+                    aria-label="Imagem anterior"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => carouselApi?.scrollNext()}
+                    disabled={!carouselApi?.canScrollNext()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed p-2 text-white transition-colors"
+                    aria-label="Próxima imagem"
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </>
+              )}
+            </Carousel>
           )}
 
           <div
@@ -116,7 +180,7 @@ export default function StoryDetail({ story, isLoading }: StoryDetailProps) {
       {images.length > 0 && (
         <ImageLightbox
           images={images}
-          initialIndex={0}
+          initialIndex={currentIndex}
           isOpen={lightboxOpen}
           onClose={() => setLightboxOpen(false)}
         />

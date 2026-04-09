@@ -523,7 +523,7 @@ Meu sítio  fica aqui mesmo, na Matatas. Quando eu comprei, só era terra. Mas a
     description: "Maria Renilde de Santana, 69 anos, povoado Matatas, Salgado (SE). De cor parda, mãe de sete filhos e viúva duas vezes, orgulhosa do seu roçado cheio de fruteiras e de vida.",
     slug: "maria-renilde",
     regionId: "SAL",
-    mediaUrls: ["/images/stories/maria-renilde.webp", "/images/stories/maria-renilde-2.webp"],
+    mediaUrls: ["/images/stories/maria-renilde.webp"],
     content: `
   <p>Maria Renilde de Santana, 69 anos. povoado Matatas, Salgado (SE) de cor parda, mãe de sete filhos e viúva duas vezes, ela relata vida de muito trabalho desde criança, da dor pela perda trágica dos seus, mas sem perder a alegria e disposição de trabalhar, viver em comunidade e servindo a quem a procura, está nas rodas de mulheres. Orgulhosa do seu roçado cheio de fruteiras e de vida.</p>
 
