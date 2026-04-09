@@ -38,7 +38,7 @@ export default function Page() {
         subtitle="Conheça os produtos cultivados com amor e tradição"
       />
       <div className="container-wrapper">
-        <div className="container flex flex-col gap-6 my-6">
+        <div className="container flex flex-col gap-6 mt-6">
           <SearchBar
             value={search}
             onSubmit={setSearch}
