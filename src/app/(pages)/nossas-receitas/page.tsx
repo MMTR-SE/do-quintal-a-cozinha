@@ -44,7 +44,7 @@ export default function RecipesPage() {
           onSubmit={setSearchQuery}
           placeholder="Buscar receitas..."
         />
-        {!!searchQuery ? (
+        {searchQuery ? (
           <RecipeGrid
             recipes={filtered}
             isLoading={isLoading}

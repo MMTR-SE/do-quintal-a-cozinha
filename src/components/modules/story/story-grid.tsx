@@ -95,9 +95,9 @@ export function StoryGrid({
             </>
           ) : (
             <>
-              <h3 className="text-xl font-semibold text-foreground mb-2">
+              <h4 className="text-xl font-semibold text-foreground mb-2">
                 Nenhuma história disponível
-              </h3>
+              </h4>
               <p className="text-muted-foreground">
                 Não há histórias para mostrar no momento.
               </p>
