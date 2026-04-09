@@ -1,13 +1,22 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Fuse from "fuse.js";
+import { useState } from "react";
+import type { IFuseOptions } from "fuse.js";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { SearchBar } from "@/components/ui/search-bar";
 import { FeaturedRecipes } from "@/components/modules/recipe/featured-recipes";
 import { RecipeGrid } from "@/components/modules/recipe/recipe-grid";
 import { useGetAllRecipes } from "@/hooks/use-get-all-recipes";
+import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
+import type { Recipe } from "@/types/recipe";
+
+const RECIPE_FUSE_OPTIONS: IFuseOptions<Recipe> = {
+  keys: [
+    { name: "title", weight: 2 },
+    "description",
+  ],
+};
 
 /**
  * Recipe listing page with search bar, featured section, and full recipe grid.
@@ -17,24 +26,7 @@ export default function RecipesPage() {
 
   const { data: recipes, isLoading } = useGetAllRecipes();
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(recipes ?? [], {
-        keys: [
-          { name: "title", weight: 2 },
-          "description",
-        ],
-        threshold: 0.4,
-        ignoreLocation: true,
-      }),
-    [recipes]
-  );
-
-  const filtered = useMemo(() => {
-    if (!recipes) return [];
-    if (!searchQuery.trim()) return recipes;
-    return fuse.search(searchQuery.trim()).map((r) => r.item);
-  }, [recipes, searchQuery, fuse]);
+  const filtered = useFuzzySearch(recipes, searchQuery, RECIPE_FUSE_OPTIONS);
 
   const handleClearSearch = () => {
     setSearchQuery("");
