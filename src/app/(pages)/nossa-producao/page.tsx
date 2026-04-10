@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/page-header";
 import { SearchBar } from "@/components/search-bar";
 import { CategoryFilter } from "@/components/category-filter";
 import { PRODUCT_CATEGORIES } from "@/config/categories";
+import type { Category } from "@prisma/client";
 import type { Product } from "@/types/product";
 
 const PRODUCT_FUSE_OPTIONS: IFuseOptions<Product> = {
@@ -26,7 +27,7 @@ const PRODUCT_FUSE_OPTIONS: IFuseOptions<Product> = {
  */
 export default function Page() {
   const [search, setSearch] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const { data, isLoading } = useGetAllProducts({
     categories: selectedCategories.length > 0 ? selectedCategories : undefined,
   });
@@ -40,7 +41,7 @@ export default function Page() {
         subtitle="Conheça os produtos cultivados com amor e tradição"
       />
       <div className="container-wrapper">
-        <div className="container flex flex-col gap-6 mt-6">
+        <div className="container flex flex-col gap-6 my-6">
           <SearchBar
             value={search}
             onSubmit={setSearch}

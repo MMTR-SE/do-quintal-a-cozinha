@@ -1,16 +1,17 @@
 "use client";
 
+import type { Category } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import type { CategoryOption } from "@/config/categories";
 
 interface CategoryFilterProps {
   options: CategoryOption[];
-  value: string[];
-  onChange: (value: string[]) => void;
+  value: Category[];
+  onChange: (value: Category[]) => void;
 }
 
 export function CategoryFilter({ options, value, onChange }: CategoryFilterProps) {
-  const toggle = (optionValue: string) => {
+  const toggle = (optionValue: Category) => {
     onChange(
       value.includes(optionValue)
         ? value.filter((v) => v !== optionValue)

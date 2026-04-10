@@ -1,7 +1,7 @@
 import { Category } from "@prisma/client";
 
 export interface CategoryOption {
-  value: string;
+  value: Category;
   label: string;
 }
 

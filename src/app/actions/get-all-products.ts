@@ -11,7 +11,7 @@ import { Category } from "@prisma/client";
 
 interface Options {
   search?: string
-  categories?: string[]
+  categories?: Category[]
   price?: string[]
 }
 
@@ -161,7 +161,7 @@ export async function getAllProducts(options?: Options) {
 
   if (options?.categories) {
     where.category = {
-      in: options.categories as Category[]
+      in: options.categories
     }
   }
 
