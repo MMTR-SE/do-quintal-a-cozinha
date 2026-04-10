@@ -1,5 +1,4 @@
 import type { Category } from "@prisma/client";
-import { CATEGORY } from "@/lib/enums";
 
 export interface CategoryOption {
   value: Category;
@@ -7,7 +6,7 @@ export interface CategoryOption {
 }
 
 export const PRODUCT_CATEGORIES: CategoryOption[] = [
-  { value: CATEGORY.AGRICOLA, label: "Agrícola" },
-  { value: CATEGORY.ARTESANATO, label: "Artesanato" },
-  { value: CATEGORY.PROCESSADO, label: "Processado" },
+  { value: Category.AGRICOLA, label: "Agrícola" },
+  { value: Category.ARTESANATO, label: "Artesanato" },
+  { value: Category.PROCESSADO, label: "Processado" },
 ];
