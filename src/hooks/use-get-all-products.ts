@@ -4,11 +4,12 @@
  */
 
 import { getAllProducts } from "@/app/actions/get-all-products"
+import type { Category } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
 
 interface Options {
   search?: string
-  categories?: string[]
+  categories?: Category[]
   price?: string[]
 }
 
