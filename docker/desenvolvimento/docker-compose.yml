@@ -10,6 +10,7 @@ services:
     volumes:
       - $PWD:/app
       - /app/node_modules
+      - ./docker/desenvolvimento/certificates:/app/certificates
     environment:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true  # Enable polling for hot reload in Docker
