@@ -9,19 +9,19 @@ import Image from "next/image";
 const galleryImages = [
   {
     url: "/mmtr-sobre-1.webp",
-    alt: "Mulheres trabalhadoras rurais do MMTR-SE reunidas em atividade coletiva de organização e formação política",
+    alt: "Mulheres do MMTR-SE reunidas em atividade de organização e formação política",
   },
   {
     url: "/mmtr-sobre-2.webp",
-    alt: "Evento do Movimento da Mulher Trabalhadora Rural com participantes em momento de mobilização e debate",
+    alt: "Evento do MMTR com participantes em mobilização e debate",
   },
   {
     url: "/mmtr-sobre-3.webp",
-    alt: "Mulheres do MMTR-SE em espaço de participação política, demonstrando a atuação do movimento em Sergipe",
+    alt: "Mulheres do MMTR-SE em espaço de participação política em Sergipe",
   },
   {
     url: "/mmtr-sobre-4.webp",
-    alt: "Trabalhadoras rurais em ação de mobilização do MMTR-SE, construindo o feminismo rural a partir de suas identidades e territórios",
+    alt: "Trabalhadoras rurais mobilizadas pelo MMTR-SE pelo feminismo rural",
   },
 ];
 
@@ -44,7 +44,6 @@ export default function Sobre() {
       <PageHeader
         title="Sobre Nós"
         subtitle="Movimento de Mulheres Trabalhadoras Rurais de Sergipe"
-        backgroundImage="/mmtr-sobre-3.webp"
       />
       <main className="container-wrapper">
         <div className="container flex flex-col gap-6 py-8">

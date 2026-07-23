@@ -17,6 +17,7 @@ COPY --from=deps /usr/bin/dumb-init /usr/bin/dumb-init
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN npx prisma migrate deploy
 RUN npm run build
 
 FROM base AS runner

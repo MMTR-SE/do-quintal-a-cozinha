@@ -9,15 +9,21 @@ import { MobileNav } from "@/components/mobile-nav";
 
 import InstagramIcon from "@mui/icons-material/Instagram";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
+
+/**
+ * Sticky site header with navigation and social contact links.
+ */
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-yellow-400/95 backdrop-blur supports-[backdrop-filter]:bg-yellow-400/60">
       <div className="container-wrapper">
         <div className="container flex h-14 items-center gap-2 md:gap-4">
+          <h1 className="sr-only">Do Quintal à Cozinha</h1>
+          <h2 className="sr-only">Navegação do site</h2>
           <MainNav />
           <MobileNav />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
-            <nav className="flex items-center gap-0.5">
+            <nav className="flex items-center gap-0.5" aria-label="Contato">
               <Button
                 asChild
                 variant="ghost"
@@ -28,9 +34,10 @@ export function Header() {
                   href={siteConfig.links.ig}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="Visitar página do MMTR-SE no Instagram (abre em nova aba)"
                 >
-                  <InstagramIcon />
-                  <span className="sr-only">Instagram</span>
+                  <InstagramIcon aria-hidden="true" />
+                  <span className="sr-only">Visitar página do MMTR-SE no Instagram (abre em nova aba)</span>
                 </Link>
               </Button>
               <Button
@@ -46,9 +53,10 @@ export function Header() {
                     window.open('/api/email?subject=Contato via site', '_blank');
                   }}
                   className="cursor-pointer"
+                  aria-label="Enviar email para o MMTR-SE (abre em nova aba)"
                 >
-                  <MailOutlineIcon />
-                  <span className="sr-only">Email</span>
+                  <MailOutlineIcon aria-hidden="true" />
+                  <span className="sr-only">Enviar email para o MMTR-SE (abre em nova aba)</span>
                 </a>
               </Button>
             </nav>

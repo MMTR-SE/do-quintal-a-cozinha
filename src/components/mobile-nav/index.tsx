@@ -5,10 +5,20 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
+/**
+ * Mobile drawer navigation triggered by hamburger menu icon.
+ */
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
 
@@ -17,58 +27,53 @@ export function MobileNav() {
   }, []);
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} modal={true}>
       <DrawerTrigger asChild>
         <Button
           variant="ghost"
-          className="h-8 gap-4  px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+          aria-label="Abrir menu de navegação"
+          aria-expanded={open}
+          className="h-8 gap-4 px-0 text-base hover:bg-transparent focus-visible:bg-transparent md:hidden"
         >
           <MenuIcon />
         </Button>
       </DrawerTrigger>
       <DrawerContent className="max-h-[80svh] p-0">
-           <div className="overflow-auto p-6">
-          <div className="flex flex-col space-y-3">
-            <MobileLink href="/" onOpenChange={setOpen}>
-             Home
-            </MobileLink>
+        <DrawerTitle className="sr-only">Menu de navegação</DrawerTitle>
+        <nav className="flex flex-col" aria-label="Menu principal">
+          <div className="flex justify-end p-4 border-b">
+            <DrawerClose asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Fechar menu"
+                autoFocus
+              >
+                <CloseIcon />
+              </Button>
+            </DrawerClose>
           </div>
-        </div>
-        <div className="overflow-auto p-6">
-          <div className="flex flex-col space-y-3">
+          <div className="flex flex-col p-6 space-y-4">
+            <MobileLink href="/" onOpenChange={setOpen}>
+              Home
+            </MobileLink>
             <MobileLink href="/onde-estamos" onOpenChange={setOpen}>
               Onde Estamos
             </MobileLink>
-          </div>
-        </div>
-        <div className="overflow-auto p-6">
-          <div className="flex flex-col space-y-3">
             <MobileLink href="/nossas-historias" onOpenChange={setOpen}>
               Nossas Histórias
             </MobileLink>
-          </div>
-        </div>
-        <div className="overflow-auto p-6">
-          <div className="flex flex-col space-y-3">
             <MobileLink href="/nossa-producao" onOpenChange={setOpen}>
               Nossa Produção
             </MobileLink>
-          </div>
-        </div>
-        <div className="overflow-auto p-6">
-          <div className="flex flex-col space-y-3">
             <MobileLink href="/nossas-receitas" onOpenChange={setOpen}>
               Nossas Receitas
             </MobileLink>
-          </div>
-        </div>
-        <div className="overflow-auto p-6">
-          <div className="flex flex-col space-y-3">
             <MobileLink href="/nosso-espaco" onOpenChange={setOpen}>
               Nosso Espaço
             </MobileLink>
           </div>
-        </div>
+        </nav>
       </DrawerContent>
     </Drawer>
   );
@@ -95,7 +100,7 @@ function MobileLink({
         router.push(href.toString());
         onOpenChange?.(false);
       }}
-      className={cn("text-[1.15rem]", className)}
+      className={cn("text-[1.15rem] py-2", className)}
       {...props}
     >
       {children}

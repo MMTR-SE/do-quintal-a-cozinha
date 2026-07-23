@@ -7,25 +7,25 @@ const productsData = [
     product_name: "Malcasado",
     description: "Saboroso macasado caseiro",
     category: Category.PROCESSADO,
-    image: "https://md.coolab.org/uploads/upload_017b9a928c4570b12765c879c1231262.jpeg",
+    image: "https://storage.mulheresrurais.com.br/typebot/public/tmp/typebots/cketor63k011m9bole7usb06/blocks/jv2bycs020prsic44drergij/WhatsApp Image 2025-11-05 at 14.48.14.jpeg",
   },
   {
     product_name: "Pé de Moleque",
     description: "Pé de Moleque com assado na folha de bananeira",
     category: Category.PROCESSADO,
-    image: "https://md.coolab.org/uploads/upload_238a4f1269f0e4126d3774d68d84c992.jpeg",
+    image: "https://storage.mulheresrurais.com.br/typebot/public/tmp/typebots/cketor63k011m9bole7usb06/blocks/jv2bycs020prsic44drergij/WhatsApp%20Image%202025-11-05%20at%2014.49.01(1).jpeg",
   },
   {
     product_name: "Cocada mundinha",
     description: "Cocada mundinha com gosto de infancia",
     category: Category.PROCESSADO,
-    image: "https://md.coolab.org/uploads/upload_289c1845efd5caf8b2be1492fc73ab0c.jpeg",
+    image: "https://storage.mulheresrurais.com.br/typebot/public/tmp/typebots/cketor63k011m9bole7usb06/blocks/kikn9164xu6m5ot4rxulsvai/WhatsApp Image 2025-11-05 at 14.49.17.jpeg",
   },
   {
     product_name: "Bolo de Macaxeira",
     description: "Bolo de macaxeira da vó",
     category: Category.PROCESSADO,
-    image: "https://md.coolab.org/uploads/upload_c5b15456eea74eac7fe8630455570585.jpeg",
+    image: "https://storage.mulheresrurais.com.br/typebot/public/tmp/typebots/cketor63k011m9bole7usb06/blocks/z5z6egot3qj3msvxa4nzhqqp/WhatsApp Image 2025-11-05 at 14.49.44.jpeg",
   },
 ];
 

@@ -12,15 +12,18 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 
+/**
+ * Desktop horizontal navigation menu with active route highlighting.
+ */
 export function MainNav() {
   const pathname = usePathname();
 
   return (
-    <div className="mr-4 hidden md:flex">
-      <Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6">
+    <nav className="mr-4 hidden md:flex" aria-label="Navegação principal">
+      <Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6" aria-label="Voltar à página inicial">
         <Image 
           src="/logo.webp" 
-          alt="Logo do Movimento da Mulher Trabalhadora Rural de Sergipe e voltar ao ínicio da página" 
+          alt="Logo do MMTR-SE" 
           height={32} 
           width={32} 
         />
@@ -33,16 +36,16 @@ export function MainNav() {
 	        <NavigationMenuLink
        	            href="/sobre"
        	            className={cn(
-       	              "transition-colors hover:text-foreground/80",
-       	              pathname === "/sobre" ? "text-foreground" : "text-foreground/80"
+       	              "transition-colors hover:text-primary",
+       	              pathname === "/sobre" ? "text-foreground font-semibold" : "text-foreground"
        	            )}
        	          >Sobre
 	        </NavigationMenuLink>
 	        <NavigationMenuLink
        	            href="/onde-estamos"
        	            className={cn(
-       	              "transition-colors hover:text-foreground/80",
-       	              pathname === "/onde-estamos" ? "text-foreground" : "text-foreground/80"
+       	              "transition-colors hover:text-primary",
+       	              pathname === "/onde-estamos" ? "text-foreground font-semibold" : "text-foreground"
        	            )}
        	          >
        	            Onde Estamos
@@ -53,10 +56,10 @@ export function MainNav() {
 	      <NavigationMenuLink
                  href="/nossas-historias"
                  className={cn(
-                   "transition-colors hover:text-foreground/80",
-                   pathname === "/nossa-historia" ? "text-foreground" : "text-foreground/80"
+                   "transition-colors hover:text-primary",
+                   pathname?.startsWith("/nossas-historias") ? "text-foreground font-semibold" : "text-foreground"
                  )}
-        >       
+        >
                  Nossas Histórias
 	      </NavigationMenuLink>
 	    </NavigationMenuItem>
@@ -64,10 +67,10 @@ export function MainNav() {
 	      <NavigationMenuLink
                 href="/nossa-producao"
                 className={cn(
-                  "transition-colors hover:text-foreground/80",
+                  "transition-colors hover:text-primary",
                   pathname?.startsWith("/nossa-producao")
-                    ? "text-foreground"
-                    : "text-foreground/80"
+                    ? "text-foreground font-semibold"
+                    : "text-foreground"
                 )}
                 >
                 Nossa Produção
@@ -77,10 +80,10 @@ export function MainNav() {
 	      <NavigationMenuLink
                 href="/nossas-receitas"
                 className={cn(
-                  "transition-colors hover:text-foreground/80",
+                  "transition-colors hover:text-primary",
                   pathname?.startsWith("/nossas-receitas")
-                    ? "text-foreground"
-                    : "text-foreground/80"
+                    ? "text-foreground font-semibold"
+                    : "text-foreground"
                 )}
                 >
                 Nossas Receitas
@@ -90,10 +93,10 @@ export function MainNav() {
 	      <NavigationMenuLink
                 href="/nosso-espaco"
                 className={cn(
-                  "transition-colors hover:text-foreground/80",
+                  "transition-colors hover:text-primary",
                   pathname?.startsWith("/nosso-espaco")
-                    ? "text-foreground"
-                    : "text-foreground/80"
+                    ? "text-foreground font-semibold"
+                    : "text-foreground"
                 )}
                 >
                 Nosso Espaço
@@ -102,6 +105,6 @@ export function MainNav() {
 	  </NavigationMenuList>
         </NavigationMenu>
 
-    </div>
+    </nav>
   );
 }

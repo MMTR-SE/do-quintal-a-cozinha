@@ -6,6 +6,10 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 
+/**
+ * React Query provider setup with singleton pattern for client-side caching.
+ */
+
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {

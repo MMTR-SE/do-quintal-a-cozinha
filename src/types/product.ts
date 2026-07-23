@@ -40,5 +40,5 @@ export interface Product {
  * Detailed product information for individual product pages
  */
 export interface ProductWithDetail extends Product {
-  profile_id: string;
+  profile_id?: string;
 }

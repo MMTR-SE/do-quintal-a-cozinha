@@ -1,3 +1,8 @@
+/**
+ * Generates WhatsApp deep links with pre-filled messages.
+ * Primary communication channel for customer-producer contact.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSingle, getStrapiField } from "@/lib/strapi";
@@ -18,7 +23,6 @@ export async function GET(request: NextRequest) {
     let phoneNumber: string | null = null;
     let productName = "";
 
-    // Se veio productId, busca pelo produto
     if (productId) {
       if (productId.startsWith("strapi-")) {
         const documentId = productId.slice("strapi-".length);
@@ -56,7 +60,6 @@ export async function GET(request: NextRequest) {
       productName = product.product_name;
       }
     }
-    // Se veio profileId, busca pelo perfil
     else if (profileId) {
       const profile = await prisma.profile.findUnique({
         where: { id: profileId },
@@ -82,7 +85,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Monta a mensagem do WhatsApp
     const message = productName
       ? `Olá! Estou interessado(a) no produto: ${productName}`
       : "Olá! Gostaria de saber mais sobre seus produtos.";
@@ -91,7 +93,6 @@ export async function GET(request: NextRequest) {
       message
     )}`;
 
-    // Redireciona para o WhatsApp
     return NextResponse.redirect(whatsappUrl);
   } catch (error) {
     console.error("Error redirecting to WhatsApp:", error);

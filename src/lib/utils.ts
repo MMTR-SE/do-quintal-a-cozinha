@@ -3,10 +3,16 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { intervalToDuration } from "date-fns";
 
+/**
+ * Merges conditional Tailwind classes with conflict resolution.
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/**
+ * Converts RecipeDifficulty enum to Portuguese display text.
+ */
 export function formatRecipeDifficulty(difficulty: RecipeDifficulty) {
   if (difficulty === RecipeDifficulty.EASY)
     return "Fácil";
@@ -16,7 +22,9 @@ export function formatRecipeDifficulty(difficulty: RecipeDifficulty) {
     return "Difícil";
 }
 
-
+/**
+ * Formats minutes to "2h 30min" format.
+ */
 export function formatMinutes(mins: number) {
   const duration = intervalToDuration({ start: 0, end: mins * 60 * 1000 });
   const { hours = 0, minutes = 0 } = duration;
@@ -27,13 +35,8 @@ export function formatMinutes(mins: number) {
 }
 
 /**
- * Formats a price value to Brazilian Real currency format.
- *
- * BUSINESS RULE: Products without prices should prompt customers to contact the producer.
- * This supports gradual price adoption as producers transition to the platform.
- *
- * @param price - Price as Decimal/number or null
- * @returns Formatted string "R$ 10,95" or "Consulte o produtor" if null
+ * Formats price to Brazilian Real currency format.
+ * Returns "Consulte a produtora" if null (supports gradual price adoption).
  */
 export function formatPrice(price: number | null): string {
   if (price === null || price === undefined) {

@@ -17,6 +17,9 @@ interface RecipeDetailProps {
   isLoading: boolean;
 }
 
+/**
+ * Full recipe view with ingredients, steps, metadata, and image lightbox.
+ */
 export function RecipeDetail({ recipe, isLoading }: RecipeDetailProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 

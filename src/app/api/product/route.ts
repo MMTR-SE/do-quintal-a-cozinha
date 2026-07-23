@@ -1,3 +1,8 @@
+/**
+ * RESTful endpoint for product creation and querying.
+ * CRITICAL: Uses database transactions for atomic product + media creation.
+ */
+
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
 import { type NextRequest } from "next/server";
@@ -8,19 +13,23 @@ interface MediaItem {
   media_type: MediaType;
 }
 
+/**
+ * Creates product with media using transaction (all-or-nothing).
+ * Handles Typebot empty string variables and validates all inputs.
+ */
 export async function POST(request: Request) {
   const body = await request.json();
 
-  // Normalize empty strings to undefined (handles Typebot variables that aren't set)
+  // Typebot sends empty strings for unset variables
   const productName = body.product_name?.trim() || undefined;
   const phoneNumber = body.phone_number?.trim() || undefined;
   const category = body.category?.trim() || undefined;
   const media: MediaItem[] = body.media || [];
+
   const price = body.price !== undefined && body.price !== null && body.price !== ""
     ? Number(body.price)
     : null;
 
-  // Validate required fields
   if (!productName) {
     return new Response(JSON.stringify({ error: "Product name is required" }), {
       status: 400,
@@ -52,7 +61,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Validate price if provided
   if (price !== null && (isNaN(price) || price < 0)) {
     return new Response(
       JSON.stringify({ error: "Price must be a positive number" }),
@@ -60,16 +68,14 @@ export async function POST(request: Request) {
     );
   }
 
-  // Filter out media items with empty URLs and validate remaining items
+  // Filter out media with empty URLs (common in Typebot flows)
   const validMedia = media.filter(item => {
-    // Skip items with empty/missing URLs
     if (!item.url || typeof item.url !== 'string' || item.url.trim() === '') {
       return false;
     }
     return true;
   });
 
-  // Validate media_type for remaining items
   for (let i = 0; i < validMedia.length; i++) {
     const item = validMedia[i];
 
@@ -94,7 +100,6 @@ export async function POST(request: Request) {
     }
   }
 
-  // Verify profile exists
   const profile = await prisma.profile.findUnique({
     where: {
       phone_number: phoneNumber,
@@ -108,9 +113,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Use transaction to ensure atomicity
+    // CRITICAL: Transaction ensures atomicity - if media creation fails, product creation rolls back
     const result = await prisma.$transaction(async (tx) => {
-      // Create product
       const newProduct = await tx.product.create({
         data: {
           id: uuidv4(),
@@ -122,7 +126,6 @@ export async function POST(request: Request) {
         },
       });
 
-      // Create media entries if provided
       const createdMedia = [];
       for (const mediaItem of validMedia) {
         const newMedia = await tx.media.create({
@@ -133,7 +136,6 @@ export async function POST(request: Request) {
           },
         });
 
-        // Link media to product via junction table
         await tx.productMedia.create({
           data: {
             productId: newProduct.id,
@@ -169,6 +171,9 @@ export async function POST(request: Request) {
   }
 }
 
+/**
+ * Queries products by phone_number (all from producer) or product_id (single).
+ */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const phone_number = searchParams.get("phone_number");

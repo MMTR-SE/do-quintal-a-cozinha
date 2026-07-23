@@ -7,7 +7,7 @@ interface GridCardProps {
   href: string;
   imageUrl: string;
   imageAlt: string;
-  imageHeight?: "fixed" | "square";
+  imageHeight?: "fixed" | "square" | "portrait";
   children: ReactNode;
 }
 
@@ -25,7 +25,7 @@ interface GridCardProps {
  * @param href - Link destination (e.g., "/nossas-receitas/123")
  * @param imageUrl - Image source URL
  * @param imageAlt - Image alt text for accessibility
- * @param imageHeight - Image height style: "fixed" (h-48) or "square" (aspect-square)
+ * @param imageHeight - Image height style: "fixed" (h-48), "square" (aspect-square), or "portrait" (aspect-[3/4])
  * @param children - Card content (metadata, description, etc.)
  */
 export function GridCard({
@@ -40,7 +40,11 @@ export function GridCard({
       <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-border hover:border-primary/30 overflow-hidden h-full">
         <div
           className={`relative overflow-hidden ${
-            imageHeight === "fixed" ? "h-48" : "aspect-square"
+            imageHeight === "fixed"
+              ? "h-48"
+              : imageHeight === "square"
+              ? "aspect-square"
+              : "aspect-[3/4]"
           }`}
         >
           <Image

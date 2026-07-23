@@ -1,5 +1,9 @@
 import { RecipeDifficulty } from "@prisma/client";
 
+/**
+ * Recipe type definitions for listing and detail views.
+ */
+
 export interface RecipeStep {
   step_number: number;
   instruction: string;

@@ -22,7 +22,7 @@ export function Cooking() {
           <div className="relative w-full h-[400px] rounded-lg overflow-hidden shadow-lg">
             <Image
               src="/icons/botton-espaco.webp"
-              alt="Nosso Espaço"
+              alt="Ilustração de mãos entrelaçadas formando um coração, símbolo de união entre mulheres"
               fill
               style={{ objectFit: "cover" }}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

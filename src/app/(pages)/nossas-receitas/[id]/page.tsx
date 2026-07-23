@@ -10,6 +10,9 @@ interface RecipePageProps {
   }>;
 }
 
+/**
+ * Recipe detail page showing full recipe with steps and ingredients.
+ */
 export default function RecipePage({ params }: RecipePageProps) {
   const { id } = use(params);
 

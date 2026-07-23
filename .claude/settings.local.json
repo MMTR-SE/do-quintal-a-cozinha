@@ -9,7 +9,11 @@
       "mcp__context7__get-library-docs",
       "Bash(npm run lint:*)",
       "Bash(cwebp:*)",
-      "Bash(npx prisma migrate dev:*)"
+      "Bash(npx prisma migrate dev:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run db:seed:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

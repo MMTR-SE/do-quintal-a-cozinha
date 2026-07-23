@@ -1,3 +1,9 @@
+/**
+ * CRITICAL: Singleton prevents database connection exhaustion during Next.js hot-reload.
+ * Without this, each hot-reload creates new connections until SQLite hits limit.
+ * globalThis persists across Fast Refresh, reusing the same PrismaClient instance.
+ */
+
 import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {

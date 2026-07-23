@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * Detects mobile viewport (< 768px) for conditional rendering logic.
+ * Initial false state prevents hydration mismatch.
+ */
+
 import { useState, useEffect } from "react"
 
 export const useMobile = () => {
@@ -7,16 +12,11 @@ export const useMobile = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768) // Adjust breakpoint as needed
+      setIsMobile(window.innerWidth < 768)
     }
 
-    // Set initial value
     handleResize()
-
-    // Add event listener
     window.addEventListener("resize", handleResize)
-
-    // Clean up event listener
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 

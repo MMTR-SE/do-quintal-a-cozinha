@@ -1,3 +1,7 @@
+/**
+ * Story type definitions with region and media relations.
+ */
+
 export type Region = ({
   id: string;
   name: string;

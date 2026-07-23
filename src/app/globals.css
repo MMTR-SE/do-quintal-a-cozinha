@@ -114,6 +114,9 @@
 
 
 @layer base {
+  button, [role="button"], a, select, summary, [type="button"], [type="submit"], [type="reset"] {
+    cursor: pointer;
+  }
   * {
     @apply border-border;
   }

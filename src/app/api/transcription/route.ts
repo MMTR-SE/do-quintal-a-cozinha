@@ -1,3 +1,8 @@
+/**
+ * Transcribes audio to text using Groq Whisper (whisper-large-v3-turbo).
+ * Supports literacy-inclusive product creation for rural producers.
+ */
+
 import { Groq } from "groq-sdk";
 
 const groq = new Groq({
@@ -28,6 +33,7 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
+    console.error("Groq transcription error:", error);
     return new Response(
       JSON.stringify({ error: "Failed to transcribe audio", details: error }),
       { status: 500 }

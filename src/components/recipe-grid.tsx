@@ -12,6 +12,9 @@ interface RecipeGridProps {
   onClearSearch?: () => void;
 }
 
+/**
+ * Displays recipes in a responsive grid with loading, empty, and search result states.
+ */
 export function RecipeGrid({
   recipes,
   isLoading,
@@ -21,11 +24,11 @@ export function RecipeGrid({
   return (
     <section>
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-4">
+        <h3 className="text-3xl font-bold text-foreground mb-4">
           {!!searchQuery
             ? `Resultados para "${searchQuery}"`
             : "Todas as Receitas"}
-        </h2>
+        </h3>
         <p className="text-muted-foreground text-lg">
           {searchQuery
             ? `${recipes.length} receita${
@@ -69,19 +72,19 @@ export function RecipeGrid({
         </div>
       ) : recipes.length === 0 ? (
         <div className="text-center py-16">
-          <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
+          <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6" role="img" aria-label={searchQuery ? "Ícone de lupa representando busca" : "Ícone de chapéu de chef representando receitas"}>
             {searchQuery ? (
-              <Search className="h-10 w-10 text-muted-foreground" />
+              <Search className="h-10 w-10 text-muted-foreground" aria-hidden="true" />
             ) : (
-              <ChefHat className="h-10 w-10 text-muted-foreground" />
+              <ChefHat className="h-10 w-10 text-muted-foreground" aria-hidden="true" />
             )}
           </div>
 
           {searchQuery ? (
             <>
-              <h3 className="text-xl font-semibold text-foreground mb-2">
+              <h4 className="text-xl font-semibold text-foreground mb-2">
                 Nenhuma receita encontrada
-              </h3>
+              </h4>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                 Não encontramos receitas para {`"${searchQuery}"`}. Tente buscar
                 por outros ingredientes ou categorias.
@@ -94,9 +97,9 @@ export function RecipeGrid({
             </>
           ) : (
             <>
-              <h3 className="text-xl font-semibold text-foreground mb-2">
+              <h4 className="text-xl font-semibold text-foreground mb-2">
                 Nenhuma receita disponível
-              </h3>
+              </h4>
               <p className="text-muted-foreground">
                 Não há receitas para mostrar no momento.
               </p>

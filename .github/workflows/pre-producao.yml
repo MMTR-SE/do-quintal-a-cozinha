@@ -1,9 +1,9 @@
-name: Cozinhando Pre-Produção
+name: Cozinhando a Pre-Produção
 
 on:
   push:
     branches:
-      - desenvolvimento
+      - pre-producao
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
       - name: Sincronizando repositorio
         uses: actions/checkout@v4
         with:
-          ref: desenvolvimento
+          ref: pre-producao
       - name: Preparando cache
         uses: actions/cache@v4
         with:
@@ -32,7 +32,7 @@ jobs:
           GROQ_API_KEY: "some-key"
   deploy:
     name: Servindo para testar
-    environment: Patio
+    environment: Pre-Producao
     needs: cozinhando
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +45,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd $DEV_PATH
-            git checkout desenvolvimento
-            git pull --rebase origin desenvolvimento
+            git checkout pre-producao
+            git pull --rebase novo pre-producao
             cd ../caddy
             docker compose up -d --build pre-quintal

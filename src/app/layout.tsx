@@ -6,6 +6,10 @@ import { Suspense } from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
+/**
+ * Root layout with providers, fonts, metadata, and skip-to-content link.
+ */
+
 const montserratSans = Montserrat({
   variable: "--font-montserrat-sans",
   subsets: ["latin"],
@@ -17,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Raimunda Raquel",
+  title: "Do Quintal à Cozinha",
   description:
     "Descubra produtos artesanais únicos feitos por mulheres artesãs do interior de Sergipe",
 };
@@ -28,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>

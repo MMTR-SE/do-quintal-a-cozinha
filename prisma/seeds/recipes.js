@@ -7,7 +7,7 @@ const recipes = [
     title: "Macasado",
     description:
       "Receita caseira de macasado docinho, assado na folha de bananeira",
-    image: "/receitas/macasado-assado.jpeg",
+    image: "/receitas/macasado-assado.webp",
     preparation_time_in_minutes: 90,
     cooking_time_in_minutes: 40,
     number_of_servings: 40,
@@ -32,7 +32,7 @@ const recipes = [
     title: "Pé de Moleque",
     description:
       "Receita caseira de pé de moleque fofinho, assado na folha de bananeira e taxo de metal",
-    image: "/receitas/pe-de-moleque.jpeg",
+    image: "/receitas/pe-de-moleque.webp",
     preparation_time_in_minutes: 50,
     cooking_time_in_minutes: 20,
     number_of_servings: 40,
