@@ -9,7 +9,7 @@ interface StoryDetails {
   isLoading: boolean;
 }
 
-export default function StoryDetail({ story, isLoading }: StoryDetails) {
+export default function StoryDetail({ story }: StoryDetails) {
   const [imgSrc, setImgSrc] = useState(story.media?.[0]?.media?.url || "/placeholder.png");
 
   return (

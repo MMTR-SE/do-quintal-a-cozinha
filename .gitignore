@@ -57,6 +57,7 @@ next-env.d.ts
 /prisma/dev.db
 /prisma/dev.db-journal
 /prisma/migrations
+dev.db
 
 # Strapi CMS
 /cms/.env
@@ -73,3 +74,13 @@ next-env.d.ts
 *.http
 *storybook.log
 test-whatsapp-api.js
+
+# Strapi
+/cms/.tmp
+/cms/.cache
+/cms/.strapi
+/cms/dist
+/cms/build
+/cms/node_modules
+/cms/.env
+/cms/.strapi-updater.json
