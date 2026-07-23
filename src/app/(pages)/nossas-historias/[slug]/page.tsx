@@ -18,8 +18,9 @@ export default function StoryPage({ params }: StoryPageProps) {
   const { data: story, isLoading } = useGetStoryBySlug({ slug });
   
   if (!story) {
-     return notFound();
-    }
+    if (isLoading) return <p>Carregando...</p>;
+    return notFound();
+  }
 
   return <StoryDetail story={story} isLoading={isLoading} />;
 }

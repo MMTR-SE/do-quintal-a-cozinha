@@ -41,7 +41,17 @@
       }
     },
     "categoria": {
-      "type": "string",
+      "type": "enumeration",
+      "enum": [
+        "agricola",
+        "hortalicas",
+        "frutas",
+        "graos",
+        "processado",
+        "processados",
+        "artesanato",
+        "outros"
+      ],
       "pluginOptions": {
         "i18n": {
           "localized": true

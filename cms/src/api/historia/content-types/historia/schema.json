@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "historias",
+  "info": {
+    "singularName": "historia",
+    "pluralName": "historias",
+    "displayName": "História",
+    "description": "Histórias das mulheres e dos territórios"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "titulo": { "type": "string", "required": true },
+    "nome": { "type": "string", "required": true },
+    "descricao": { "type": "text" },
+    "slug": { "type": "uid", "targetField": "nome", "required": true },
+    "conteudo": { "type": "richtext" },
+    "regiao": { "type": "string" },
+    "imagem": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    }
+  }
+}

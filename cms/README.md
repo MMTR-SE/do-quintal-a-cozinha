@@ -43,37 +43,33 @@ Para consumir a API do Next.js:
 
 ## 📋 Sugestões de Content Types
 
-Para o projeto MMTR-SE, considere criar:
+Para o projeto MMTR-SE, os seguintes tipos já estão configurados:
 
-### 1. Produto (já integrado com /nossa-producao)
-- nome (text) - Nome do produto
+### 1. Produto (integrado com /nossa-producao)
+- Nome (text) - Nome do produto
 - descricao (text - long) - Descrição do produto
 - preco (number - decimal) - Preço do produto
-- categoria (enumeration) - Categorias: hortalicas, frutas, graos, processados, artesanato, outros
+- categoria (enumeration) - Categorias: agricola, hortalicas, frutas, graos, processado, artesanato, outros
 - produtora (text) - Nome da produtora
-- imagem (media - single) - Foto do produto
+- imagem (media - multiple) - Fotos do produto
+- telefone (text) - WhatsApp da produtora
 
-### 2. Produtora
-- Nome (text)
-- Biografia (richtext)
-- Foto (media)
-- Localização (text)
-- Contato (email/phone)
+### 2. Receita (integrada com /nossas-receitas)
+- titulo, descricao (text)
+- tempo_preparo, tempo_cozimento, porcoes (number)
+- dificuldade (facil, intermediaria ou dificil)
+- ingredientes (JSON com uma lista de textos)
+- passos (componente repetível com `numero` e `instrucao`)
+- imagem (media - multiple)
 
-### 3. Receita
-- Título (text)
-- Ingredientes (richtext)
-- Modo de Preparo (richtext)
-- Tempo de Preparo (number)
-- Imagem (media)
-- Produtos Relacionados (relation)
+### 3. História (integrada com /nossas-historias)
+- titulo, nome, descricao (text)
+- slug (UID)
+- conteudo (richtext)
+- regiao (text)
+- imagem (media - multiple)
 
-### 4. Notícia/Blog
-- Título (text)
-- Conteúdo (richtext)
-- Imagem de Capa (media)
-- Data de Publicação (date)
-- Autor (text)
+Publique os registros no Content Manager para que apareçam no site.
 
 ## 🔗 Integração com Next.js
 

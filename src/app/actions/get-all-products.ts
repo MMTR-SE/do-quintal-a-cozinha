@@ -1,7 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getCollection } from "@/lib/strapi";
+import {
+  getCollection,
+  getStrapiField,
+  getStrapiMedia,
+  getStrapiMediaItems,
+  StrapiEntity,
+} from "@/lib/strapi";
 import { Category } from "@prisma/client";
 
 interface Options {
@@ -38,38 +44,30 @@ async function getProductsFromStrapi() {
       return [];
     }
 
-    // Debug: log da estrutura do primeiro produto
-    if (strapiProducts.length > 0) {
-      console.log('Estrutura do produto Strapi:', JSON.stringify(strapiProducts[0], null, 2));
-    }
-
-    return strapiProducts.map((item: any) => {
-      console.log('Item do Strapi:', item);
-      
+    return strapiProducts.map((item: StrapiEntity) => {
       // Mapear categoria do Strapi para o enum Category do Prisma
-      let category: Category = 'OUTROS';
-      const categoriaValue = item.categoria || item.attributes?.categoria;
+      let category: Category = 'AGRICOLA';
+      const categoriaValue = getStrapiField<string>(item, 'categoria', 'Categoria');
       if (categoriaValue) {
         const categoryMap: Record<string, Category> = {
-          'hortalicas': 'HORTALICAS',
-          'frutas': 'FRUTAS',
-          'graos': 'GRAOS',
-          'processados': 'PROCESSADOS',
+          'agricola': 'AGRICOLA',
+          'hortalicas': 'AGRICOLA',
+          'frutas': 'AGRICOLA',
+          'graos': 'AGRICOLA',
+          'processados': 'PROCESSADO',
+          'processado': 'PROCESSADO',
           'artesanato': 'ARTESANATO',
-          'outros': 'OUTROS'
+          'outros': 'AGRICOLA'
         };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'OUTROS';
+        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
       }
 
-      // Extrair campos (Strapi v5 coloca diretamente no objeto)
-      // NOTA: Strapi pode criar campos com primeira letra maiúscula
-      const nome = item.Nome || item.nome || item.attributes?.nome || item.attributes?.Nome;
-      const descricao = item.descricao || item.attributes?.descricao;
-      const preco = item.preco || item.attributes?.preco;
-      const produtora = item.Produtora || item.produtora || item.attributes?.produtora || item.attributes?.Produtora;
-      const imagem = item.Imagem || item.imagem || item.attributes?.imagem || item.attributes?.Imagem;
-
-      console.log('Campos extraídos:', { nome, descricao, preco, produtora, categoria: categoriaValue });
+      const nome = getStrapiField<string>(item, 'Nome', 'nome');
+      const descricao = getStrapiField<any>(item, 'descricao');
+      const preco = getStrapiField<number>(item, 'preco');
+      const produtora = getStrapiField<string>(item, 'Produtora', 'produtora');
+      const telefone = getStrapiField<string>(item, 'telefone', 'Telefone');
+      const imagens = getStrapiMediaItems(getStrapiField(item, 'Imagem', 'imagem'));
 
       // Converter Rich Text para string simples
       let descriptionText = null;
@@ -91,21 +89,27 @@ async function getProductsFromStrapi() {
         id: `strapi-${item.documentId || item.id}`,
         product_name: nome || 'Produto sem nome',
         description: descriptionText,
-        price: preco || null,
+        price: preco ?? null,
         category,
         profile: {
           name: produtora || 'MMTR-SE',
           social_name: null,
           instagram: null,
+          phone_number: telefone,
         },
-        media: imagem?.url ? [{
-          media: {
-            url: `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imagem.url}`,
-            media_type: 'IMAGE' as const
-          },
-          mediaId: `strapi-media-${item.documentId || item.id}`,
-          productId: `strapi-${item.documentId || item.id}`
-        }] : []
+        media: imagens.flatMap((imagem, index) => {
+          const url = getStrapiMedia(imagem.url);
+          if (!url) return [];
+
+          return [{
+            media: {
+              url,
+              media_type: 'IMAGE' as const
+            },
+            mediaId: `strapi-media-${item.documentId || item.id}-${index}`,
+            productId: `strapi-${item.documentId || item.id}`
+          }];
+        })
       };
     });
   } catch (error) {

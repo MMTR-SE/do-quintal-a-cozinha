@@ -54,7 +54,7 @@ export function StoryCard({ stories, isLoading, searchQuery }: StoryCardProps) {
                 </p>
 
                 <div className="flex items-center justify-between pt-2">
-                  <Link href={`/nossa-historia/${story.id}`}>
+                  <Link href={`/nossas-historias/${story.slug}`}>
                     <span className="text-primary font-medium hover:underline">
                       Leia mais
                     </span>
