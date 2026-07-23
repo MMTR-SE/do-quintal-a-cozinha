@@ -47,6 +47,22 @@ const withPWA = withPWAInit({
   },
 });
 
+const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+const strapiImagePattern = (() => {
+  try {
+    if (!strapiUrl) return null;
+    const url = new URL(strapiUrl);
+    return {
+      protocol: url.protocol.replace(":", "") as "http" | "https",
+      hostname: url.hostname,
+      port: url.port,
+      pathname: "/uploads/**",
+    };
+  } catch {
+    return null;
+  }
+})();
+
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -106,6 +122,7 @@ const nextConfig: NextConfig = {
   ],
   images: {
     remotePatterns: [
+      ...(strapiImagePattern ? [strapiImagePattern] : []),
       {
         protocol: "https",
         hostname: "typebot.luisotee.com",

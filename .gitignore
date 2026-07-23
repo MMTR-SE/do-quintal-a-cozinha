@@ -81,6 +81,7 @@ dev.db
 
 # Strapi CMS
 /cms/.env
+/cms/.env.local
 /cms/.tmp
 /cms/build
 /cms/dist
