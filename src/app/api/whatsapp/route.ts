@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSingle, getStrapiField } from "@/lib/strapi";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -23,6 +24,19 @@ export async function GET(request: NextRequest) {
     let productName = "";
 
     if (productId) {
+      if (productId.startsWith("strapi-")) {
+        const documentId = productId.slice("strapi-".length);
+        const strapiProduct = await getSingle("produtos", documentId, { populate: "*" });
+        const phone = getStrapiField<string>(strapiProduct, "telefone", "Telefone");
+        const name = getStrapiField<string>(strapiProduct, "Nome", "nome");
+
+        if (!strapiProduct || !phone) {
+          return NextResponse.json({ error: "Phone number not found" }, { status: 404 });
+        }
+
+        phoneNumber = phone;
+        productName = name || "";
+      } else {
       const product = await prisma.product.findUnique({
         where: { id: productId },
         select: {
@@ -44,6 +58,7 @@ export async function GET(request: NextRequest) {
 
       phoneNumber = product.profile.phone_number;
       productName = product.product_name;
+      }
     }
     else if (profileId) {
       const profile = await prisma.profile.findUnique({

@@ -1,13 +1,25 @@
 import type { NextConfig } from "next";
 
+const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+const strapiImagePattern = (() => {
+  try {
+    if (!strapiUrl) return null;
+    const url = new URL(strapiUrl);
+    return {
+      protocol: url.protocol.replace(":", "") as "http" | "https",
+      hostname: url.hostname,
+      port: url.port,
+      pathname: "/uploads/**",
+    };
+  } catch {
+    return null;
+  }
+})();
+
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-  // Standalone mode for Docker deployment (reduces image size ~50%)
   output: "standalone",
-
-  // Trailing slashes for consistent SEO and social sharing URLs
   trailingSlash: true,
-
-  // CORS headers for external API access (Typebot, WhatsApp integration)
   headers: async () => [
     {
       source: "/api/:path*",
@@ -27,10 +39,9 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
-
-  // Whitelisted domains for Next.js Image optimization
   images: {
     remotePatterns: [
+      ...(strapiImagePattern ? [strapiImagePattern] : []),
       {
         protocol: "https",
         hostname: "typebot.luisotee.com",

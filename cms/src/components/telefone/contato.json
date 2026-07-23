@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_telefone_contatoes",
+  "info": {
+    "displayName": "contato"
+  },
+  "options": {},
+  "attributes": {
+    "numero": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

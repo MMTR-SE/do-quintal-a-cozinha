@@ -7,6 +7,7 @@ export interface Profile {
   name: string;
   social_name: string | null;
   instagram: string | null;
+  phone_number?: string | null;
 }
 
 /**
@@ -39,5 +40,5 @@ export interface Product {
  * Detailed product information for individual product pages
  */
 export interface ProductWithDetail extends Product {
-  profile_id: string;
+  profile_id?: string;
 }
