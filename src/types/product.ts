@@ -7,6 +7,7 @@ export interface Profile {
   name: string;
   social_name: string | null;
   instagram: string | null;
+  phone_number?: string | null;
 }
 
 /**

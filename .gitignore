@@ -36,6 +36,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env
+.env.local
 
 # vercel
 .vercel
@@ -60,6 +61,7 @@ dev.db
 
 # Strapi CMS
 /cms/.env
+/cms/.env.local
 /cms/.tmp
 /cms/build
 /cms/dist

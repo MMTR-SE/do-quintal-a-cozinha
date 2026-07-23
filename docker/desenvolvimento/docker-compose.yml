@@ -13,7 +13,33 @@ services:
     environment:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true  # Enable polling for hot reload in Docker
+      - NEXT_PUBLIC_STRAPI_URL=http://cms:1337
+    depends_on:
+      - cms
     command: npm run dev
+    restart: unless-stopped
+    networks:
+      - app_network
+
+  cms:
+    build:
+      context: $PWD
+      dockerfile: docker/cms/Dockerfile
+    ports:
+      - "1337:1337"
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 1337
+      APP_KEYS: ${CMS_APP_KEYS:-dev-key-1,dev-key-2}
+      API_TOKEN_SALT: ${CMS_API_TOKEN_SALT:-dev-api-token-salt}
+      ADMIN_JWT_SECRET: ${CMS_ADMIN_JWT_SECRET:-dev-admin-jwt-secret}
+      TRANSFER_TOKEN_SALT: ${CMS_TRANSFER_TOKEN_SALT:-dev-transfer-token-salt}
+      JWT_SECRET: ${CMS_JWT_SECRET:-dev-jwt-secret}
+      ENCRYPTION_KEY: ${CMS_ENCRYPTION_KEY:-dev-encryption-key}
+    volumes:
+      - cms_data:/app/.tmp
+      - cms_uploads:/app/public/uploads
     restart: unless-stopped
     networks:
       - app_network
@@ -21,3 +47,7 @@ services:
 networks:
   app_network:
     driver: bridge
+
+volumes:
+  cms_data:
+  cms_uploads:

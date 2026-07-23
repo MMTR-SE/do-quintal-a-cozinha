@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "receitas",
+  "info": {
+    "singularName": "receita",
+    "pluralName": "receitas",
+    "displayName": "Receita",
+    "description": "Receitas do movimento"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "titulo": { "type": "string", "required": true },
+    "descricao": { "type": "text" },
+    "tempo_preparo": { "type": "integer", "default": 0 },
+    "tempo_cozimento": { "type": "integer", "default": 0 },
+    "porcoes": { "type": "integer", "default": 1 },
+    "dificuldade": {
+      "type": "enumeration",
+      "enum": ["facil", "intermediaria", "dificil"],
+      "default": "facil"
+    },
+    "ingredientes": { "type": "json" },
+    "passos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "receita.passo"
+    },
+    "imagem": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    }
+  }
+}

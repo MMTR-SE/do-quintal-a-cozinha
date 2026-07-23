@@ -10,6 +10,13 @@
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
 
+export type StrapiEntity = {
+  id?: string | number;
+  documentId?: string;
+  attributes?: Record<string, any>;
+  [key: string]: any;
+};
+
 interface FetchAPIOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   body?: any;
@@ -112,7 +119,31 @@ export function getStrapiMedia(url: string | null | undefined): string | null {
   }
   
   // Caso contrário, adiciona a URL base do Strapi
-  return `${STRAPI_URL}${url}`;
+  return `${STRAPI_URL.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
+}
+
+/** Reads a field from both Strapi v4 (attributes) and Strapi v5 (flat) entities. */
+export function getStrapiField<T = any>(entity: StrapiEntity, ...names: string[]): T | null {
+  if (!entity) return null;
+
+  for (const name of names) {
+    const value = entity[name] ?? entity.attributes?.[name];
+    if (value !== undefined && value !== null) return value as T;
+  }
+
+  return null;
+}
+
+/** Returns media entries from Strapi v4/v5 responses, supporting single and multiple media. */
+export function getStrapiMediaItems(value: any): Array<{ url?: string; [key: string]: any }> {
+  if (!value) return [];
+
+  const rawItems = value.data ?? value;
+  const items = Array.isArray(rawItems) ? rawItems : [rawItems];
+
+  return items
+    .map((item) => item?.attributes ?? item)
+    .filter((item) => item && typeof item === 'object');
 }
 
 /**

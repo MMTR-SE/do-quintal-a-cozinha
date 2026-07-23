@@ -16,6 +16,10 @@ interface StoryPageProps {
 export default function StoryPage({ params }: StoryPageProps) {
   const { slug } = use(params);
   const { data: story, isLoading } = useGetStoryBySlug({ slug });
- 
+  if (!story) {
+    if (isLoading) return <p>Carregando...</p>;
+    return notFound();
+  }
+
   return <StoryDetail story={story} isLoading={isLoading} />;
 }

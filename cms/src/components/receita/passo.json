@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_receita_passos",
+  "info": {
+    "displayName": "Passo da receita"
+  },
+  "options": {},
+  "attributes": {
+    "numero": {
+      "type": "integer",
+      "required": true
+    },
+    "instrucao": {
+      "type": "text",
+      "required": true
+    }
+  }
+}
