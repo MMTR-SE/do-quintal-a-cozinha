@@ -28,6 +28,8 @@ jobs:
         run: |
           npm install --omit=dev
           npm run build --if-present
+          npm ci --prefix cms
+          npm run build --prefix cms
         env:
           GROQ_API_KEY: "some-key"
   deploy:
@@ -47,5 +49,30 @@ jobs:
             cd $DEV_PATH
             git checkout pre-producao
             git pull --rebase novo pre-producao
+
+            touch .env
+            ensure_secret() {
+              key="$1"
+              if ! grep -q "^${key}=" .env; then
+                printf '%s=%s\n' "$key" "$(openssl rand -hex 32)" >> .env
+              fi
+            }
+            if ! grep -q '^CMS_APP_KEYS=' .env; then
+              printf 'CMS_APP_KEYS=%s,%s\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 32)" >> .env
+            fi
+            ensure_secret CMS_API_TOKEN_SALT
+            ensure_secret CMS_ADMIN_JWT_SECRET
+            ensure_secret CMS_TRANSFER_TOKEN_SALT
+            ensure_secret CMS_JWT_SECRET
+            ensure_secret CMS_ENCRYPTION_KEY
+
             cd ../caddy
+            if [ ! -f Caddyfile ]; then
+              echo "Caddyfile não encontrado em $(pwd)" >&2
+              exit 1
+            fi
+            if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
+              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' >> Caddyfile
+            fi
             docker compose up -d --build pre-quintal
+            docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile

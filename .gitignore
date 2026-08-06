@@ -36,6 +36,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env
+.env.local
 
 # vercel
 .vercel
@@ -57,6 +58,18 @@ next-env.d.ts
 /prisma/dev.db-journal
 /prisma/migrations
 dev.db
+
+# Strapi CMS
+/cms/.env
+/cms/.env.local
+/cms/.tmp
+/cms/build
+/cms/dist
+/cms/.cache
+/cms/node_modules
+/cms/.strapi
+/cms/.strapi-updater.json
+/cms/public/uploads
 
 *.http
 *storybook.log

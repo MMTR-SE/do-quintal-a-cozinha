@@ -4,8 +4,14 @@ services:
     build:
       context: $DEV_PATH
       dockerfile: $DEV_PATH/docker/pre-producao/Dockerfile
+      args:
+        NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
     env_file:
       - $DEV_PATH/.env
+    environment:
+      NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
+    depends_on:
+      - pre-quintal-cms
     ports:
       - "82:3000"
     restart: unless-stopped
@@ -13,6 +19,29 @@ services:
       - app_network
     volumes:
       - $DEV_PATH/prisma:/app/prisma
+
+  pre-quintal-cms:
+    container_name: pre-quintal-cms
+    build:
+      context: $DEV_PATH
+      dockerfile: $DEV_PATH/docker/cms/Dockerfile
+    env_file:
+      - $DEV_PATH/.env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 1337
+      PUBLIC_URL: https://conteudos.mulheresrurais.com.br
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: .tmp/data.db
+    ports:
+      - "127.0.0.1:1337:1337"
+    restart: unless-stopped
+    networks:
+      - app_network
+    volumes:
+      - $DEV_PATH/cms/.tmp:/app/.tmp
+      - $DEV_PATH/cms/public/uploads:/app/public/uploads
 
 networks:
   app_network:

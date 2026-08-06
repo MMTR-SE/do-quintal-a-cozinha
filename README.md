@@ -89,6 +89,16 @@ O site estará disponível em: http://localhost:3001
 
 > **Observação:** O Docker está configurado com hot-reload, ou seja, as alterações no código serão automaticamente refletidas no site.
 
+## 📝 CMS - Gerenciamento de Conteúdo
+
+O projeto utiliza Strapi para gerenciar produtos, receitas e histórias.
+
+```bash
+npm run cms:dev
+```
+
+Acesse `http://localhost:1337/admin`, crie e publique os registros nos content types `Produto`, `Receita` e `História`. Para a configuração dos campos, permissões e integração com o Next.js, consulte [`cms/README.md`](cms/README.md) e [`cms/INTEGRATION.md`](cms/INTEGRATION.md).
+
 
 ## Como funciona
 
@@ -141,4 +151,3 @@ Agradecemos a todas as pessoas que contribuíram para este projeto:
 - [henmohr](https://github.com/henmohr)
 - Cris
 - telemias
-
