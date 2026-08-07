@@ -49,4 +49,11 @@ jobs:
             git checkout pre-producao
             git pull --rebase novo pre-producao
             cd ../caddy
+            if [ ! -f Caddyfile ]; then
+              echo "Caddyfile não encontrado em $(pwd)" >&2
+              exit 1
+            fi
+            if ! grep -qF 'conteudo.{$DOMAIN}' Caddyfile; then
+              printf '\nconteudo.mulheresrurais-se.com.br,\nconteudo.{$DOMAIN} {\n\treverse_proxy pre-quintal-cms:1337\n}\n' >> Caddyfile
+            fi
             docker compose up -d --build pre-quintal
