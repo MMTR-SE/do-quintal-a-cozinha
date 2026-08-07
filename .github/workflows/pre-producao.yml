@@ -71,8 +71,8 @@ jobs:
               echo "Caddyfile não encontrado em $(pwd)" >&2
               exit 1
             fi
-            if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
-              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' >> Caddyfile
+            if ! grep -qF 'conteudo.{$DOMAIN}' Caddyfile; then
+              printf '\nconteudo.mulheresrurais-se.com.br,\nconteudo.{$DOMAIN} {\n\treverse_proxy pre-quintal-cms:1337\n}\n' >> Caddyfile
             fi
             docker compose up -d --build pre-quintal
             docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile

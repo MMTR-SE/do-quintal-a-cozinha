@@ -5,11 +5,11 @@ services:
       context: $DEV_PATH
       dockerfile: $DEV_PATH/docker/pre-producao/Dockerfile
       args:
-        NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
+        NEXT_PUBLIC_STRAPI_URL: https://conteudo.mulheresrurais.com.br
     env_file:
       - $DEV_PATH/.env
     environment:
-      NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
+      NEXT_PUBLIC_STRAPI_URL: https://conteudo.mulheresrurais.com.br
     depends_on:
       - pre-quintal-cms
     ports:
@@ -31,7 +31,7 @@ services:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 1337
-      PUBLIC_URL: https://conteudos.mulheresrurais.com.br
+      PUBLIC_URL: https://conteudo.mulheresrurais.com.br
       DATABASE_CLIENT: sqlite
       DATABASE_FILENAME: .tmp/data.db
     ports:
