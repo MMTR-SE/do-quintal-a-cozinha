@@ -101,7 +101,6 @@ jobs:
           script: |
             set -eu
 
-            # Falha com mensagem clara se DEV_PATH nao chegar (ou vier vazio).
             : "${DEV_PATH:?DEV_PATH nao definido — configure vars.DEV_PATH no environment Pre-Producao}"
 
             cd "$DEV_PATH"
