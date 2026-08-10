@@ -72,7 +72,7 @@ jobs:
               exit 1
             fi
             if ! grep -qF 'conteudo.{$DOMAIN}' Caddyfile; then
-              printf '\nconteudos.mulheresrurais.com.br,\nconteudo.{$DOMAIN} {\n\treverse_proxy pre-quintal-cms:1337\n}\n' >> Caddyfile
+              printf '\nconteudos.mulheresrurais.com.br,\nconteudos.{$DOMAIN} {\n\treverse_proxy pre-quintal-cms:1337\n}\n' >> Caddyfile
             fi
             docker compose up -d --build pre-quintal
             docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
