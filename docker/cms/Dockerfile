@@ -16,6 +16,9 @@ WORKDIR /app
 
 COPY --from=build /app ./
 
+LABEL org.opencontainers.image.source="https://github.com/MMTR-SE/do-quintal-a-cozinha"
+LABEL org.opencontainers.image.description="Strapi CMS do projeto Do Quintal à Cozinha"
+
 EXPOSE 1337
 
 CMD ["npm", "run", "start"]
