@@ -14,7 +14,7 @@ services:
       - $DEV_PATH/.env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/${POSTGRES_DB:-quintal}?schema=public
-    depends_on:
+   depends_on:
       - pre-quintal-cms
     ports:
       - "82:3000"

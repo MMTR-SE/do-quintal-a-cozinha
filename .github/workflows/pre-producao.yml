@@ -90,17 +90,12 @@ jobs:
         env:
           GHCR_USERNAME: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Caminho do checkout na VPS. Era uma variavel do shell da VPS antiga;
-          # agora vem do environment Pre-Producao (vars.DEV_PATH) e e repassada
-          # ao shell remoto pela lista `envs` abaixo.
           DEV_PATH: ${{ vars.DEV_PATH }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          # O build da imagem na VPS passava de 10 min; o padrao do passo
-          # cortava o deploy no meio.
           command_timeout: 30m
           envs: GHCR_USERNAME,GHCR_TOKEN,DEV_PATH
           script: |
@@ -220,43 +215,10 @@ jobs:
             printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
             trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
 
-            # Banco do Typebot dentro do Postgres da pre-producao (idempotente).
-            docker exec -i pre-quintal-postgres sh -s <<'EOSQL'
-            if psql -U "$POSTGRES_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='typebot'" | grep -q 1; then
-              echo "Banco typebot ja existe."
-            else
-              psql -U "$POSTGRES_USER" -d postgres -c "CREATE DATABASE typebot OWNER $POSTGRES_USER;"
-              echo "Banco typebot criado."
-            fi
-            EOSQL
-
             docker compose pull pre-quintal-cms
             docker compose up -d --no-build pre-quintal-cms
-            # A imagem da aplicacao vem pronta do GHCR (construida no runner).
-            docker compose pull pre-quintal
-            docker compose up -d --no-build --no-deps pre-quintal
-
-            # Typebot de teste + Mailpit. Usam as mesmas imagens do Typebot de
-            # producao (que ja estao na VPS) e os limites de memoria definidos no
-            # compose para nao derrubarem o Caddy nem o Typebot de producao.
-            echo "Memoria antes de subir o Typebot de teste:"; free -m || true
-            docker compose up -d --no-build \
-              pre-quintal-mailpit \
-              pre-quintal-typebot-redis \
-              pre-quintal-typebot-builder \
-              pre-quintal-typebot-viewer
-
-            # Só recarrega o Caddy depois de validar: um Caddyfile inválido
-            # derrubaria todos os sites da VPS. Se estiver inválido, volta o
-            # arquivo anterior (o Caddy segue com a config que já está em memória).
-            if docker compose exec -T caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile; then
-              docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
-            else
-              echo "Caddyfile inválido: restaurando a versão anterior." >&2
-              cp /tmp/Caddyfile.do-quintal.bak Caddyfile
-              exit 1
-            fi
-            echo "Memoria depois de subir o Typebot de teste:"; free -m || true
+            docker compose up -d --build --no-deps pre-quintal
+            docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
 
       - name: Verificando a publicação
         run: |
@@ -270,19 +232,3 @@ jobs:
           done
           echo "A publicação não respondeu via HTTPS." >&2
           exit 1
-
-      - name: Conferindo CMS e Typebot de pré-produção (informativo)
-        # Não derruba o deploy: o site e o CMS antigos já estão no ar e o Typebot
-        # pode ainda estar emitindo o certificado do domínio novo.
-        continue-on-error: true
-        run: |
-          for url in \
-            https://conteudos-dev.mulheresrurais.com.br/_health \
-            https://typebot-dev.mulheresrurais.com.br/ \
-            https://bot-dev.mulheresrurais.com.br/ \
-            https://typebot-dev.mulheresrurais.com.br/mailpit/
-          do
-            code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
-              --location --max-time 20 "$url" || true)"
-            echo "${url} -> HTTP ${code:-sem resposta}"
-          done
