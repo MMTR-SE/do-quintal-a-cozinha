@@ -83,6 +83,16 @@ jobs:
             set -eu
 
             cd $DEV_PATH
+
+            available_kb="$(df --output=avail / | tail -n 1 | tr -d ' ')"
+            if [ "$available_kb" -lt 5242880 ]; then
+              echo "Pouco espaço em disco; removendo apenas caches e imagens Docker sem uso."
+              df -h /
+              docker builder prune --all --force
+              docker image prune --all --force
+              df -h /
+            fi
+
             git checkout pre-producao
 
             # A VPS tinha uma alteracao manual neste arquivo, impedindo o pull.
