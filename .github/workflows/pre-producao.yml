@@ -134,7 +134,8 @@ jobs:
               exit 1
             fi
             if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
-              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' >> Caddyfile
+              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
+                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
             fi
 
             printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
