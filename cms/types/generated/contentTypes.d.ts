@@ -484,13 +484,8 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
     categoria: Schema.Attribute.Enumeration<
       [
         'agricola',
-        'hortalicas',
-        'frutas',
-        'graos',
         'processado',
-        'processados',
         'artesanato',
-        'outros',
       ]
     > &
       Schema.Attribute.Required &
