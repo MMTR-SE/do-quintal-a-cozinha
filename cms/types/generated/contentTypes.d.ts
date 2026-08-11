@@ -649,6 +649,46 @@ export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
+  collectionName: 'receitas';
+  info: {
+    description: 'Receitas do movimento';
+    displayName: 'Receita';
+    pluralName: 'receitas';
+    singularName: 'receita';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    descricao: Schema.Attribute.Text;
+    dificuldade: Schema.Attribute.Enumeration<
+      ['facil', 'intermediaria', 'dificil']
+    > &
+      Schema.Attribute.DefaultTo<'facil'>;
+    imagem: Schema.Attribute.Media<'images', true>;
+    ingredientes: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::receita.receita'
+    > &
+      Schema.Attribute.Private;
+    passos: Schema.Attribute.Component<'receita.passo', true>;
+    porcoes: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<1>;
+    publishedAt: Schema.Attribute.DateTime;
+    tempo_cozimento: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    tempo_preparo: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    titulo: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';

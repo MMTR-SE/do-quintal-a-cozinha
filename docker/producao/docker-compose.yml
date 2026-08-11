@@ -7,14 +7,8 @@ services:
     build:
       context: $PROD_PATH
       dockerfile: $PROD_PATH/docker/producao/Dockerfile
-    # Todo o ambiente da aplicacao vem deste arquivo: e a unica fonte de
-    # verdade (DATABASE_URL, API_KEY, STRAPI_API_TOKEN, NEXT_PUBLIC_STRAPI_URL,
-    # CMS_*). Nao repetir essas variaveis em `environment:` -- variavel
-    # interpolada cujo valor nao esteja no .env do projeto chega VAZIA e
-    # sobrepoe o que veio do env_file.
     env_file:
       - $PROD_PATH/.env
-
     ports:
       - "83:3000"
     restart: unless-stopped
