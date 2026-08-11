@@ -4,8 +4,12 @@ services:
     build:
       context: $PROD_PATH
       dockerfile: $PROD_PATH/docker/producao/Dockerfile
+      args:
+        NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
     env_file:
       - $PROD_PATH/.env
+    environment:
+      NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
     ports:
       - "83:3000"
     restart: unless-stopped

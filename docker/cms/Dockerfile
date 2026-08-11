@@ -1,11 +1,23 @@
-FROM node:22-alpine
+FROM node:22-bookworm-slim AS build
 
 WORKDIR /app
 
 COPY cms/package*.json ./
-RUN npm install --omit=dev
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 COPY cms/ ./
+RUN npm run build
+RUN npm prune --omit=dev
+
+FROM node:22-bookworm-slim AS runtime
+
+ENV NODE_ENV=production
+WORKDIR /app
+
+COPY --from=build /app ./
+
+LABEL org.opencontainers.image.source="https://github.com/MMTR-SE/do-quintal-a-cozinha"
+LABEL org.opencontainers.image.description="Strapi CMS do projeto Do Quintal à Cozinha"
 
 EXPOSE 1337
 

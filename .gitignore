@@ -67,8 +67,8 @@ dev.db
 /cms/dist
 /cms/.cache
 /cms/node_modules
-/cms/package-lock.json
 /cms/.strapi
+/cms/.strapi-updater.json
 /cms/public/uploads
 
 *.http
