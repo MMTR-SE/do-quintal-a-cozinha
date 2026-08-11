@@ -67,20 +67,10 @@ dev.db
 /cms/dist
 /cms/.cache
 /cms/node_modules
-/cms/package-lock.json
 /cms/.strapi
+/cms/.strapi-updater.json
 /cms/public/uploads
 
 *.http
 *storybook.log
 test-whatsapp-api.js
-
-# Strapi
-/cms/.tmp
-/cms/.cache
-/cms/.strapi
-/cms/dist
-/cms/build
-/cms/node_modules
-/cms/.env
-/cms/.strapi-updater.json
