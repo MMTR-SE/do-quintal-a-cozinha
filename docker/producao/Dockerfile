@@ -12,6 +12,12 @@ RUN npm ci --omit=dev
 
 FROM base AS builder
 WORKDIR /app
+
+# NEXT_PUBLIC_* values are compiled into the Next.js build. Docker Compose
+# passes this value from the production environment file.
+ARG NEXT_PUBLIC_STRAPI_URL
+ENV NEXT_PUBLIC_STRAPI_URL=$NEXT_PUBLIC_STRAPI_URL
+
 COPY --from=deps /usr/bin/dumb-init /usr/bin/dumb-init
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

@@ -4,8 +4,12 @@ services:
     build:
       context: $PROD_PATH
       dockerfile: $PROD_PATH/docker/producao/Dockerfile
+      args:
+        NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
     env_file:
       - $PROD_PATH/.env
+    environment:
+      NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
     ports:
       - "83:3000"
     restart: unless-stopped

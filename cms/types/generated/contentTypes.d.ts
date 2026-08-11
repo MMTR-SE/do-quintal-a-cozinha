@@ -430,6 +430,41 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiHistoriaHistoria extends Struct.CollectionTypeSchema {
+  collectionName: 'historias';
+  info: {
+    description: 'Hist\u00F3rias das mulheres e dos territ\u00F3rios';
+    displayName: 'Hist\u00F3ria';
+    pluralName: 'historias';
+    singularName: 'historia';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    conteudo: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    descricao: Schema.Attribute.Text;
+    imagem: Schema.Attribute.Media<'images', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::historia.historia'
+    > &
+      Schema.Attribute.Private;
+    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    regiao: Schema.Attribute.String;
+    slug: Schema.Attribute.UID<'nome'> & Schema.Attribute.Required;
+    titulo: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
   collectionName: 'produtos';
   info: {
@@ -446,7 +481,13 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    categoria: Schema.Attribute.String &
+    categoria: Schema.Attribute.Enumeration<
+      [
+        'agricola',
+        'processado',
+        'artesanato',
+      ]
+    > &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -502,6 +543,46 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
+  collectionName: 'receitas';
+  info: {
+    description: 'Receitas do movimento';
+    displayName: 'Receita';
+    pluralName: 'receitas';
+    singularName: 'receita';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    descricao: Schema.Attribute.Text;
+    dificuldade: Schema.Attribute.Enumeration<
+      ['facil', 'intermediaria', 'dificil']
+    > &
+      Schema.Attribute.DefaultTo<'facil'>;
+    imagem: Schema.Attribute.Media<'images', true>;
+    ingredientes: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::receita.receita'
+    > &
+      Schema.Attribute.Private;
+    passos: Schema.Attribute.Component<'receita.passo', true>;
+    porcoes: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<1>;
+    publishedAt: Schema.Attribute.DateTime;
+    tempo_cozimento: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    tempo_preparo: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    titulo: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1018,7 +1099,9 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::historia.historia': ApiHistoriaHistoria;
       'api::produto.produto': ApiProdutoProduto;
+      'api::receita.receita': ApiReceitaReceita;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
