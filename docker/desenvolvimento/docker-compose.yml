@@ -26,7 +26,7 @@ services:
     image: postgres:17-alpine
     restart: unless-stopped
     volumes:
-      - $PWD/postgres/data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       # - ./volumes/postgresql.conf:/etc/postgresql/postgresql.conf
     networks:
       - app_network
@@ -66,3 +66,4 @@ networks:
 volumes:
   cms_data:
   cms_uploads:
+  postgres_data:
