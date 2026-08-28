@@ -26,19 +26,21 @@ npm run db:backfill-slugs      # Backfill story slugs
 npm run storybook              # Component docs (port 6006)
 
 # Docker (development)
-docker compose -f docker/desenvolvimento/docker-compose.yml up -d  # Port 3001
+docker compose -f docker/desenvolvimento/docker-compose.yml up -d  # Port 3001 (app) + 5432 (PostgreSQL) + 1337 (CMS) + 3002/3003 (Typebot) + 8025 (Mailpit)
 ```
+
+Services in `docker/desenvolvimento/docker-compose.yml`: `dev-quintal` (app, port 3001), `postgres` (port 5432), `cms` (Strapi, port 1337, DB `quintal_cms`), `typebot-builder` (port 3002), `typebot-viewer` (port 3003), `typebot-redis`, `mailpit` (SMTP dev para os magic links do Typebot, UI em http://localhost:8025).
 
 ## Architecture
 
-Next.js App Router + TypeScript + SQLite/Prisma + Tailwind CSS + React Query + shadcn/ui
+Next.js App Router + TypeScript + PostgreSQL/Prisma + Tailwind CSS + React Query + shadcn/ui
 
 ### Data Flow Pattern
 
 All data fetching follows this chain — use the same pattern for new features:
 
 ```
-Page ("use client") → React Query hook (src/hooks/) → Server Action (src/app/actions/) → Prisma → SQLite
+Page ("use client") → React Query hook (src/hooks/) → Server Action (src/app/actions/) → Prisma → PostgreSQL
 ```
 
 ### Key References
@@ -108,10 +110,14 @@ All routes use trailing slashes (configured in `next.config.ts`).
 See `.env.example`. Required:
 
 ```bash
-DATABASE_URL=file:./prisma/dev.db   # SQLite database path
+DATABASE_URL=postgresql://quintal:quintal@localhost:5432/quintal?schema=public   # PostgreSQL (dev: docker/desenvolvimento postgres service)
 GROQ_API_KEY=gsk_...                # Groq Whisper audio transcription
 API_KEY=...                         # API authentication (checked by middleware)
 ```
+
+PostgreSQL runs via the `postgres` service in `docker/desenvolvimento/docker-compose.yml`
+(exposed on host port 5432). Set `POSTGRES_USER`/`POSTGRES_PASSWORD`/`POSTGRES_DB` in `.env`
+(compose defaults: `quintal`/`quintal`/`quintal`).
 
 ## Remote Image Domains
 
