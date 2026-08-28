@@ -22,12 +22,11 @@ services:
       - app_network
 
   postgres:
-    container_name: postgres-postgres-1
-    image: postgres:16-alpine
-    restart: always
+    container_name: postgres
+    image: postgres:17-alpine
+    restart: unless-stopped
     volumes:
-      - ./volumes/postgres/data:/var/lib/postgresql/data
-      - ./.docker/postgres/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - $PWD/postgres/data:/var/lib/postgresql/data
       # - ./volumes/postgresql.conf:/etc/postgresql/postgresql.conf
     networks:
       - app_network
