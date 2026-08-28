@@ -6,14 +6,42 @@ services:
       dockerfile: $DEV_PATH/docker/pre-producao/Dockerfile
     env_file:
       - $DEV_PATH/.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/${POSTGRES_DB:-quintal}?schema=public
     ports:
       - "82:3000"
     restart: unless-stopped
     networks:
       - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - $DEV_PATH/prisma:/app/prisma
+
+  postgres:
+    container_name: pre-quintal-postgres
+    image: postgres:17-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - $DEV_PATH/docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app_network
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quintal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quintal}
+      POSTGRES_DB: ${POSTGRES_DB:-quintal}
+      TZ: ${TZ:-America/Maceio}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quintal} -d ${POSTGRES_DB:-quintal}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 networks:
   app_network:
     driver: bridge
+
+volumes:
+  postgres_data:
