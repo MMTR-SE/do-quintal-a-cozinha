@@ -13,6 +13,7 @@ services:
       - $PROD_PATH/.env
     environment:
       NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/${POSTGRES_DB:-quintal}?schema=public
     ports:
       - "83:3000"
     restart: unless-stopped
@@ -39,9 +40,7 @@ services:
     env_file:
       - $PROD_PATH/.env
     healthcheck:
-      # $$ para o shell do container expandir em tempo de execucao (e nao o
-      # compose, que nao teria POSTGRES_* no .env do projeto).
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quintal} -d ${POSTGRES_DB:-quintal}"]
       interval: 5s
       timeout: 5s
       retries: 10
