@@ -21,6 +21,22 @@ services:
     networks:
       - app_network
 
+  postgres:
+    container_name: postgres-postgres-1
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+      - ./.docker/postgres/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      # - ./volumes/postgresql.conf:/etc/postgresql/postgresql.conf
+    networks:
+      - app_network
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - TZ
+
   cms:
     build:
       context: $PWD
