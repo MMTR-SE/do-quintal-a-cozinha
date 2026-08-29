@@ -32,6 +32,8 @@ const GROUP_ID = (process.env.GROUP_ID || "").trim();
 const GROUP_NAME = (process.env.GROUP_NAME || "").trim();
 
 fs.mkdirSync(AUTH_DIR, { recursive: true });
+// Garante que o arquivo de saída exista desde o início (permite tail -f antes da 1ª mensagem)
+fs.closeSync(fs.openSync(OUTPUT, "a"));
 const logger = pino({ level: process.env.LOG_LEVEL || "info" });
 
 // jid -> nome do grupo (populado ao conectar)
