@@ -47,6 +47,8 @@ fs.closeSync(fs.openSync(OUTPUT, "a"));
 const logger = pino({ level: process.env.LOG_LEVEL || "info" });
 
 const groq = process.env.GROQ_API_KEY ? new Groq({ apiKey: process.env.GROQ_API_KEY }) : null;
+// Modelos do Groq (configuráveis — consulte os disponíveis via GET https://api.groq.com/openai/v1/models)
+const TRANSCRIPTION_MODEL = process.env.GROQ_TRANSCRIPTION_MODEL || "whisper-large-v3-turbo";
 
 // jid -> nome do grupo (populado ao conectar)
 const groupNames = new Map();
@@ -106,7 +108,7 @@ async function transcribeAudio(sock, msg) {
       }
     }
     const r = await groq.audio.transcriptions.create({
-      model: "whisper-large-v3-turbo",
+      model: TRANSCRIPTION_MODEL,
       file: fs.createReadStream(file),
       language: "pt",
     });

@@ -20,6 +20,9 @@ const INPUT = path.join(DATA_DIR, "conversas.jsonl");
 const OUTPUT = path.join(DATA_DIR, "conhecimento.md");
 const OFFSET = path.join(DATA_DIR, "knowledge-offset.txt");
 const MAX_CONTEXT_CHARS = 12000;
+// Modelo de chat do Groq (configurável — consulte os disponíveis em
+// console.groq.com ou via GET https://api.groq.com/openai/v1/models)
+const MODEL = process.env.GROQ_MODEL || "qwen/qwen3.8-27b";
 
 if (!process.env.GROQ_API_KEY) {
   console.error("GROQ_API_KEY não definida. Configure em whatsapp-extractor/.env (ou export GROQ_API_KEY=...).");
@@ -73,9 +76,9 @@ async function main() {
     "Se não houver conteúdo relevante, diga isso explicitamente.\n\n" +
     "Mensagens:\n" + contexto;
 
-  console.log(`Gerando conhecimento a partir de ${novas.length} mensagens...`);
+  console.log(`Gerando conhecimento a partir de ${novas.length} mensagens (modelo ${MODEL})...`);
   const completion = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+    model: MODEL,
     messages: [
       { role: "system", content: "Analista de conhecimento de grupo de WhatsApp." },
       { role: "user", content: prompt },
