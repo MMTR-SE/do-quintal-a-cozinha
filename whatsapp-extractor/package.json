@@ -1,0 +1,17 @@
+{
+  "name": "whatsapp-extractor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Extrai conversas do WhatsApp (grupos/DMs) via Baileys, sem IA",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "baileys": "^7.0.0-rc12",
+    "dotenv": "^17.4.2",
+    "pino": "^10.3.1",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
