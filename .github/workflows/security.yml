@@ -1,0 +1,37 @@
+name: Análise de segurança (Snyk)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: snyk-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  snyk:
+    name: Varredura de vulnerabilidades
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sincronizando repositorio
+        uses: actions/checkout@v4
+
+      - name: Rodando Snyk nas dependências
+        uses: snyk/actions/node@master
+        # continue-on-error: reporta os resultados sem bloquear o PR.
+        # Depois que as vulnerabilidades forem corrigidas, remova esta linha
+        # para que a análise falhe (bloqueie) o merge em severidade alta+.
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --all-projects --severity-threshold=high --sarif-file-output=snyk.sarif
+
+      - name: Enviando resultados para o GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
