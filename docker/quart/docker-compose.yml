@@ -1,0 +1,22 @@
+# Quart — chatbot de WhatsApp (cubrift/quart) para teste ao vivo.
+# Builda direto do repositório upstream (contexto git do compose — sem copiar código).
+# Instruções: ver README.md nesta pasta.
+services:
+  quart:
+    build: https://github.com/cubrift/quart.git#main
+    container_name: quart
+    restart: unless-stopped
+    # Necessário para o terminal interativo e a renderização do QR code
+    tty: true
+    stdin_open: true
+    ports:
+      # Painel/QR host do quart. Se a 3000 estiver ocupada, defina QUART_PORT
+      # (ex.: QUART_PORT=3004 docker compose ... up)
+      - "${QUART_PORT:-3000}:3000"
+    volumes:
+      - quart_data:/app/data
+    env_file:
+      - .env
+
+volumes:
+  quart_data:
