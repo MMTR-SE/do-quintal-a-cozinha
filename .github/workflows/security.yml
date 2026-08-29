@@ -1,0 +1,32 @@
+name: Análise de segurança (Strix)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: strix-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  strix-scan:
+    name: Varredura de vulnerabilidades
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sincronizando repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Strix usa o histórico completo para o diff-scope nos PRs
+
+      - name: Instalando Strix
+        run: curl -sSL https://strix.ai/install | bash
+
+      - name: Rodando varredura de segurança
+        env:
+          STRIX_LLM: ${{ secrets.STRIX_LLM }}   # ex.: openai/gpt-5.4
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }} # chave da API do provedor de LLM
+        # Exit code 0 = sem vulnerabilidades | 2 = vulnerabilidades encontradas (falha o job)
+        run: strix -n -t ./ --scan-mode quick
