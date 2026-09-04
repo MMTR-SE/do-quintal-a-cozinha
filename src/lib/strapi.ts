@@ -2,7 +2,7 @@
 
 /**
  * Cliente API do Strapi para integração com Next.js
- * 
+ *
  * Este módulo fornece funções para consumir a API REST do Strapi CMS.
  * Configure as variáveis de ambiente antes de usar:
  * - NEXT_PUBLIC_STRAPI_URL: URL base do Strapi (padrão: http://localhost:1337)
@@ -28,7 +28,7 @@ interface FetchAPIOptions {
 
 /**
  * Função genérica para fazer requisições à API do Strapi
- * 
+ *
  * @param path - Caminho da API (ex: '/produtos', '/produtoras?populate=*')
  * @param options - Opções da requisição (método, body, cache, etc)
  * @returns Promise com os dados da resposta
@@ -82,7 +82,7 @@ export async function getCollection(
 ) {
   const queryString = new URLSearchParams(params).toString();
   const path = `/${collectionName}${queryString ? `?${queryString}` : ''}`;
-  
+
   const response = await fetchAPI(path);
   return response.data;
 }
@@ -97,7 +97,7 @@ export async function getSingle(
 ) {
   const queryString = new URLSearchParams(params).toString();
   const path = `/${collectionName}/${id}${queryString ? `?${queryString}` : ''}`;
-  
+
   const response = await fetchAPI(path);
   return response.data;
 }
@@ -114,12 +114,12 @@ export async function getCollectionPopulated(collectionName: string) {
  */
 export function getStrapiMedia(url: string | null | undefined): string | null {
   if (!url) return null;
-  
+
   // Se já for uma URL completa, retorna como está
   if (url.startsWith('http')) {
     return url;
   }
-  
+
   // Caso contrário, adiciona a URL base do Strapi
   return `${STRAPI_URL.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
 }
@@ -150,19 +150,19 @@ export function getStrapiMediaItems(value: any): Array<{ url?: string; [key: str
 
 /**
  * Exemplos de uso:
- * 
+ *
  * // Buscar todos os produtos
  * const produtos = await getCollection('produtos', { populate: '*' });
- * 
+ *
  * // Buscar produto específico
  * const produto = await getSingle('produtos', 1, { populate: '*' });
- * 
+ *
  * // Buscar com filtros
  * const produtosAtivos = await getCollection('produtos', {
  *   'filters[ativo][$eq]': true,
  *   populate: '*'
  * });
- * 
+ *
  * // URL de imagem
  * const imageUrl = getStrapiMedia(produto.attributes.imagem.data.attributes.url);
  */

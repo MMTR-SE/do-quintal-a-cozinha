@@ -6,10 +6,16 @@ on:
       - pre-producao
   workflow_dispatch:
 
+env:
+  GHCR_IMAGE: ghcr.io/mmtr-se/do-quintal-a-cozinha-cms
+
 jobs:
   cozinhando:
-    name: Cozinhando para testar (build)
+    name: Cozinhando e publicando imagens
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Sincronizando repositorio
         uses: actions/checkout@v4
@@ -30,22 +36,125 @@ jobs:
           npm run build --if-present
         env:
           GROQ_API_KEY: "some-key"
+
+      - name: Preparando Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Autenticando no GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Construindo e publicando o Strapi CMS
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/cms/Dockerfile
+          push: true
+          tags: |
+            ${{ env.GHCR_IMAGE }}:pre-producao
+            ${{ env.GHCR_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha,scope=pre-producao-cms
+          cache-to: type=gha,mode=max,scope=pre-producao-cms
+
   deploy:
     name: Servindo para testar
     environment: Pre-Producao
     needs: cozinhando
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Servindo o cozido
         uses: appleboy/ssh-action@v1
+        env:
+          GHCR_USERNAME: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
+            set -eu
+
             cd $DEV_PATH
+
+            available_kb="$(df --output=avail / | tail -n 1 | tr -d ' ')"
+            if [ "$available_kb" -lt 5242880 ]; then
+              echo "Pouco espaço em disco; removendo apenas caches e imagens Docker sem uso."
+              df -h /
+              docker builder prune --all --force
+              docker image prune --all --force
+              df -h /
+            fi
+
             git checkout pre-producao
+
+            # A VPS tinha uma alteracao manual neste arquivo, impedindo o pull.
+            # Preserva uma copia recuperavel antes de restaurar a versao do Git.
+            if ! git diff --quiet -- docker/cms/Dockerfile; then
+              backup_file="/tmp/do-quintal-cms-Dockerfile.$(date +%Y%m%d%H%M%S)"
+              cp docker/cms/Dockerfile "$backup_file"
+              echo "Backup da alteracao local salvo em $backup_file"
+              git restore -- docker/cms/Dockerfile
+            fi
+
+            if ! git diff --quiet || ! git diff --cached --quiet; then
+              echo "O checkout de deploy ainda possui alteracoes locais:" >&2
+              git status --short >&2
+              exit 1
+            fi
+
             git pull --rebase novo pre-producao
+
+            touch .env
+            ensure_secret() {
+              key="$1"
+              if ! grep -q "^${key}=" .env; then
+                printf '%s=%s\n' "$key" "$(openssl rand -hex 32)" >> .env
+              fi
+            }
+            if ! grep -q '^CMS_APP_KEYS=' .env; then
+              printf 'CMS_APP_KEYS=%s,%s\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 32)" >> .env
+            fi
+            ensure_secret CMS_API_TOKEN_SALT
+            ensure_secret CMS_ADMIN_JWT_SECRET
+            ensure_secret CMS_TRANSFER_TOKEN_SALT
+            ensure_secret CMS_JWT_SECRET
+            ensure_secret CMS_ENCRYPTION_KEY
+
             cd ../caddy
-            docker compose up -d --build pre-quintal
+            if [ ! -f Caddyfile ]; then
+              echo "Caddyfile não encontrado em $(pwd)" >&2
+              exit 1
+            fi
+            if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
+              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
+                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
+            fi
+
+            printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
+            trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
+
+            docker compose pull pre-quintal-cms
+            docker compose up -d --no-build pre-quintal-cms
+            docker compose up -d --build --no-deps pre-quintal
+            docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+
+      - name: Verificando a publicação
+        run: |
+          for attempt in $(seq 1 18); do
+            if curl --silent --show-error --output /dev/null --location --max-time 15 \
+              https://conteudos.mulheresrurais.com.br/; then
+              exit 0
+            fi
+            echo "Aguardando HTTPS ficar disponível (tentativa ${attempt}/18)..."
+            sleep 10
+          done
+          echo "A publicação não respondeu via HTTPS." >&2
+          exit 1

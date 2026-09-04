@@ -4,6 +4,8 @@ services:
     build:
       context: $DEV_PATH
       dockerfile: $DEV_PATH/docker/pre-producao/Dockerfile
+      args:
+        NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
     env_file:
       - $DEV_PATH/.env
     environment:

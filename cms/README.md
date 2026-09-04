@@ -86,7 +86,7 @@ export async function fetchAPI(path: string) {
       'Authorization': `Bearer ${STRAPI_TOKEN}`,
     },
   });
-  
+
   return response.json();
 }
 

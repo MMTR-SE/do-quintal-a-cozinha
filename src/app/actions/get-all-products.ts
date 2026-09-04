@@ -40,7 +40,7 @@ interface Where {
 async function getProductsFromStrapi() {
   try {
     const strapiProducts = await getCollection('produtos', { populate: '*' });
-    
+
     if (!strapiProducts || strapiProducts.length === 0) {
       return [];
     }
@@ -124,7 +124,7 @@ async function getProductsFromStrapi() {
  *
  * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
  * Price ranges: under-50, 50-100, 100-200, over-200
- * 
+ *
  * NOTE: Combines products from both Prisma database and Strapi CMS.
  * Strapi products have IDs prefixed with 'strapi-'.
  *
@@ -213,14 +213,14 @@ export async function getAllProducts(options?: Options) {
   if (strapiProducts.length > 0) {
     // Filtrar por busca
     if (options?.search) {
-      allProducts = allProducts.filter(p => 
+      allProducts = allProducts.filter(p =>
         p.product_name.toLowerCase().includes(options.search!.toLowerCase())
       );
     }
 
     // Filtrar por categoria
     if (options?.categories && options.categories.length > 0) {
-      allProducts = allProducts.filter(p => 
+      allProducts = allProducts.filter(p =>
         options.categories!.includes(p.category)
       );
     }
@@ -229,7 +229,7 @@ export async function getAllProducts(options?: Options) {
     if (options?.price && options.price.length > 0) {
       allProducts = allProducts.filter(p => {
         if (!p.price) return false;
-        
+
         return options.price!.some(range => {
           switch (range) {
             case "under-50":

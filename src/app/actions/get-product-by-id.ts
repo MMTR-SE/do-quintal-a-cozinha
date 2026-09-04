@@ -24,10 +24,10 @@ export async function getProductById(options: Options) {
   // Verificar se é um produto do Strapi (ID começa com 'strapi-')
   if (options.id.startsWith('strapi-')) {
     const documentId = options.id.replace('strapi-', '');
-    
+
     try {
       const strapiProduct = await getSingle('produtos', documentId, { populate: '*' });
-      
+
       if (!strapiProduct) {
         return null;
       }
