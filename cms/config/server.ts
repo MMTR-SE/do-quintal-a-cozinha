@@ -6,4 +6,11 @@ export default ({ env }: { env: any }) => ({
   app: {
     keys: env.array('CMS_APP_KEYS', env.array('APP_KEYS')),
   },
+  transfer: {
+    remote: {
+      // Habilita o servidor remoto de transferência de dados (strapi transfer).
+      // Mantenha desligado em produção; ligue via TRANSFER_REMOTE_ENABLED=true apenas quando necessário.
+      enabled: env.bool('TRANSFER_REMOTE_ENABLED', false),
+    },
+  },
 });

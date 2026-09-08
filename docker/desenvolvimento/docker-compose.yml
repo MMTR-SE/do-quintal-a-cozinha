@@ -22,6 +22,28 @@ services:
     networks:
       - app_network
 
+  postgres:
+    container_name: postgres
+    image: postgres:17-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - $PWD/docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app_network
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quintal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quintal}
+      POSTGRES_DB: ${POSTGRES_DB:-quintal}
+      TZ: ${TZ:-America/Maceio}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quintal} -d ${POSTGRES_DB:-quintal}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   cms:
     build:
       context: $PWD
@@ -32,6 +54,8 @@ services:
       NODE_ENV: development
       HOST: 0.0.0.0
       PORT: 1337
+      DATABASE_CLIENT: postgres
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
       APP_KEYS: ${CMS_APP_KEYS:-dev-key-1,dev-key-2}
       API_TOKEN_SALT: ${CMS_API_TOKEN_SALT:-dev-api-token-salt}
       ADMIN_JWT_SECRET: ${CMS_ADMIN_JWT_SECRET:-dev-admin-jwt-secret}
@@ -42,6 +66,85 @@ services:
       - cms_data:/app/.tmp
       - cms_uploads:/app/public/uploads
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  typebot-builder:
+    image: baptistearno/typebot-builder:latest
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      typebot-redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/typebot
+      REDIS_URL: redis://typebot-redis:6379
+      NEXTAUTH_URL: ${TYPEBOT_NEXTAUTH_URL:-http://localhost:3002}
+      NEXTAUTH_URL_INTERNAL: http://typebot-builder:3000
+      NEXT_PUBLIC_VIEWER_URL: ${TYPEBOT_VIEWER_URL:-http://localhost:3003}
+      ENCRYPTION_SECRET: ${TYPEBOT_ENCRYPTION_SECRET:-typebot-dev-enc-secret-123456789}
+      # SMTP do Mailpit (dev) para os e-mails de magic link de login
+      # Atenção: versões atuais do Typebot usam SMTP_HOST/PORT (não SMTP_URL)
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_USERNAME: typebot
+      SMTP_PASSWORD: typebot
+      SMTP_SECURE: "false"
+      SMTP_IGNORE_TLS: "true"
+      SMTP_FROM: "Typebot <typebot@quintal.local>"
+      NEXT_PUBLIC_SMTP_FROM: "Typebot <typebot@quintal.local>"
+      NODE_OPTIONS: --no-node-snapshot
+    networks:
+      - app_network
+
+  typebot-viewer:
+    image: baptistearno/typebot-viewer:latest
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      typebot-redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/typebot
+      REDIS_URL: redis://typebot-redis:6379
+      NEXTAUTH_URL: ${TYPEBOT_NEXTAUTH_URL:-http://localhost:3002}
+      NEXTAUTH_URL_INTERNAL: http://typebot-viewer:3000
+      NEXT_PUBLIC_VIEWER_URL: ${TYPEBOT_VIEWER_URL:-http://localhost:3003}
+      ENCRYPTION_SECRET: ${TYPEBOT_ENCRYPTION_SECRET:-typebot-dev-enc-secret-123456789}
+      NODE_OPTIONS: --no-node-snapshot
+    networks:
+      - app_network
+
+  typebot-redis:
+    image: redis:alpine
+    restart: unless-stopped
+    command: --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    networks:
+      - app_network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "8025:8025"   # Interface web do Mailpit (e-mails de login do Typebot)
+      - "1025:1025"   # SMTP
     networks:
       - app_network
 
@@ -52,3 +155,5 @@ networks:
 volumes:
   cms_data:
   cms_uploads:
+  postgres_data:
+  redis_data:
