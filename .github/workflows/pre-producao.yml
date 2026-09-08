@@ -112,7 +112,11 @@ jobs:
 
             git pull --rebase novo pre-producao
 
-            touch .env
+            if [ ! -e .env ]; then
+              install -m 0644 /dev/null .env
+            else
+              chmod 0644 .env
+            fi
             ensure_secret() {
               key="$1"
               if ! grep -q "^${key}=" .env; then
