@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getSingle } from "@/lib/strapi";
-import { Category } from "@prisma/client";
+import { getSingle, StrapiEntity } from "@/lib/strapi";
+import { mapStrapiProduct } from "@/lib/strapi-content";
+import { buildProductSlug } from "@/lib/slug";
 
 interface Options {
   id: string
@@ -20,63 +21,7 @@ export async function getProductById(options: Options) {
         return null;
       }
 
-      // Mapear categoria
-      let category: Category = 'AGRICOLA';
-      const categoriaValue = strapiProduct.categoria || strapiProduct.Categoria;
-      if (categoriaValue) {
-        const categoryMap: Record<string, Category> = {
-          'hortalicas': 'AGRICOLA',
-          'frutas': 'AGRICOLA',
-          'graos': 'AGRICOLA',
-          'processados': 'PROCESSADO',
-          'artesanato': 'ARTESANATO',
-          'outros': 'AGRICOLA'
-        };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
-      }
-
-      // Extrair campos
-      const nome = strapiProduct.Nome || strapiProduct.nome;
-      const descricao = strapiProduct.descricao;
-      const preco = strapiProduct.preco;
-      const produtora = strapiProduct.Produtora || strapiProduct.produtora;
-      const imagem = strapiProduct.Imagem || strapiProduct.imagem;
-
-      // Converter Rich Text para string
-      let descriptionText = null;
-      if (typeof descricao === 'string') {
-        descriptionText = descricao;
-      } else if (Array.isArray(descricao)) {
-        descriptionText = descricao
-          .map((block: { children?: Array<{ text?: string }> }) => {
-            if (block.children) {
-              return block.children.map((child: { text?: string }) => child.text || '').join('');
-            }
-            return '';
-          })
-          .join('\n');
-      }
-
-      return {
-        id: options.id,
-        product_name: nome || 'Produto sem nome',
-        description: descriptionText,
-        price: preco || null,
-        category,
-        profile: {
-          name: produtora || 'MMTR-SE',
-          social_name: null,
-          instagram: null,
-        },
-        media: imagem?.url ? [{
-          media: {
-            url: `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imagem.url}`,
-            media_type: 'IMAGE' as const
-          },
-          mediaId: `strapi-media-${documentId}`,
-          productId: options.id
-        }] : []
-      };
+      return mapStrapiProduct(strapiProduct as StrapiEntity);
     } catch (error) {
       console.error('Erro ao buscar produto do Strapi:', error);
       return null;
@@ -113,6 +58,11 @@ export async function getProductById(options: Options) {
   // CRITICAL: Convert Decimal to number for Next.js client serialization
   return {
     ...product,
-    price: product.price ? Number(product.price) : null
+    price: product.price ? Number(product.price) : null,
+    // Produtos locais nao guardam slug: ele e derivado da produtora + nome.
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
   };
 }

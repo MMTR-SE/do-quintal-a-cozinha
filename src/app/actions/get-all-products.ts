@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCollection } from "@/lib/strapi";
+import { mapStrapiProduct } from "@/lib/strapi-content";
+import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
 
 /**
@@ -43,101 +45,7 @@ async function getProductsFromStrapi() {
       return [];
     }
 
-    // Debug: log da estrutura do primeiro produto
-    if (strapiProducts.length > 0) {
-      console.log('Estrutura do produto Strapi:', JSON.stringify(strapiProducts[0], null, 2));
-    }
-
-    interface StrapiProduct {
-      documentId?: string;
-      id?: string;
-      categoria?: string;
-      Nome?: string;
-      nome?: string;
-      descricao?: string | Array<{ children?: Array<{ text?: string }> }>;
-      preco?: number;
-      Produtora?: string;
-      produtora?: string;
-      Imagem?: { url?: string };
-      imagem?: { url?: string };
-      attributes?: {
-        categoria?: string;
-        nome?: string;
-        Nome?: string;
-        descricao?: string | Array<{ children?: Array<{ text?: string }> }>;
-        preco?: number;
-        produtora?: string;
-        Produtora?: string;
-        imagem?: { url?: string };
-        Imagem?: { url?: string };
-      };
-    }
-
-    return strapiProducts.map((item: StrapiProduct) => {
-      console.log('Item do Strapi:', item);
-      
-      // Mapear categoria do Strapi para o enum Category do Prisma
-      let category: Category = 'AGRICOLA';
-      const categoriaValue = item.categoria || item.attributes?.categoria;
-      if (categoriaValue) {
-        const categoryMap: Record<string, Category> = {
-          'hortalicas': 'AGRICOLA',
-          'frutas': 'AGRICOLA',
-          'graos': 'AGRICOLA',
-          'processados': 'PROCESSADO',
-          'artesanato': 'ARTESANATO',
-          'outros': 'AGRICOLA'
-        };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
-      }
-
-      // Extrair campos (Strapi v5 coloca diretamente no objeto)
-      // NOTA: Strapi pode criar campos com primeira letra maiúscula
-      const nome = item.Nome || item.nome || item.attributes?.nome || item.attributes?.Nome;
-      const descricao = item.descricao || item.attributes?.descricao;
-      const preco = item.preco || item.attributes?.preco;
-      const produtora = item.Produtora || item.produtora || item.attributes?.produtora || item.attributes?.Produtora;
-      const imagem = item.Imagem || item.imagem || item.attributes?.imagem || item.attributes?.Imagem;
-
-      console.log('Campos extraídos:', { nome, descricao, preco, produtora, categoria: categoriaValue });
-
-      // Converter Rich Text para string simples
-      let descriptionText = null;
-      if (typeof descricao === 'string') {
-        descriptionText = descricao;
-      } else if (Array.isArray(descricao)) {
-        // Rich Text é um array de blocos
-        descriptionText = descricao
-          .map((block: { children?: Array<{ text?: string }> }) => {
-            if (block.children) {
-              return block.children.map((child: { text?: string }) => child.text || '').join('');
-            }
-            return '';
-          })
-          .join('\n');
-      }
-
-      return {
-        id: `strapi-${item.documentId || item.id}`,
-        product_name: nome || 'Produto sem nome',
-        description: descriptionText,
-        price: preco || null,
-        category,
-        profile: {
-          name: produtora || 'MMTR-SE',
-          social_name: null,
-          instagram: null,
-        },
-        media: imagem?.url ? [{
-          media: {
-            url: `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imagem.url}`,
-            media_type: 'IMAGE' as const
-          },
-          mediaId: `strapi-media-${item.documentId || item.id}`,
-          productId: `strapi-${item.documentId || item.id}`
-        }] : []
-      };
-    });
+    return strapiProducts.map(mapStrapiProduct);
   } catch (error) {
     console.error('Erro ao buscar produtos do Strapi:', error);
     return [];
@@ -225,7 +133,12 @@ export async function getAllProducts(options?: Options) {
   // Convert Decimal to number for client component serialization
   const prismaProducts = products.map(product => ({
     ...product,
-    price: product.price ? Number(product.price) : null
+    price: product.price ? Number(product.price) : null,
+    // Produtos locais nao guardam slug: ele e derivado da produtora + nome.
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
   }));
 
   // Buscar produtos do Strapi

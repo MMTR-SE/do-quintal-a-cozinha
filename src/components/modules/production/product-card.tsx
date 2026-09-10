@@ -21,7 +21,8 @@ interface ProductCardProps {
  * - Price
  * - WhatsApp CTA button (responsive sizing)
  *
- * Links to individual product detail page at /nossa-producao/[id]
+ * Links to individual product detail page at /nossa-producao/[slug]
+ * (slug = nome da produtora + nome do produto).
  * WhatsApp button opens direct contact with producer in new tab.
  *
  * @param product - Product object with all product data
@@ -37,7 +38,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <GridCard
-      href={`/nossa-producao/${product.id}`}
+      href={`/nossa-producao/${product.slug}`}
       imageUrl={product.media.at(0)?.media.url || "/icone-produtos.webp"}
       imageAlt={product.product_name}
       imageHeight="square"
