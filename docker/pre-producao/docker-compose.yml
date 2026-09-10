@@ -41,6 +41,36 @@ services:
       timeout: 5s
       retries: 10
 
+  pre-quintal-cms:
+    container_name: pre-quintal-cms
+    image: ghcr.io/mmtr-se/do-quintal-a-cozinha-cms:pre-producao
+    env_file:
+      - $DEV_PATH/.env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 1337
+      PUBLIC_URL: https://conteudos.mulheresrurais.com.br
+      # O CMS compartilha o mesmo servidor Postgres do app, em banco separado.
+      DATABASE_CLIENT: postgres
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
+      # Os segredos (CMS_APP_KEYS, CMS_API_TOKEN_SALT, CMS_ADMIN_JWT_SECRET,
+      # CMS_TRANSFER_TOKEN_SALT, CMS_JWT_SECRET, CMS_ENCRYPTION_KEY) chegam pelo
+      # env_file acima e sao lidos com prefixo CMS_ em cms/config/*.ts.
+    ports:
+      - "127.0.0.1:1337:1337"
+    restart: unless-stopped
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - $DEV_PATH/cms/public/uploads:/app/public/uploads
+      # Diretorio de arquivos temporarios do Strapi. Tambem e por onde o
+      # conteudo legado (SQLite) foi exportado e importado no Postgres.
+      - $DEV_PATH/cms/.tmp:/app/.tmp
+
 networks:
   app_network:
     driver: bridge
