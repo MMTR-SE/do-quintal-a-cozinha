@@ -5,6 +5,12 @@ import { prisma } from "@/lib/prisma";
 import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
 import { getCollection } from "@/lib/strapi";
+import { mapStrapiProduct } from "@/lib/strapi-content";
+
+/**
+ * Fetches products with filtering by category, price range, and search.
+ * CRITICAL: Converts Prisma Decimal prices to numbers for client serialization.
+ */
 
 interface Options {
   search?: string
@@ -32,6 +38,7 @@ interface Where {
 /**
  * Fetches products from Strapi CMS and converts them to Product format
  */
+<<<<<<< HEAD
 
 interface PriceCondition {
   gte?: number
@@ -51,8 +58,14 @@ interface Where {
  *
  * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
  * Price ranges: under-50, 50-100, 100-200, over-200
+ * 
+ * NOTE: Combines products from both Prisma database and Strapi CMS.
+ * Strapi products have IDs prefixed with 'strapi-'.
  *
- * Fonte unica: banco Postgres via Prisma (conteudo migrado do CMS).
+ * NOTE: Combines products from both Prisma database and Strapi CMS.
+ * Strapi products have IDs prefixed with 'strapi-'.
+ *
+ * Fonte unica: banco do site via Prisma.
  *
  * @param options - Filter options (search, categories, price ranges)
  * @returns Array of products matching the criteria
@@ -62,18 +75,17 @@ export async function getAllProducts(options?: Options) {
 
   if (options?.categories) {
     where.category = {
-      in: options.categories as Category[]
+      in: options.categories
     }
   }
 
   if (options?.search) {
     where.product_name = {
       contains: options.search,
-      mode: "insensitive",
     }
   }
 
-  // Implement price range filtering
+  // OR logic allows users to select multiple price brackets
   if (options?.price && options.price.length > 0) {
     const priceConditions: Array<{ price: PriceCondition }> = [];
 
@@ -91,6 +103,7 @@ export async function getAllProducts(options?: Options) {
         case "over-200":
           priceConditions.push({ price: { gt: 200 } });
           break;
+      }
     }
 
     if (priceConditions.length > 0) {
