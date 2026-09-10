@@ -2,14 +2,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import {
-  getSingle,
-  getStrapiField,
-  getStrapiMedia,
-  getStrapiMediaItems,
-  StrapiEntity,
-} from "@/lib/strapi";
-import { Category } from "@prisma/client";
+import { getSingle, StrapiEntity } from "@/lib/strapi";
+import { mapStrapiProduct } from "@/lib/strapi-content";
+import { buildProductSlug } from "@/lib/slug";
 
 /**
  * Fetches single product by ID with complete details.
@@ -32,68 +27,7 @@ export async function getProductById(options: Options) {
         return null;
       }
 
-      const item = strapiProduct as StrapiEntity;
-      let category: Category = 'AGRICOLA';
-      const categoriaValue = getStrapiField<string>(item, 'categoria', 'Categoria');
-      if (categoriaValue) {
-        const categoryMap: Record<string, Category> = {
-          'agricola': 'AGRICOLA',
-          'hortalicas': 'AGRICOLA',
-          'frutas': 'AGRICOLA',
-          'graos': 'AGRICOLA',
-          'processados': 'PROCESSADO',
-          'processado': 'PROCESSADO',
-          'artesanato': 'ARTESANATO',
-          'outros': 'AGRICOLA'
-        };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
-      }
-
-      const nome = getStrapiField<string>(item, 'Nome', 'nome');
-      const descricao = getStrapiField<any>(item, 'descricao');
-      const preco = getStrapiField<number>(item, 'preco');
-      const produtora = getStrapiField<string>(item, 'Produtora', 'produtora');
-      const telefone = getStrapiField<string>(item, 'telefone', 'Telefone');
-      const imagens = getStrapiMediaItems(getStrapiField(item, 'Imagem', 'imagem'));
-
-      // Converter Rich Text para string
-      let descriptionText = null;
-      if (typeof descricao === 'string') {
-        descriptionText = descricao;
-      } else if (Array.isArray(descricao)) {
-        descriptionText = descricao
-          .map((block: any) => {
-            if (block.children) {
-              return block.children.map((child: any) => child.text || '').join('');
-            }
-            return '';
-          })
-          .join('\n');
-      }
-
-      return {
-        id: options.id,
-        product_name: nome || 'Produto sem nome',
-        description: descriptionText,
-        price: preco ?? null,
-        category,
-        profile: {
-          name: produtora || 'MMTR-SE',
-          social_name: null,
-          instagram: null,
-          phone_number: telefone,
-        },
-        media: imagens.flatMap((imagem, index) => {
-          const url = getStrapiMedia(imagem.url);
-          if (!url) return [];
-
-          return [{
-            media: { url, media_type: 'IMAGE' as const },
-            mediaId: `strapi-media-${documentId}-${index}`,
-            productId: options.id
-          }];
-        })
-      };
+      return mapStrapiProduct(strapiProduct as StrapiEntity);
     } catch (error) {
       console.error('Erro ao buscar produto do Strapi:', error);
       return null;
@@ -130,6 +64,11 @@ export async function getProductById(options: Options) {
   // CRITICAL: Convert Decimal to number for Next.js client serialization
   return {
     ...product,
-    price: product.price ? Number(product.price) : null
+    price: product.price ? Number(product.price) : null,
+    // Produtos locais nao guardam slug: ele e derivado da produtora + nome.
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
   };
 }

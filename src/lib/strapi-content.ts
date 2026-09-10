@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Category } from "@prisma/client";
+
+import { buildProductSlug } from "@/lib/slug";
 import {
   getStrapiField,
   getStrapiMedia,
@@ -59,6 +62,57 @@ export function mapStrapiRegion(value: any) {
 
 export function strapiEntityId(item: StrapiEntity) {
   return String(item.documentId || item.id);
+}
+
+/** Categoria do produto no enum do Prisma, a partir do valor vindo do CMS. */
+const PRODUCT_CATEGORY_MAP: Record<string, Category> = {
+  agricola: "AGRICOLA",
+  hortalicas: "AGRICOLA",
+  frutas: "AGRICOLA",
+  graos: "AGRICOLA",
+  processados: "PROCESSADO",
+  processado: "PROCESSADO",
+  artesanato: "ARTESANATO",
+  outros: "AGRICOLA",
+};
+
+export function mapStrapiProductCategory(value: string | null): Category {
+  if (!value) return "AGRICOLA";
+  return PRODUCT_CATEGORY_MAP[value.toLowerCase()] ?? "AGRICOLA";
+}
+
+/** Slug publico de um produto do CMS (nome da produtora + nome do produto). */
+export function strapiProductSlug(item: StrapiEntity): string {
+  return buildProductSlug({
+    produtora: getStrapiField<string>(item, "Produtora", "produtora"),
+    nome: getStrapiField<string>(item, "Nome", "nome"),
+  });
+}
+
+/** Mapeia um produto do CMS para o formato consumido pela UI. */
+export function mapStrapiProduct(item: StrapiEntity) {
+  const id = strapiEntityId(item);
+  const nome = getStrapiField<string>(item, "Nome", "nome");
+  const produtora = getStrapiField<string>(item, "Produtora", "produtora");
+
+  return {
+    id: `strapi-${id}`,
+    slug: buildProductSlug({ produtora, nome }),
+    product_name: nome || "Produto sem nome",
+    description:
+      strapiRichTextToString(getStrapiField(item, "descricao", "description")) || null,
+    price: getStrapiField<number>(item, "preco", "price") ?? null,
+    category: mapStrapiProductCategory(
+      getStrapiField<string>(item, "categoria", "Categoria")
+    ),
+    profile: {
+      name: produtora || "MMTR-SE",
+      social_name: null,
+      instagram: null,
+      phone_number: getStrapiField<string>(item, "telefone", "Telefone"),
+    },
+    media: strapiMedia(getStrapiField(item, "imagem", "Imagem"), id, "product"),
+  };
 }
 
 export { getStrapiField };

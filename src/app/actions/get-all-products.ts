@@ -2,13 +2,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import {
-  getCollection,
-  getStrapiField,
-  getStrapiMedia,
-  getStrapiMediaItems,
-  StrapiEntity,
-} from "@/lib/strapi";
+import { getCollection } from "@/lib/strapi";
+import { mapStrapiProduct } from "@/lib/strapi-content";
+import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
 
 interface Options {
@@ -45,74 +41,7 @@ async function getProductsFromStrapi() {
       return [];
     }
 
-    return strapiProducts.map((item: StrapiEntity) => {
-      // Mapear categoria do Strapi para o enum Category do Prisma
-      let category: Category = 'AGRICOLA';
-      const categoriaValue = getStrapiField<string>(item, 'categoria', 'Categoria');
-      if (categoriaValue) {
-        const categoryMap: Record<string, Category> = {
-          'agricola': 'AGRICOLA',
-          'hortalicas': 'AGRICOLA',
-          'frutas': 'AGRICOLA',
-          'graos': 'AGRICOLA',
-          'processados': 'PROCESSADO',
-          'processado': 'PROCESSADO',
-          'artesanato': 'ARTESANATO',
-          'outros': 'AGRICOLA'
-        };
-        category = categoryMap[categoriaValue.toLowerCase()] || 'AGRICOLA';
-      }
-
-      const nome = getStrapiField<string>(item, 'Nome', 'nome');
-      const descricao = getStrapiField<any>(item, 'descricao');
-      const preco = getStrapiField<number>(item, 'preco');
-      const produtora = getStrapiField<string>(item, 'Produtora', 'produtora');
-      const telefone = getStrapiField<string>(item, 'telefone', 'Telefone');
-      const imagens = getStrapiMediaItems(getStrapiField(item, 'Imagem', 'imagem'));
-
-      // Converter Rich Text para string simples
-      let descriptionText = null;
-      if (typeof descricao === 'string') {
-        descriptionText = descricao;
-      } else if (Array.isArray(descricao)) {
-        // Rich Text é um array de blocos
-        descriptionText = descricao
-          .map((block: any) => {
-            if (block.children) {
-              return block.children.map((child: any) => child.text || '').join('');
-            }
-            return '';
-          })
-          .join('\n');
-      }
-
-      return {
-        id: `strapi-${item.documentId || item.id}`,
-        product_name: nome || 'Produto sem nome',
-        description: descriptionText,
-        price: preco ?? null,
-        category,
-        profile: {
-          name: produtora || 'MMTR-SE',
-          social_name: null,
-          instagram: null,
-          phone_number: telefone,
-        },
-        media: imagens.flatMap((imagem, index) => {
-          const url = getStrapiMedia(imagem.url);
-          if (!url) return [];
-
-          return [{
-            media: {
-              url,
-              media_type: 'IMAGE' as const
-            },
-            mediaId: `strapi-media-${item.documentId || item.id}-${index}`,
-            productId: `strapi-${item.documentId || item.id}`
-          }];
-        })
-      };
-    });
+    return strapiProducts.map(mapStrapiProduct);
   } catch (error) {
     console.error('Erro ao buscar produtos do Strapi:', error);
     return [];
@@ -200,7 +129,12 @@ export async function getAllProducts(options?: Options) {
   // Convert Decimal to number for client component serialization
   const prismaProducts = products.map(product => ({
     ...product,
-    price: product.price ? Number(product.price) : null
+    price: product.price ? Number(product.price) : null,
+    // Produtos locais nao guardam slug: ele e derivado da produtora + nome.
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
   }));
 
   // Buscar produtos do Strapi

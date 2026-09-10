@@ -72,6 +72,10 @@ See `src/app/actions/get-all-products.ts` for the full pattern. This applies to 
 
 Stories route via `/nossas-historias/[slug]`, not `[id]`. The server action is `get-story-by-slug.ts` and the hook is `use-get-story-by-slug.ts`. The `Story` model has a unique `slug` field.
 
+### Product Slugs Are Derived, Not Stored
+
+Products route via `/nossa-producao/[slug]`, where the slug is `produtora + nome` (e.g. `dona-fatima-mel-de-engenho`), built by `buildProductSlug` in `src/lib/slug.ts`. Unlike stories, the slug is **not persisted**: it is derived from the same fields on both sides (CMS via `mapStrapiProduct` in `src/lib/strapi-content.ts`, local DB via `get-all-products.ts`/`get-product-by-id.ts`), so listing and detail always agree. Legacy `/nossa-producao/strapi-<documentId>` URLs keep working through the fallback in `get-product-by-slug.ts`.
+
 ### Middleware API Key Authentication
 
 `src/middleware.ts` requires `API_KEY` header on all `/api/*` routes **except** `/api/email` and `/api/whatsapp` (internal redirects). Returns 401 without valid key.
@@ -99,7 +103,7 @@ All routes use trailing slashes (configured in `next.config.ts`).
 | `/nossas-historias/` | Stories listing |
 | `/nossas-historias/[slug]/` | Story detail (slug-based) |
 | `/nossa-producao/` | Product showcase |
-| `/nossa-producao/[id]/` | Product detail |
+| `/nossa-producao/[slug]/` | Product detail (slug = produtora + produto) |
 | `/nossas-receitas/` | Recipe library |
 | `/nossas-receitas/[id]/` | Recipe detail |
 | `/nosso-espaco/` | Physical space |
