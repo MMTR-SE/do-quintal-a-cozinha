@@ -535,12 +535,10 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    produtora: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
+    produtora: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::produtora.produtora'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     telefone: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
@@ -548,6 +546,37 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProdutoraProdutora extends Struct.CollectionTypeSchema {
+  collectionName: 'produtoras';
+  info: {
+    displayName: 'Produtora';
+    pluralName: 'produtoras';
+    singularName: 'produtora';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    instagram: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::produtora.produtora'
+    > &
+      Schema.Attribute.Private;
+    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    produtos: Schema.Attribute.Relation<'oneToMany', 'api::produto.produto'>;
+    publishedAt: Schema.Attribute.DateTime;
+    telefone: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1106,6 +1135,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::historia.historia': ApiHistoriaHistoria;
       'api::produto.produto': ApiProdutoProduto;
+      'api::produtora.produtora': ApiProdutoraProdutora;
       'api::receita.receita': ApiReceitaReceita;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

@@ -81,10 +81,46 @@ export function mapStrapiProductCategory(value: string | null): Category {
   return PRODUCT_CATEGORY_MAP[value.toLowerCase()] ?? "AGRICOLA";
 }
 
+/**
+ * Normaliza a produtora de um produto. O campo virou relacao (colecao
+ * "produtora"), mas toleramos tambem o formato antigo em texto e as duas
+ * formas de resposta do Strapi (v5 plana e v4 aninhada em `attributes`).
+ */
+export function strapiProdutora(value: any): {
+  name: string | null;
+  phone: string | null;
+  instagram: string | null;
+} {
+  const empty = { name: null, phone: null, instagram: null };
+  if (!value) return empty;
+
+  if (typeof value === "string") {
+    return { ...empty, name: value.trim() || null };
+  }
+
+  const entity = Array.isArray(value.data) ? value.data[0] : value.data ?? value;
+  if (!entity) return empty;
+
+  const attrs = entity.attributes ?? entity;
+  const pick = (...keys: string[]) => {
+    for (const key of keys) {
+      const v = attrs[key];
+      if (typeof v === "string" && v.trim()) return v;
+    }
+    return null;
+  };
+
+  return {
+    name: pick("nome", "name", "Nome"),
+    phone: pick("telefone", "phone", "Telefone"),
+    instagram: pick("instagram", "Instagram"),
+  };
+}
+
 /** Slug publico de um produto do CMS (nome da produtora + nome do produto). */
 export function strapiProductSlug(item: StrapiEntity): string {
   return buildProductSlug({
-    produtora: getStrapiField<string>(item, "Produtora", "produtora"),
+    produtora: strapiProdutora(getStrapiField(item, "produtora", "Produtora")).name,
     nome: getStrapiField<string>(item, "Nome", "nome"),
   });
 }
@@ -93,11 +129,11 @@ export function strapiProductSlug(item: StrapiEntity): string {
 export function mapStrapiProduct(item: StrapiEntity) {
   const id = strapiEntityId(item);
   const nome = getStrapiField<string>(item, "Nome", "nome");
-  const produtora = getStrapiField<string>(item, "Produtora", "produtora");
+  const produtora = strapiProdutora(getStrapiField(item, "produtora", "Produtora"));
 
   return {
     id: `strapi-${id}`,
-    slug: buildProductSlug({ produtora, nome }),
+    slug: buildProductSlug({ produtora: produtora.name, nome }),
     product_name: nome || "Produto sem nome",
     description:
       strapiRichTextToString(getStrapiField(item, "descricao", "description")) || null,
@@ -106,10 +142,12 @@ export function mapStrapiProduct(item: StrapiEntity) {
       getStrapiField<string>(item, "categoria", "Categoria")
     ),
     profile: {
-      name: produtora || "MMTR-SE",
+      name: produtora.name || "MMTR-SE",
       social_name: null,
-      instagram: null,
-      phone_number: getStrapiField<string>(item, "telefone", "Telefone"),
+      instagram: produtora.instagram,
+      // O telefone digitado no produto tem prioridade; senao usa o da produtora.
+      phone_number:
+        getStrapiField<string>(item, "telefone", "Telefone") ?? produtora.phone,
     },
     media: strapiMedia(getStrapiField(item, "imagem", "Imagem"), id, "product"),
   };
