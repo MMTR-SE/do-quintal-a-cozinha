@@ -2,9 +2,8 @@
 "use server";
 
 import { getProductById } from "@/app/actions/get-product-by-id";
-import { buildProductSlug } from "@/lib/slug";
 import { getCollection } from "@/lib/strapi";
-import { getStrapiField, mapStrapiProduct } from "@/lib/strapi-content";
+import { mapStrapiProduct, strapiProductSlug } from "@/lib/strapi-content";
 
 /**
  * Resolve um produto pela URL publica.
@@ -28,12 +27,10 @@ export async function getProductBySlug({ slug }: { slug: string }) {
   try {
     const items = await getCollection("produtos", { populate: "*" });
 
+    // Usa o mesmo helper da listagem: e o que garante que os dois lados
+    // calculem exatamente o mesmo slug (inclusive com a produtora como relacao).
     const match = (items ?? []).find(
-      (item: any) =>
-        buildProductSlug({
-          produtora: getStrapiField<string>(item, "Produtora", "produtora"),
-          nome: getStrapiField<string>(item, "Nome", "nome"),
-        }) === slug
+      (item: any) => strapiProductSlug(item) === slug
     );
 
     if (match) {
