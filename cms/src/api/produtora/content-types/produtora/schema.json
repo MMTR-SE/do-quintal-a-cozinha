@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "produtoras",
+  "info": {
+    "singularName": "produtora",
+    "pluralName": "produtoras",
+    "displayName": "Produtora"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "telefone": {
+      "type": "string"
+    },
+    "instagram": {
+      "type": "string"
+    },
+    "produtos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::produto.produto",
+      "mappedBy": "produtora"
+    }
+  }
+}
