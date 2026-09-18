@@ -94,15 +94,27 @@ const mapDifficulty = (v) => {
 };
 
 async function fetchCollection(plural) {
-  const res = await fetch(`${SRC_URL}/api/${plural}?populate=*&pagination[pageSize]=100`, {
-    headers: { Authorization: `Bearer ${SRC_TOKEN}` },
-  });
-  if (!res.ok) {
-    console.warn(`  ! ${plural}: HTTP ${res.status} (${await res.text().catch(() => "")})`.slice(0, 160));
-    return [];
+  // Colchetes codificados: o Strapi de producao trava (timeout) com "pagination[...]".
+  const base = `${SRC_URL}/api/${plural}?populate=*&pagination%5BpageSize%5D=100`;
+  const items = new Map();
+
+  // Busca publicados e rascunhos (uniao por documentId) — a pre-producao recebe tudo.
+  for (const suffix of ["", "&status=draft"]) {
+    try {
+      const res = await fetch(base + suffix, {
+        headers: { Authorization: `Bearer ${SRC_TOKEN}` },
+      });
+      if (!res.ok) {
+        console.warn(`  ! ${plural}${suffix}: HTTP ${res.status}`);
+        continue;
+      }
+      const json = await res.json();
+      for (const item of json.data || []) items.set(entityId(item), item);
+    } catch (e) {
+      console.warn(`  ! ${plural}${suffix}: ${e.message}`);
+    }
   }
-  const json = await res.json();
-  return json.data || [];
+  return [...items.values()];
 }
 
 async function ensureMedia(url, created) {
