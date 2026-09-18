@@ -1,8 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getSingle, StrapiEntity } from "@/lib/strapi";
-import { mapStrapiProduct } from "@/lib/strapi-content";
 import { buildProductSlug } from "@/lib/slug";
 
 interface Options {
@@ -10,25 +8,6 @@ interface Options {
 }
 
 export async function getProductById(options: Options) {
-  // Verificar se é um produto do Strapi (ID começa com 'strapi-')
-  if (options.id.startsWith('strapi-')) {
-    const documentId = options.id.replace('strapi-', '');
-    
-    try {
-      const strapiProduct = await getSingle('produtos', documentId, { populate: '*' });
-      
-      if (!strapiProduct) {
-        return null;
-      }
-
-      return mapStrapiProduct(strapiProduct as StrapiEntity);
-    } catch (error) {
-      console.error('Erro ao buscar produto do Strapi:', error);
-      return null;
-    }
-  }
-
-  // Buscar do Prisma (produto local)
   const product = await prisma.product.findUnique({
     select: {
       id: true,
@@ -59,7 +38,7 @@ export async function getProductById(options: Options) {
   return {
     ...product,
     price: product.price ? Number(product.price) : null,
-    // Produtos locais nao guardam slug: ele e derivado da produtora + nome.
+    // Produtos nao guardam slug: ele e derivado da produtora + nome.
     slug: buildProductSlug({
       produtora: product.profile?.name,
       nome: product.product_name,
