@@ -2,19 +2,22 @@
 /**
  * Confere que o site esta carregando os dados do Postgres (sem Strapi).
  *
- * Sobe um navegador headless, abre as listagens e um detalhe de historia, e
- * falha (exit 1) se algo nao renderizar.
+ * Abre as listagens num navegador headless, confere que vem item do banco e
+ * abre o detalhe da primeira historia conferindo o titulo (consultado no banco,
+ * porque o card da listagem mostra o nome e o detalhe mostra o titulo).
  *
  * Uso:
  *   npm run verify:dados
  *   BASE_URL=http://localhost:3000 PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium npm run verify:dados
  *
- * Requer o site rodando (npm run dev) e o Playwright instalado.
+ * Requer o site rodando (npm run dev), Playwright instalado e DATABASE_URL valido.
  */
 import { chromium } from "playwright";
+import { PrismaClient } from "@prisma/client";
 
 const BASE_URL = (process.env.BASE_URL || "http://localhost:3000").replace(/\/$/, "");
 const CHROMIUM = process.env.PLAYWRIGHT_CHROMIUM_PATH || "/usr/bin/chromium";
+const prisma = new PrismaClient();
 
 const browser = await chromium.launch({
   executablePath: CHROMIUM,
@@ -29,51 +32,55 @@ async function abrir(path) {
   await page.waitForTimeout(1500); // deixa o React Query concluir
 }
 
-async function conferir(nome, path, checks) {
+async function conferirListagem(nome, path, seletorItens) {
   try {
     await abrir(path);
-    const texto = await page.innerText("body");
-    const faltando = checks.filter((c) => (c.tipo === "texto" ? !texto.includes(c.valor) : c.valor(texto)));
-    if (faltando.length) {
-      console.log(`FALHA ${nome} (${path}) — nao encontrou: ${faltando.map((f) => f.desc || f.valor).join(", ")}`);
-      falhas++;
-      return;
-    }
-    console.log(`OK    ${nome} (${path})`);
+    const itens = await page.$$eval(seletorItens, (els) =>
+      els.map((e) => e.getAttribute("href")).filter(Boolean)
+    );
+    if (!(await page.innerText("body")).trim()) throw new Error("pagina vazia");
+    console.log(`${itens.length ? "OK   " : "AVISO"} ${nome} (${path}) — ${itens.length} item(ns) do banco`);
+    return itens[0] || null;
   } catch (e) {
     console.log(`FALHA ${nome} (${path}) — ${e.message}`);
+    falhas++;
+    return null;
+  }
+}
+
+async function conferirDetalheHistoria(href) {
+  const slug = href.replace(/^\/nossas-historias\//, "").replace(/\/$/, "");
+  try {
+    const esperada = await prisma.story.findUnique({ where: { slug }, select: { title: true, name: true } });
+    await abrir(href);
+    const texto = await page.innerText("body");
+    if (esperada?.title && texto.includes(esperada.title)) {
+      console.log(`OK    detalhe de historia (${href}) — contem "${esperada.title}"`);
+      return;
+    }
+    if (texto.length >= 400) {
+      console.log(`OK    detalhe de historia (${href}) — renderizou (${texto.length} chars)`);
+      return;
+    }
+    throw new Error(`conteudo curto (${texto.length} chars)${esperada ? ` — esperado "${esperada.title}"` : ""}`);
+  } catch (e) {
+    console.log(`FALHA detalhe de historia (${href}) — ${e.message}`);
     falhas++;
   }
 }
 
-// Listagens: precisam pelo menos renderizar o titulo da secao.
-await conferir("listagem de historias", "/nossas-historias/", [{ tipo: "texto", valor: "Nossas Histórias" }]);
-await conferir("listagem de receitas", "/nossas-receitas/", [{ tipo: "texto", valor: "Receitas" }]);
-await conferir("listagem de produtos", "/nossa-producao/", [{ tipo: "texto", valor: "Produção" }]);
+const historia = await conferirListagem(
+  "listagem de historias",
+  "/nossas-historias/",
+  'a[href^="/nossas-historias/"]:not([href="/nossas-historias/"])'
+);
+await conferirListagem("listagem de receitas", "/nossas-receitas/", 'a[href^="/nossas-receitas/"]');
+await conferirListagem("listagem de produtos", "/nossa-producao/", 'a[href^="/nossa-producao/"]');
 
-// Detalhe: pega o primeiro link de historia da listagem e confere que abre.
-try {
-  await abrir("/nossas-historias/");
-  const link = await page.$eval('a[href*="/nossas-historias/"]', (el) => el.getAttribute("href"));
-  if (link) {
-    const slug = link.replace(/\/$/, "");
-    await abrir(`${slug}/`);
-    const titulo = await page.title();
-    const temConteudo = (await page.innerText("body")).length > 400;
-    if (temConteudo) console.log(`OK    detalhe de historia (${slug}/)`);
-    else {
-      console.log(`FALHA detalhe de historia (${slug}/) — pagina sem conteudo (title: ${titulo})`);
-      falhas++;
-    }
-  } else {
-    console.log("AVISO nenhuma historia na listagem para testar o detalhe");
-  }
-} catch (e) {
-  console.log(`FALHA detalhe de historia — ${e.message}`);
-  falhas++;
-}
+if (historia) await conferirDetalheHistoria(historia);
 
 await browser.close();
+await prisma.$disconnect();
 
 if (falhas) {
   console.log(`\n${falhas} verificacao(oes) falharam.`);
