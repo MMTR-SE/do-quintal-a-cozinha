@@ -86,7 +86,7 @@ The server actions and API routes no longer call the Strapi CMS — all content 
 - `npm run db:importar-sqlite` — `SQLITE_SRC=/caminho/prod.db`, traz os dados da aplicação em produção (banco SQLite) preservando ids.
 - `npm run db:migrate-producao` — `STRAPI_SRC_URL` + `STRAPI_SRC_TOKEN`, traz o conteúdo do CMS, preservando ids como `strapi-<documentId>`.
 
-Depois de importar, `npm run verify:dados` abre o site no navegador (Playwright) e confere que as listagens e um detalhe carregam do Postgres. As imagens continuam apontando para os domínios liberados em `next.config.ts`.
+Depois de importar, `npm run verify:dados` abre o site no navegador (Playwright) e confere que as listagens e um detalhe carregam do Postgres. Para carregar a pré-produção com os dados de produção (sem seed), limpe antes com `npx prisma migrate reset --force --skip-seed`. As imagens continuam apontando para os domínios liberados em `next.config.ts`.
 
 ### Middleware API Key Authentication
 
