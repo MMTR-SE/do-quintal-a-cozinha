@@ -22,6 +22,8 @@ npm run db:deploy              # Apply migrations + generate (production)
 npm run db:seed                # Seed database (prisma/seeds/main.js)
 npm run db:backfill-slugs      # Backfill story slugs
 npm run db:migrate-producao    # Importa conteudo do Strapi de producao p/ o Postgres (ver abaixo)
+npm run db:importar-sqlite     # Importa o banco SQLite de producao p/ o Postgres (SQLITE_SRC=arquivo.db)
+npm run verify:dados           # Confere no navegador se o site carrega os dados do Postgres
 
 # Storybook
 npm run storybook              # Component docs (port 6006)
@@ -79,7 +81,12 @@ Products route via `/nossa-producao/[slug]`, where the slug is `produtora + nome
 
 ### Site reads only Postgres (no Strapi at runtime)
 
-The server actions and API routes no longer call the Strapi CMS — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). CMS content is imported once with `npm run db:migrate-producao` (`prisma/scripts/migrate-producao.mjs`, requires `STRAPI_SRC_URL` + `STRAPI_SRC_TOKEN`), which preserves ids as `strapi-<documentId>` and is idempotent. The Strapi/image domains stay whitelisted in `next.config.ts` because migrated media URLs point there.
+The server actions and API routes no longer call the Strapi CMS — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). There are two one-off importers, both idempotent:
+
+- `npm run db:importar-sqlite` — `SQLITE_SRC=/caminho/prod.db`, traz os dados da aplicação em produção (banco SQLite) preservando ids.
+- `npm run db:migrate-producao` — `STRAPI_SRC_URL` + `STRAPI_SRC_TOKEN`, traz o conteúdo do CMS, preservando ids como `strapi-<documentId>`.
+
+Depois de importar, `npm run verify:dados` abre o site no navegador (Playwright) e confere que as listagens e um detalhe carregam do Postgres. As imagens continuam apontando para os domínios liberados em `next.config.ts`.
 
 ### Middleware API Key Authentication
 
