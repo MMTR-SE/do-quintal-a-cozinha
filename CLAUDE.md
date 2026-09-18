@@ -21,6 +21,7 @@ npx prisma studio                               # Database GUI
 npm run db:deploy              # Apply migrations + generate (production)
 npm run db:seed                # Seed database (prisma/seeds/main.js)
 npm run db:backfill-slugs      # Backfill story slugs
+npm run db:migrate-producao    # Importa conteudo do Strapi de producao p/ o Postgres (ver abaixo)
 
 # Storybook
 npm run storybook              # Component docs (port 6006)
@@ -74,7 +75,11 @@ Stories route via `/nossas-historias/[slug]`, not `[id]`. The server action is `
 
 ### Product Slugs Are Derived, Not Stored
 
-Products route via `/nossa-producao/[slug]`, where the slug is `produtora + nome` (e.g. `dona-fatima-mel-de-engenho`), built by `buildProductSlug` in `src/lib/slug.ts`. Unlike stories, the slug is **not persisted**: it is derived from the same fields on both sides (CMS via `mapStrapiProduct` in `src/lib/strapi-content.ts`, local DB via `get-all-products.ts`/`get-product-by-id.ts`), so listing and detail always agree. Legacy `/nossa-producao/strapi-<documentId>` URLs keep working through the fallback in `get-product-by-slug.ts`.
+Products route via `/nossa-producao/[slug]`, where the slug is `produtora + nome` (e.g. `dona-fatima-mel-de-engenho`), built by `buildProductSlug` in `src/lib/slug.ts`. Unlike stories, the slug is **not persisted**: it is derived from the same fields in `get-all-products.ts`, `get-product-by-id.ts` and `get-product-by-slug.ts`, so listing and detail always agree. Legacy `/nossa-producao/strapi-<documentId>` URLs keep working because the content migration imports CMS items with id `strapi-<documentId>`.
+
+### Site reads only Postgres (no Strapi at runtime)
+
+The server actions and API routes no longer call the Strapi CMS — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). CMS content is imported once with `npm run db:migrate-producao` (`prisma/scripts/migrate-producao.mjs`, requires `STRAPI_SRC_URL` + `STRAPI_SRC_TOKEN`), which preserves ids as `strapi-<documentId>` and is idempotent. The Strapi/image domains stay whitelisted in `next.config.ts` because migrated media URLs point there.
 
 ### Middleware API Key Authentication
 

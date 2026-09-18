@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { getProductById } from "@/app/actions/get-product-by-id";
-import { getCollection } from "@/lib/strapi";
-import { mapStrapiProduct, strapiProductSlug } from "@/lib/strapi-content";
+import { prisma } from "@/lib/prisma";
+import { buildProductSlug } from "@/lib/slug";
 
 /**
  * Resolve um produto pela URL publica.
  *
  * O slug e a produtora + o nome do produto (ex.: "dona-fatima-mel-de-engenho").
- * Como os produtos vem do CMS e do banco local, o slug nao fica guardado: ele e
- * derivado dos mesmos campos nos dois lados, entao a listagem e o detalhe sempre
- * chegam ao mesmo valor.
+ * Como os produtos nao guardam slug, ele e derivado dos mesmos campos da
+ * listagem (get-all-products), garantindo que listagem e detalhe concordem.
  *
  * URLs antigas (/nossa-producao/strapi-<documentId> e ids locais) continuam
  * funcionando pelo fallback em getProductById.
@@ -19,27 +17,31 @@ import { mapStrapiProduct, strapiProductSlug } from "@/lib/strapi-content";
 export async function getProductBySlug({ slug }: { slug: string }) {
   if (!slug) return null;
 
-  // Compatibilidade com as URLs antigas baseadas no id do CMS.
+  // Compatibilidade com as URLs antigas baseadas no id do CMS/local.
   if (slug.startsWith("strapi-")) {
     return getProductById({ id: slug });
   }
 
-  try {
-    const items = await getCollection("produtos", { populate: "*" });
+  const products = await prisma.product.findMany({
+    select: {
+      id: true,
+      product_name: true,
+      profile: { select: { name: true } },
+    },
+  });
 
-    // Usa o mesmo helper da listagem: e o que garante que os dois lados
-    // calculem exatamente o mesmo slug (inclusive com a produtora como relacao).
-    const match = (items ?? []).find(
-      (item: any) => strapiProductSlug(item) === slug
-    );
+  const match = products.find(
+    (product) =>
+      buildProductSlug({
+        produtora: product.profile?.name,
+        nome: product.product_name,
+      }) === slug
+  );
 
-    if (match) {
-      return mapStrapiProduct(match);
-    }
-  } catch (error) {
-    console.error("Erro ao buscar produto por slug:", error);
+  if (match) {
+    return getProductById({ id: match.id });
   }
 
-  // Ultimo recurso: id de produto local (Prisma).
+  // Ultimo recurso: id de produto direto.
   return getProductById({ id: slug });
 }

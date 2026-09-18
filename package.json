@@ -14,6 +14,7 @@
     "db:deploy": "npx prisma migrate deploy && npx prisma generate",
     "db:seed": "node prisma/seeds/main.js",
     "db:backfill-slugs": "node prisma/scripts/backfill-slugs.js",
+    "db:migrate-producao": "node prisma/scripts/migrate-producao.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "cms:dev": "cd cms && npm run develop",

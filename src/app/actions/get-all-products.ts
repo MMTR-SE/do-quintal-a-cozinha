@@ -2,8 +2,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getCollection } from "@/lib/strapi";
-import { mapStrapiProduct } from "@/lib/strapi-content";
 import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
 
@@ -26,26 +24,8 @@ interface PriceCondition {
 
 interface Where {
   category?: CategorySearch
-  product_name?: { contains: string }
+  product_name?: { contains: string; mode?: "insensitive" }
   OR?: Array<{ price: PriceCondition }>
-}
-
-/**
- * Fetches products from Strapi CMS and converts them to Product format
- */
-async function getProductsFromStrapi() {
-  try {
-    const strapiProducts = await getCollection('produtos', { populate: '*' });
-
-    if (!strapiProducts || strapiProducts.length === 0) {
-      return [];
-    }
-
-    return strapiProducts.map(mapStrapiProduct);
-  } catch (error) {
-    console.error('Erro ao buscar produtos do Strapi:', error);
-    return [];
-  }
 }
 
 /**
@@ -54,8 +34,7 @@ async function getProductsFromStrapi() {
  * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
  * Price ranges: under-50, 50-100, 100-200, over-200
  *
- * NOTE: Combines products from both Prisma database and Strapi CMS.
- * Strapi products have IDs prefixed with 'strapi-'.
+ * Fonte unica: banco Postgres via Prisma (conteudo migrado do CMS).
  *
  * @param options - Filter options (search, categories, price ranges)
  * @returns Array of products matching the criteria
@@ -71,7 +50,8 @@ export async function getAllProducts(options?: Options) {
 
   if (options?.search) {
     where.product_name = {
-      contains: options.search
+      contains: options.search,
+      mode: "insensitive",
     }
   }
 
@@ -127,60 +107,13 @@ export async function getAllProducts(options?: Options) {
   });
 
   // Convert Decimal to number for client component serialization
-  const prismaProducts = products.map(product => ({
+  return products.map(product => ({
     ...product,
     price: product.price ? Number(product.price) : null,
-    // Produtos locais nao guardam slug: ele e derivado da produtora + nome.
+    // Produtos nao guardam slug: ele e derivado da produtora + nome.
     slug: buildProductSlug({
       produtora: product.profile?.name,
       nome: product.product_name,
     }),
   }));
-
-  // Buscar produtos do Strapi
-  const strapiProducts = await getProductsFromStrapi();
-
-  // Mesclar produtos do Prisma e do Strapi
-  let allProducts = [...prismaProducts, ...strapiProducts];
-
-  // Aplicar filtros nos produtos do Strapi (os do Prisma já vêm filtrados)
-  if (strapiProducts.length > 0) {
-    // Filtrar por busca
-    if (options?.search) {
-      allProducts = allProducts.filter(p =>
-        p.product_name.toLowerCase().includes(options.search!.toLowerCase())
-      );
-    }
-
-    // Filtrar por categoria
-    if (options?.categories && options.categories.length > 0) {
-      allProducts = allProducts.filter(p =>
-        options.categories!.includes(p.category)
-      );
-    }
-
-    // Filtrar por preço
-    if (options?.price && options.price.length > 0) {
-      allProducts = allProducts.filter(p => {
-        if (!p.price) return false;
-
-        return options.price!.some(range => {
-          switch (range) {
-            case "under-50":
-              return p.price! < 50;
-            case "50-100":
-              return p.price! >= 50 && p.price! <= 100;
-            case "100-200":
-              return p.price! >= 100 && p.price! <= 200;
-            case "over-200":
-              return p.price! > 200;
-            default:
-              return false;
-          }
-        });
-      });
-    }
-  }
-
-  return allProducts;
 }
