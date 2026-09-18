@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
 interface Options { search?: string; tags?: string[]; profileId?: string; }
 
 export async function getAllStories(options?: Options) {
-  const where: any = options?.search
+  const where: Prisma.StoryWhereInput = options?.search
     ? { name: { contains: options.search, mode: "insensitive" } }
     : {};
 

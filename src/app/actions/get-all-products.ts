@@ -36,24 +36,6 @@ interface Where {
 }
 
 /**
- * Fetches products from Strapi CMS and converts them to Product format
- */
-<<<<<<< HEAD
-
-interface PriceCondition {
-  gte?: number
-  lte?: number
-  lt?: number
-  gt?: number
-}
-
-interface Where {
-  category?: CategorySearch
-  product_name?: { contains: string; mode?: "insensitive" }
-  OR?: Array<{ price: PriceCondition }>
-}
-
-/**
  * Retrieves all products with optional filtering.
  *
  * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
@@ -136,5 +118,13 @@ export async function getAllProducts(options?: Options) {
     where
   });
 
-  return products;
+  return products.map(product => ({
+    ...product,
+    price: product.price ? Number(product.price) : null,
+    // Produtos nao guardam slug: ele e derivado da produtora + nome.
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
+  }));
 }

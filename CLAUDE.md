@@ -121,27 +121,9 @@ Stories route via `/nossas-historias/[slug]`, not `[id]`. The server action is `
 
 Products route via `/nossa-producao/[slug]`, where the slug is `produtora + nome` (e.g. `dona-fatima-mel-de-engenho`), built by `buildProductSlug` in `src/lib/slug.ts`. Unlike stories, the slug is **not persisted**: it is derived from the same fields in `get-all-products.ts`, `get-product-by-id.ts` and `get-product-by-slug.ts`, so listing and detail always agree. Legacy `/nossa-producao/strapi-<documentId>` URLs keep working because the content migration imports CMS items with id `strapi-<documentId>`.
 
-### Site reads only Postgres (CMS writes into it)
+### Site reads only Postgres (no Strapi at runtime)
 
-Server actions and API routes never call the Strapi CMS at runtime — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). The CMS is an **editing front-end that feeds the site's Postgres**:
-
-```
-Typebot → API do site (/api/product, /api/recipe) ─┬→ Postgres (quintal) → SITE
-                                                   └→ CMS (painel, via site_id)
-CMS (Strapi) → lifecycle hook → POST /api/cms-sync → Postgres (quintal) → SITE
-```
-
-- `src/lib/cms-sync.ts` + `POST /api/cms-sync` (protegida pelo `API_KEY` do middleware): puxa o conteúdo do Strapi e faz upsert no Postgres. Com `{ action: "delete", collection, site_id | documentId }` ela **remove** do Postgres o item apagado no CMS (`removerDoPostgres`).
-- Só o que está **publicado** no CMS entra no site: rascunho fica apenas no painel. Ao despublicar (ou apagar), o item que nasceu no CMS (id `strapi-<documentId>`) sai do site; itens que vieram do site (`site_id`) continuam, porque quem manda neles é o site/Typebot.
-- `cms/src/utils/cms-sync.ts` + `lifecycles.ts` de cada content type: ao criar/atualizar/publicar no CMS, avisa o site para puxar o conteúdo (→ `agendarSincronizacao`); ao remover, manda o id do item (`→ agendarRemocao`, payload de delete). Atraso de ~2,5s para o item já estar visível na API REST. Requer `SITE_SYNC_URL` no ambiente do CMS.
-- `src/lib/site-to-cms.ts`: o inverso — ao cadastrar/atualizar **ou apagar** produto ou receita **pela API** (fluxo do Typebot), o item também é criado/atualizado/removido no CMS (`after()` do Next, sem atrasar a resposta), então o painel mostra tudo. Não há loop: a sincronização do CMS escreve direto no Prisma, sem passar pela API.
-- **Histórias são editadas apenas no CMS** (não há rota de API para elas): criar/editar/apagar em `cms` reflete no Postgres do site via os hooks acima.
-- Produtoras só são removidas do site se não tiverem produtos/receitas (o schema tem `onDelete: Cascade` — apagar a produtora apagaria o conteúdo junto); nesse caso o site registra um aviso e mantém o registro.
-- O campo **`site_id`** (produtos/histórias/receitas/produtoras) liga o item do CMS ao registro do Postgres: a sincronização atualiza **no lugar** (sem duplicar). Item criado no CMS sem `site_id` entra com id `strapi-<documentId>`.
-- Importação inicial do conteúdo que já existia no site: `npm run db:importar-cms` (`prisma/scripts/importar-site-para-cms.mjs`) — cria/atualiza no CMS, preenche `site_id` e sobe as imagens.
-- Importadores avulsos: `npm run db:importar-sqlite` (`SQLITE_SRC=/caminho/prod.db`, banco da aplicação em produção) e `npm run db:migrate-producao` (`STRAPI_SRC_URL`/`STRAPI_SRC_TOKEN`, conteúdo do CMS).
-
-Depois de importar, `npm run verify:dados` abre o site no navegador (Playwright) e confere que as listagens e um detalhe carregam do Postgres. Para carregar a pré-produção com os dados de produção (sem seed), limpe antes com `npx prisma migrate reset --force --skip-seed`. As imagens continuam apontando para os domínios liberados em `next.config.ts`.
+The server actions and API routes no longer call the Strapi CMS — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). CMS content is imported once with `npm run db:migrate-producao` (`prisma/scripts/migrate-producao.mjs`, requires `STRAPI_SRC_URL` + `STRAPI_SRC_TOKEN`), which preserves ids as `strapi-<documentId>` and is idempotent. The Strapi/image domains stay whitelisted in `next.config.ts` because migrated media URLs point there.
 
 ### Middleware API Key Authentication
 

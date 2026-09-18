@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { getProductById } from "@/app/actions/get-product-by-id";
@@ -8,6 +7,7 @@ import { buildProductSlug } from "@/lib/slug";
 export async function getProductBySlug({ slug }: { slug: string }) {
   if (!slug) return null;
 
+  // Compatibilidade com as URLs antigas baseadas no id do CMS/local.
   if (slug.startsWith("strapi-")) {
     return getProductById({ id: slug });
   }
