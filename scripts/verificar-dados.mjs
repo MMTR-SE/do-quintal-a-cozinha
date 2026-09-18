@@ -35,6 +35,8 @@ async function abrir(path) {
 async function conferirListagem(nome, path, seletorItens) {
   try {
     await abrir(path);
+    // Espera os itens aparecerem (React Query + render dos cards), em vez de tempo fixo.
+    await page.waitForSelector(seletorItens, { timeout: 20000 }).catch(() => {});
     const itens = await page.$$eval(seletorItens, (els) =>
       els.map((e) => e.getAttribute("href")).filter(Boolean)
     );
