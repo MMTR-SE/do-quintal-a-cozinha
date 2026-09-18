@@ -1,21 +1,6 @@
 #!/usr/bin/env node
-/**
- * Importa os dados de um banco SQLite (producao) para o Postgres do site.
- *
- * Uso:
- *   SQLITE_SRC=/caminho/prod.db npm run db:importar-sqlite
- *   SQLITE_SRC=/caminho/prod.db node prisma/scripts/importar-sqlite.mjs --dry-run
- *
- * - Preserva os ids (as URLs/id continuam as mesmas).
- * - Idempotente: faz upsert; passos e ligacoes de midia sao recriados.
- * - Datas em SQLite (Prisma) ficam como INTEGER (ms) — convertidas para Date.
- * - O campo `ingredients` (Json) e mantido como a string JSON original, que e
- *   o formato que a UI espera (JSON.parse).
- *
- * Le o SQLite com o modulo nativo do Node (`node:sqlite`, Node 22+) — sem
- * dependencia nativa externa, entao nao quebra o build do Docker.
- */
-import { DatabaseSync } from "node:sqlite";
+
+import Database from "better-sqlite3";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -27,7 +12,7 @@ if (!SRC) {
   process.exit(1);
 }
 
-const db = new DatabaseSync(SRC, { readOnly: true });
+const db = new Database(SRC, { readonly: true });
 const stats = {};
 
 const toDate = (v, fallback = new Date()) => {
@@ -143,8 +128,11 @@ async function main() {
 
   // 3) receitas (+ passos e midias)
   for (const r of rows("Recipe")) {
+<<<<<<< HEAD
     // Receita sem produtora na origem: usa o perfil padrao (a relacao e exigida).
     const profile_id = idsPerfis.has(r.profile_id) ? r.profile_id : await perfilPadrao();
+=======
+>>>>>>> 5f074755 (feat(migracao): importador SQLite -> Postgres para os dados de producao)
     const data = {
       title: r.title,
       description: r.description,
@@ -153,7 +141,11 @@ async function main() {
       number_of_servings: Number(r.number_of_servings ?? 1),
       difficulty: String(r.difficulty || "INTERMEDIARY").toUpperCase(),
       ingredients: r.ingredients, // string JSON, como a UI espera
+<<<<<<< HEAD
       profile_id,
+=======
+      profile_id: r.profile_id,
+>>>>>>> 5f074755 (feat(migracao): importador SQLite -> Postgres para os dados de producao)
       created_at: toDate(r.created_at),
     };
     await prisma.recipe.upsert({
@@ -178,13 +170,20 @@ async function main() {
 
   // 4) produtos (+ midias)
   for (const p of rows("Product")) {
+<<<<<<< HEAD
     const profile_id = idsPerfis.has(p.profile_id) ? p.profile_id : await perfilPadrao();
+=======
+>>>>>>> 5f074755 (feat(migracao): importador SQLite -> Postgres para os dados de producao)
     const data = {
       product_name: p.product_name,
       description: p.description ?? null,
       price: p.price ?? null,
       category: String(p.category || "AGRICOLA").toUpperCase(),
+<<<<<<< HEAD
       profile_id,
+=======
+      profile_id: p.profile_id,
+>>>>>>> 5f074755 (feat(migracao): importador SQLite -> Postgres para os dados de producao)
     };
     await prisma.product.upsert({ where: { id: p.id }, create: { id: p.id, ...data }, update: data });
     await prisma.productMedia.deleteMany({ where: { productId: p.id } });
