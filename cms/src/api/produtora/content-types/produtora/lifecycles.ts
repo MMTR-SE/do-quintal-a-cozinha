@@ -1,5 +1,9 @@
 import { agendarRemocao, agendarSincronizacao } from "../../../../utils/cms-sync";
 
+/**
+ * Avisa o site quando o conteudo muda no CMS: criacao/edicao -> o site puxa o
+ * conteudo; remocao -> o site apaga o registro correspondente no Postgres.
+ */
 export default {
   afterCreate() {
     agendarSincronizacao();
@@ -7,7 +11,7 @@ export default {
   afterUpdate() {
     agendarSincronizacao();
   },
-  afterDelete() {
-    agendarSincronizacao();
+  afterDelete(event: any) {
+    agendarRemocao("produtoras", event?.result);
   },
 };
