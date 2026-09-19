@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
 import { Category, MediaType } from "@prisma/client";
 import { after } from "next/server";
-import { enviarProdutoParaCms } from "@/lib/site-to-cms";
+import { enviarProdutoParaCms, removerProdutoDoCms } from "@/lib/site-to-cms";
 
 interface MediaItem {
   url: string;
@@ -218,6 +218,13 @@ export async function DELETE(_request: Request, { params }: params) {
   }
 
   await prisma.product.delete({ where: { id: product_id } });
+
+  // Remove tambem o item espelhado no CMS
+  after(() =>
+    removerProdutoDoCms(product_id).catch((error) =>
+      console.error("[site->cms] remover produto:", error.message)
+    )
+  );
 
   return new Response(
     JSON.stringify({ message: "Product deleted successfully" }),

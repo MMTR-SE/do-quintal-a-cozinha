@@ -1,8 +1,8 @@
-import { agendarSincronizacao } from "../../../../utils/cms-sync";
+import { agendarRemocao, agendarSincronizacao } from "../../../../utils/cms-sync";
 
 /**
- * Sempre que um item muda no CMS, avisa o site (com um pequeno atraso, para o
- * item ja estar visivel na API REST) para sincronizar com o Postgres.
+ * Avisa o site quando o conteudo muda no CMS: criacao/edicao -> o site puxa o
+ * conteudo; remocao -> o site apaga o registro correspondente no Postgres.
  */
 export default {
   afterCreate() {
@@ -11,7 +11,7 @@ export default {
   afterUpdate() {
     agendarSincronizacao();
   },
-  afterDelete() {
-    agendarSincronizacao();
+  afterDelete(event: any) {
+    agendarRemocao("receitas", event?.result);
   },
 };
