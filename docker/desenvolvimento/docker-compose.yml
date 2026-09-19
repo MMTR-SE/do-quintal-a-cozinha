@@ -54,6 +54,9 @@ services:
     build:
       context: $PWD
       dockerfile: docker/cms/Dockerfile
+    # Pega API_KEY/STRAPI_API_TOKEN do .env (o DATABASE_URL abaixo sobrescreve)
+    env_file:
+      - $PWD/.env
     ports:
       - "1337:1337"
     environment:
@@ -62,6 +65,8 @@ services:
       PORT: 1337
       DATABASE_CLIENT: postgres
       DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
+      # Ao publicar no CMS, avisa o site para sincronizar com o Postgres
+      SITE_SYNC_URL: http://dev-quintal:3000
       APP_KEYS: ${CMS_APP_KEYS:-dev-key-1,dev-key-2}
       API_TOKEN_SALT: ${CMS_API_TOKEN_SALT:-dev-api-token-salt}
       ADMIN_JWT_SECRET: ${CMS_ADMIN_JWT_SECRET:-dev-admin-jwt-secret}

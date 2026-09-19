@@ -16,6 +16,7 @@
     "db:backfill-slugs": "node prisma/scripts/backfill-slugs.js",
     "db:migrate-producao": "node prisma/scripts/migrate-producao.mjs",
     "db:importar-sqlite": "node prisma/scripts/importar-sqlite.mjs",
+    "db:importar-cms": "node prisma/scripts/importar-site-para-cms.mjs",
     "verify:dados": "node scripts/verificar-dados.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

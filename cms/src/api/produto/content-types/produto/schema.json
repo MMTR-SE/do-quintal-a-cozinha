@@ -87,6 +87,9 @@
           "localized": true
         }
       }
+    },
+    "site_id": {
+      "type": "string"
     }
   }
 }

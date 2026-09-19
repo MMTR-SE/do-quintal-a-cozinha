@@ -57,6 +57,8 @@ services:
       # Os segredos (CMS_APP_KEYS, CMS_API_TOKEN_SALT, CMS_ADMIN_JWT_SECRET,
       # CMS_TRANSFER_TOKEN_SALT, CMS_JWT_SECRET, CMS_ENCRYPTION_KEY) chegam pelo
       # env_file acima e sao lidos com prefixo CMS_ em cms/config/*.ts.
+      # Ao publicar no CMS, avisa o site para sincronizar com o Postgres.
+      SITE_SYNC_URL: http://pre-quintal:3000
     ports:
       - "127.0.0.1:1337:1337"
     restart: unless-stopped
