@@ -175,3 +175,32 @@ export async function enviarReceitaParaCms(recipeId: string): Promise<void> {
     imagem: imagens.length ? imagens : undefined,
   });
 }
+
+/** Remove do CMS o item espelhado (procurando pelo `site_id`). */
+async function removerDoCmsPorSiteId(plural: string, siteId: string): Promise<boolean> {
+  const filtro = `filters%5Bsite_id%5D%5B%24eq%5D=${encodeURIComponent(siteId)}`;
+
+  // O item pode estar publicado ou ainda em rascunho: procura nos dois estados.
+  for (const status of ["", "&status=draft"]) {
+    const busca = await cms("GET", `/api/${plural}?${filtro}${status}`);
+    const existente = busca.data?.[0];
+    if (existente) {
+      await cms("DELETE", `/api/${plural}/${existente.documentId}`);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/** Remove do CMS o produto apagado pela API. */
+export async function removerProdutoDoCms(productId: string): Promise<void> {
+  if (!ativo()) return;
+  await removerDoCmsPorSiteId("produtos", productId);
+}
+
+/** Remove do CMS a receita apagada pela API. */
+export async function removerReceitaDoCms(recipeId: string): Promise<void> {
+  if (!ativo()) return;
+  await removerDoCmsPorSiteId("receitas", recipeId);
+}

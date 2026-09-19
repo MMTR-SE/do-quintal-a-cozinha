@@ -306,3 +306,41 @@ export async function syncCmsContent(collection?: CmsCollection): Promise<SyncSt
 
   return stats;
 }
+
+/**
+ * Remove do Postgres um item que foi apagado no CMS.
+ *
+ * - Itens nascidos no CMS usam id `strapi-<documentId>`.
+ * - Itens espelhados do site carregam o id original em `site_id`.
+ * Produtoras so sao removidas se nao tiverem produtos/receitas (o schema tem
+ * cascade — apagar uma produtora com conteudo apagaria o conteudo junto).
+ */
+export async function removerDoPostgres(
+  collection: CmsCollection,
+  ids: { siteId?: string; documentId?: string }
+): Promise<number> {
+  const id = ids.siteId ? String(ids.siteId) : ids.documentId ? `strapi-${ids.documentId}` : null;
+  if (!id) return 0;
+
+  switch (collection) {
+    case "produtos":
+      return (await prisma.product.deleteMany({ where: { id } })).count;
+    case "receitas":
+      return (await prisma.recipe.deleteMany({ where: { id } })).count;
+    case "historias":
+      return (await prisma.story.deleteMany({ where: { id } })).count;
+    case "produtoras": {
+      const usados = await prisma.product.count({ where: { profile_id: id } });
+      const receitas = await prisma.recipe.count({ where: { profile_id: id } });
+      if (usados + receitas > 0) {
+        console.warn(
+          `[cms-sync] produtora ${id} nao removida: ainda tem ${usados} produto(s) e ${receitas} receita(s) no site`
+        );
+        return 0;
+      }
+      return (await prisma.profile.deleteMany({ where: { id } })).count;
+    }
+    default:
+      return 0;
+  }
+}

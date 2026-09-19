@@ -90,9 +90,11 @@ Typebot → API do site (/api/product, /api/recipe) ─┬→ Postgres (quintal)
 CMS (Strapi) → lifecycle hook → POST /api/cms-sync → Postgres (quintal) → SITE
 ```
 
-- `src/lib/cms-sync.ts` + `POST /api/cms-sync` (protegida pelo `API_KEY` do middleware): puxa o conteúdo do Strapi e faz upsert no Postgres.
-- `cms/src/utils/cms-sync.ts` + `lifecycles.ts` de cada content type: ao criar/atualizar/publicar/remover no CMS, avisa o site (com ~2,5s de atraso, para o item já estar visível na API REST). Requer `SITE_SYNC_URL` no ambiente do CMS.
-- `src/lib/site-to-cms.ts`: o inverso — ao cadastrar/atualizar produto ou receita **pela API** (fluxo do Typebot), o item também é criado/atualizado no CMS (`after()` do Next, sem atrasar a resposta), então o painel mostra tudo. Não há loop: a sincronização do CMS escreve direto no Prisma, sem passar pela API.
+- `src/lib/cms-sync.ts` + `POST /api/cms-sync` (protegida pelo `API_KEY` do middleware): puxa o conteúdo do Strapi e faz upsert no Postgres. Com `{ action: "delete", collection, site_id | documentId }` ela **remove** do Postgres o item apagado no CMS (`removerDoPostgres`).
+- `cms/src/utils/cms-sync.ts` + `lifecycles.ts` de cada content type: ao criar/atualizar/publicar no CMS, avisa o site para puxar o conteúdo (→ `agendarSincronizacao`); ao remover, manda o id do item (`→ agendarRemocao`, payload de delete). Atraso de ~2,5s para o item já estar visível na API REST. Requer `SITE_SYNC_URL` no ambiente do CMS.
+- `src/lib/site-to-cms.ts`: o inverso — ao cadastrar/atualizar **ou apagar** produto ou receita **pela API** (fluxo do Typebot), o item também é criado/atualizado/removido no CMS (`after()` do Next, sem atrasar a resposta), então o painel mostra tudo. Não há loop: a sincronização do CMS escreve direto no Prisma, sem passar pela API.
+- **Histórias são editadas apenas no CMS** (não há rota de API para elas): criar/editar/apagar em `cms` reflete no Postgres do site via os hooks acima.
+- Produtoras só são removidas do site se não tiverem produtos/receitas (o schema tem `onDelete: Cascade` — apagar a produtora apagaria o conteúdo junto); nesse caso o site registra um aviso e mantém o registro.
 - O campo **`site_id`** (produtos/histórias/receitas/produtoras) liga o item do CMS ao registro do Postgres: a sincronização atualiza **no lugar** (sem duplicar). Item criado no CMS sem `site_id` entra com id `strapi-<documentId>`.
 - Importação inicial do conteúdo que já existia no site: `npm run db:importar-cms` (`prisma/scripts/importar-site-para-cms.mjs`) — cria/atualiza no CMS, preenche `site_id` e sobe as imagens.
 - Importadores avulsos: `npm run db:importar-sqlite` (`SQLITE_SRC=/caminho/prod.db`, banco da aplicação em produção) e `npm run db:migrate-producao` (`STRAPI_SRC_URL`/`STRAPI_SRC_TOKEN`, conteúdo do CMS).
