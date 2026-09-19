@@ -17,6 +17,15 @@
 /.next/
 /out/
 
+# PWA — gerados no build pelo @ducanh2912/next-pwa (dest: public)
+/public/sw.js
+/public/sw.js.map
+/public/workbox-*.js
+/public/workbox-*.js.map
+/public/swe-worker-*.js
+/public/fallback-*.js
+/public/service-worker.js
+
 # production
 /build
 /dist
