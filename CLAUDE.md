@@ -121,12 +121,21 @@ Stories route via `/nossas-historias/[slug]`, not `[id]`. The server action is `
 
 Products route via `/nossa-producao/[slug]`, where the slug is `produtora + nome` (e.g. `dona-fatima-mel-de-engenho`), built by `buildProductSlug` in `src/lib/slug.ts`. Unlike stories, the slug is **not persisted**: it is derived from the same fields in `get-all-products.ts`, `get-product-by-id.ts` and `get-product-by-slug.ts`, so listing and detail always agree. Legacy `/nossa-producao/strapi-<documentId>` URLs keep working because the content migration imports CMS items with id `strapi-<documentId>`.
 
-### Site reads only Postgres (no Strapi at runtime)
+### Site reads only Postgres (CMS writes into it)
 
-The server actions and API routes no longer call the Strapi CMS — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). There are two one-off importers, both idempotent:
+Server actions and API routes never call the Strapi CMS at runtime — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). The CMS is an **editing front-end that feeds the site's Postgres**:
 
-- `npm run db:importar-sqlite` — `SQLITE_SRC=/caminho/prod.db`, traz os dados da aplicação em produção (banco SQLite) preservando ids.
-- `npm run db:migrate-producao` — `STRAPI_SRC_URL` + `STRAPI_SRC_TOKEN`, traz o conteúdo do CMS, preservando ids como `strapi-<documentId>`.
+```
+Typebot  → API do site (/api/product, ...)                 ┐
+                                                           ├→ Postgres (quintal) → site
+CMS (Strapi) → lifecycle hook → POST /api/cms-sync ────────┘
+```
+
+- `src/lib/cms-sync.ts` + `POST /api/cms-sync` (protegida pelo `API_KEY` do middleware): puxa o conteúdo do Strapi e faz upsert no Postgres.
+- `cms/src/utils/cms-sync.ts` + `lifecycles.ts` de cada content type: ao criar/atualizar/publicar/remover no CMS, avisa o site (com ~2,5s de atraso, para o item já estar visível na API REST). Requer `SITE_SYNC_URL` no ambiente do CMS.
+- O campo **`site_id`** (produtos/histórias/receitas/produtoras) liga o item do CMS ao registro do Postgres: a sincronização atualiza **no lugar** (sem duplicar). Item criado no CMS sem `site_id` entra com id `strapi-<documentId>`.
+- Importação inicial do conteúdo que já existia no site: `npm run db:importar-cms` (`prisma/scripts/importar-site-para-cms.mjs`) — cria/atualiza no CMS, preenche `site_id` e sobe as imagens.
+- Importadores avulsos: `npm run db:importar-sqlite` (`SQLITE_SRC=/caminho/prod.db`, banco da aplicação em produção) e `npm run db:migrate-producao` (`STRAPI_SRC_URL`/`STRAPI_SRC_TOKEN`, conteúdo do CMS).
 
 Depois de importar, `npm run verify:dados` abre o site no navegador (Playwright) e confere que as listagens e um detalhe carregam do Postgres. Para carregar a pré-produção com os dados de produção (sem seed), limpe antes com `npx prisma migrate reset --force --skip-seed`. As imagens continuam apontando para os domínios liberados em `next.config.ts`.
 

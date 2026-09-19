@@ -2,17 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { removerDoPostgres, syncCmsContent, type CmsCollection } from "@/lib/cms-sync";
 
-/**
- * Sincroniza o conteudo do CMS (Strapi) para o Postgres do site.
- *
- * POST /api/cms-sync                              -> sincroniza tudo
- * POST /api/cms-sync {collection: "produtos"}     -> sincroniza uma colecao
- * POST /api/cms-sync {action: "delete", ...}      -> remove do Postgres o item
- *                                                    apagado no CMS
- *
- * A autenticacao e feita pelo middleware (header API_KEY). Usado pelos
- * lifecycle hooks do CMS ao criar/atualizar/publicar/remover conteudo.
- */
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 

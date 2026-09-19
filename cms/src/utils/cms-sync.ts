@@ -1,10 +1,3 @@
-/**
- * Sincroniza o CMS com o site (Postgres).
- *
- * O site le apenas o Postgres; o CMS e a interface de edicao. Ao criar/atualizar
- * o hook manda o site puxar o conteudo; ao apagar, manda o id do item removido
- * para o site apagar o registro correspondente.
- */
 const SITE_URL = process.env.SITE_SYNC_URL;
 const SITE_KEY = process.env.SITE_SYNC_API_KEY || process.env.API_KEY || "";
 

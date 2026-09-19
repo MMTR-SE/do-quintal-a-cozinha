@@ -112,6 +112,7 @@ const mapDifficulty = (value: unknown) => {
   return map[String(value || "").toLowerCase()] || "INTERMEDIARY";
 };
 
+<<<<<<< HEAD
 const PAGE_SIZE = 100;
 
 /**
