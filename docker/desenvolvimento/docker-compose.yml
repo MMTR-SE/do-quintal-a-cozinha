@@ -10,14 +10,20 @@ services:
     volumes:
       - $PWD:/app
       - /app/node_modules
+      # Build do Next fica só no container (evita arquivos de root/nobody no .next do host)
+      - /app/.next
       - ./docker/desenvolvimento/certificates:/app/certificates
     environment:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true  # Enable polling for hot reload in Docker
       - NEXT_PUBLIC_STRAPI_URL=http://cms:1337
+      # Dentro do container o banco atende em "postgres" (o .env aponta para localhost)
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/${POSTGRES_DB:-quintal}?schema=public
     depends_on:
-      - cms
-    command: npm run dev
+      postgres:
+        condition: service_healthy
+      cms:
+        condition: service_started
     restart: unless-stopped
     networks:
       - app_network
