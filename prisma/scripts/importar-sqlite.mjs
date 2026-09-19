@@ -11,8 +11,11 @@
  * - Datas em SQLite (Prisma) ficam como INTEGER (ms) — convertidas para Date.
  * - O campo `ingredients` (Json) e mantido como a string JSON original, que e
  *   o formato que a UI espera (JSON.parse).
+ *
+ * Le o SQLite com o modulo nativo do Node (`node:sqlite`, Node 22+) — sem
+ * dependencia nativa externa, entao nao quebra o build do Docker.
  */
-import Database from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -24,7 +27,7 @@ if (!SRC) {
   process.exit(1);
 }
 
-const db = new Database(SRC, { readonly: true });
+const db = new DatabaseSync(SRC, { readOnly: true });
 const stats = {};
 
 const toDate = (v, fallback = new Date()) => {
