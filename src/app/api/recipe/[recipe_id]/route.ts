@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
 import { RecipeDifficulty, MediaType } from "@prisma/client";
+import { after } from "next/server";
+import { enviarReceitaParaCms } from "@/lib/site-to-cms";
 
 interface MediaItem {
   url: string;
@@ -335,6 +337,12 @@ export async function PUT(request: Request, { params }: params) {
         newMedia: createdMedia,
       };
     });
+
+    after(() =>
+      enviarReceitaParaCms(recipe_id).catch((error) =>
+        console.error("[site->cms] receita:", error.message)
+      )
+    );
 
     return new Response(
       JSON.stringify({

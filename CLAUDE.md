@@ -85,13 +85,14 @@ Products route via `/nossa-producao/[slug]`, where the slug is `produtora + nome
 Server actions and API routes never call the Strapi CMS at runtime — all content comes from Postgres via Prisma (`src/lib/strapi.ts` and `src/lib/strapi-content.ts` were removed). The CMS is an **editing front-end that feeds the site's Postgres**:
 
 ```
-Typebot  → API do site (/api/product, ...)                 ┐
-                                                           ├→ Postgres (quintal) → site
-CMS (Strapi) → lifecycle hook → POST /api/cms-sync ────────┘
+Typebot → API do site (/api/product, /api/recipe) ─┬→ Postgres (quintal) → SITE
+                                                   └→ CMS (painel, via site_id)
+CMS (Strapi) → lifecycle hook → POST /api/cms-sync → Postgres (quintal) → SITE
 ```
 
 - `src/lib/cms-sync.ts` + `POST /api/cms-sync` (protegida pelo `API_KEY` do middleware): puxa o conteúdo do Strapi e faz upsert no Postgres.
 - `cms/src/utils/cms-sync.ts` + `lifecycles.ts` de cada content type: ao criar/atualizar/publicar/remover no CMS, avisa o site (com ~2,5s de atraso, para o item já estar visível na API REST). Requer `SITE_SYNC_URL` no ambiente do CMS.
+- `src/lib/site-to-cms.ts`: o inverso — ao cadastrar/atualizar produto ou receita **pela API** (fluxo do Typebot), o item também é criado/atualizado no CMS (`after()` do Next, sem atrasar a resposta), então o painel mostra tudo. Não há loop: a sincronização do CMS escreve direto no Prisma, sem passar pela API.
 - O campo **`site_id`** (produtos/histórias/receitas/produtoras) liga o item do CMS ao registro do Postgres: a sincronização atualiza **no lugar** (sem duplicar). Item criado no CMS sem `site_id` entra com id `strapi-<documentId>`.
 - Importação inicial do conteúdo que já existia no site: `npm run db:importar-cms` (`prisma/scripts/importar-site-para-cms.mjs`) — cria/atualiza no CMS, preenche `site_id` e sobe as imagens.
 - Importadores avulsos: `npm run db:importar-sqlite` (`SQLITE_SRC=/caminho/prod.db`, banco da aplicação em produção) e `npm run db:migrate-producao` (`STRAPI_SRC_URL`/`STRAPI_SRC_TOKEN`, conteúdo do CMS).
