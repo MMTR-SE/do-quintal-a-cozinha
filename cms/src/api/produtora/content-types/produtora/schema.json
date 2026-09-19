@@ -26,6 +26,9 @@
       "relation": "oneToMany",
       "target": "api::produto.produto",
       "mappedBy": "produtora"
+    },
+    "site_id": {
+      "type": "string"
     }
   }
 }
