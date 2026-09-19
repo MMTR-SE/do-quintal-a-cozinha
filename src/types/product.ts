@@ -1,4 +1,4 @@
-import { Category, MediaType } from "@prisma/client";
+import type { Category, MediaType } from "@prisma/client";
 
 /**
  * Profile information for a product producer
