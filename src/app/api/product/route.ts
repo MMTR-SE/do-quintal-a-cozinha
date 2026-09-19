@@ -5,8 +5,9 @@
 
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
-import { type NextRequest } from "next/server";
+import { after, type NextRequest } from "next/server";
 import { Category, MediaType } from "@prisma/client";
+import { enviarProdutoParaCms } from "@/lib/site-to-cms";
 
 interface MediaItem {
   url: string;
@@ -151,6 +152,13 @@ export async function POST(request: Request) {
         media: createdMedia,
       };
     });
+
+    // Espelha no CMS (painel) o produto cadastrado pela API (fluxo do Typebot)
+    after(() =>
+      enviarProdutoParaCms(result.product.id).catch((error) =>
+        console.error("[site->cms] produto:", error.message)
+      )
+    );
 
     return new Response(
       JSON.stringify({
