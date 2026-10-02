@@ -151,6 +151,11 @@ jobs:
             ensure_secret CMS_TRANSFER_TOKEN_SALT
             ensure_secret CMS_JWT_SECRET
             ensure_secret CMS_ENCRYPTION_KEY
+            # Chave das rotas /api/* (middleware do site). Sem ela a API inteira
+            # responde 401 -- inclusive o POST /api/cms-sync que o CMS usa para
+            # publicar no Postgres e as rotas que o Typebot chama. O CMS le a
+            # mesma chave deste arquivo, entao os dois lados combinam sozinhos.
+            ensure_secret API_KEY
 
             cd ../caddy
             if [ ! -f Caddyfile ]; then
