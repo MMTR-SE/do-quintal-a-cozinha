@@ -98,8 +98,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 30m
           envs: GHCR_USERNAME,GHCR_TOKEN,DEV_PATH
-          # O build da imagem do app na VPS passa de 5 min; o padrão de 10 min
-          # do passo cortava o deploy no meio.
+          # O build da imagem na VPS passava de 10 min; o padrao do passo
+          # cortava o deploy no meio.
           command_timeout: 30m
           script: |
             set -eu
@@ -179,24 +179,6 @@ jobs:
               printf 'DISABLE_SIGNUP=true\n' >> .env
             fi
 
-            # --- Typebot (testes e validação da pré-produção) --------------------
-            # O login do Typebot é por código enviado por e-mail, então o Mailpit
-            # interno recebe esses e-mails; a caixa de entrada fica em
-            # https://typebot-dev.mulheresrurais.com.br/mailpit (protegida por senha).
-            ensure_secret MAILPIT_PASSWORD
-            if ! grep -q '^MAILPIT_USER=' .env; then
-              printf 'MAILPIT_USER=quintal\n' >> .env
-            fi
-            # O Typebot exige o ENCRYPTION_SECRET com exatamente 32 caracteres.
-            if ! grep -qE '^ENCRYPTION_SECRET=.{32}$' .env; then
-              sed -i '/^ENCRYPTION_SECRET=/d' .env
-              printf 'ENCRYPTION_SECRET=%s\n' "$(openssl rand -hex 16)" >> .env
-            fi
-            # Se um ADMIN_EMAIL foi definido no .env, tranca o cadastro nele.
-            if grep -qE '^ADMIN_EMAIL=.+@' .env && ! grep -q '^DISABLE_SIGNUP=' .env; then
-              printf 'DISABLE_SIGNUP=true\n' >> .env
-            fi
-
             cd ../caddy
             if [ ! -f Caddyfile ]; then
               echo "Caddyfile não encontrado em $(pwd)" >&2
@@ -227,33 +209,18 @@ jobs:
             printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
             trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
 
+            # Limpeza pontual: containers do Typebot de teste que chegaram a subir
+            # na pre-producao e foram removidos do compose (a VPS nao tem RAM
+            # para eles). Sem efeito depois da primeira execucao.
+            docker rm -f pre-quintal-typebot-builder pre-quintal-typebot-viewer \
+              pre-quintal-typebot-redis pre-quintal-mailpit 2>/dev/null || true
+
             docker compose pull pre-quintal-cms
             docker compose up -d --no-build pre-quintal-cms
-
-            # Banco do Typebot no Postgres da pré-produção (idempotente). O
-            # comando roda depois do CMS para garantir que o Postgres já subiu.
-            docker exec -i pre-quintal-postgres sh -s <<'EOSQL'
-            if psql -U "$POSTGRES_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='typebot'" | grep -q 1; then
-              echo "Banco typebot já existe."
-            else
-              psql -U "$POSTGRES_USER" -d postgres -c "CREATE DATABASE typebot OWNER $POSTGRES_USER;"
-              echo "Banco typebot criado."
-            fi
-            EOSQL
-
-            # Typebot (builder, viewer, Redis e Mailpit). As imagens oficiais já
-            # existem na VPS; o compose só cria/atualiza os containers.
-            docker compose up -d --no-build \
-              pre-quintal-mailpit \
-              pre-quintal-typebot-redis \
-              pre-quintal-typebot-builder \
-              pre-quintal-typebot-viewer
+            # A imagem da aplicacao vem pronta do GHCR (construida no runner).
+            docker compose pull pre-quintal
+            docker compose up -d --no-build --no-deps pre-quintal
             docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
-
-            # O build do app fica por último de propósito: é o passo mais lento
-            # (~5 min) e, se algo falhar nele, o CMS/Typebot já estão no ar e o
-            # Caddy já foi recarregado com os endereços novos.
-            docker compose up -d --build --no-deps pre-quintal
 
       - name: Verificando a publicação
         run: |
@@ -267,19 +234,3 @@ jobs:
           done
           echo "A publicação não respondeu via HTTPS." >&2
           exit 1
-
-      - name: Conferindo CMS e Typebot (informativo)
-        # Enquanto os registros DNS dos endereços novos não existirem, estes
-        # checks falham sem derrubar o deploy (os serviços já estão no ar).
-        continue-on-error: true
-        run: |
-          for url in \
-            https://conteudos-dev.mulheresrurais.com.br/_health \
-            https://typebot-dev.mulheresrurais.com.br/ \
-            https://bot-dev.mulheresrurais.com.br/ \
-            https://typebot-dev.mulheresrurais.com.br/mailpit/
-          do
-            code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
-              --location --max-time 20 "$url" || true)"
-            echo "${url} -> HTTP ${code:-sem resposta}"
-          done
