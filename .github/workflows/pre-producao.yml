@@ -161,24 +161,6 @@ jobs:
             # mesma chave deste arquivo, entao os dois lados combinam sozinhos.
             ensure_secret API_KEY
 
-            # --- Typebot de pre-producao (teste dos fluxos) ----------------------
-            # O login do Typebot e sempre por codigo enviado por e-mail: quem recebe
-            # esses codigos e o Mailpit interno. A caixa de entrada sai em
-            # https://typebot-dev.mulheresrurais.com.br/mailpit, protegida por senha.
-            ensure_secret MAILPIT_PASSWORD
-            if ! grep -q '^MAILPIT_USER=' .env; then
-              printf 'MAILPIT_USER=quintal\n' >> .env
-            fi
-            # O Typebot exige ENCRYPTION_SECRET com exatamente 32 caracteres.
-            if ! grep -qE '^ENCRYPTION_SECRET=.{32}$' .env; then
-              sed -i '/^ENCRYPTION_SECRET=/d' .env
-              printf 'ENCRYPTION_SECRET=%s\n' "$(openssl rand -hex 16)" >> .env
-            fi
-            # Com ADMIN_EMAIL definido, o cadastro fica fechado nele.
-            if grep -qE '^ADMIN_EMAIL=.+@' .env && ! grep -q '^DISABLE_SIGNUP=' .env; then
-              printf 'DISABLE_SIGNUP=true\n' >> .env
-            fi
-
             cd ../caddy
             if [ ! -f Caddyfile ]; then
               echo "Caddyfile não encontrado em $(pwd)" >&2
