@@ -1,20 +1,19 @@
 services:
   pre-quintal:
     container_name: pre-quintal
+    # A imagem e construida no runner do GitHub e publicada no GHCR: a VPS (1.9 GB
+    # de RAM) nao aguenta o `next build`. O bloco `build` fica para quem quiser
+    # construir na mao.
+    image: ghcr.io/mmtr-se/do-quintal-a-cozinha:pre-producao
     build:
       context: $DEV_PATH
       dockerfile: $DEV_PATH/docker/pre-producao/Dockerfile
       args:
-        NEXT_PUBLIC_STRAPI_URL: https://conteudos-dev.mulheresrurais.com.br
+        NEXT_PUBLIC_STRAPI_URL: https://conteudos.mulheresrurais.com.br
     env_file:
       - $DEV_PATH/.env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/${POSTGRES_DB:-quintal}?schema=public
-      # A sincronizacao com o CMS usa a rede interna (nao depende do DNS publico
-      # nem passa por TLS de saida). O NEXT_PUBLIC_STRAPI_URL abaixo e so o
-      # endereco publico, usado em links/scripts.
-      CMS_SYNC_URL: http://pre-quintal-cms:1337
-      CMS_API_URL: http://pre-quintal-cms:1337
     ports:
       - "82:3000"
     restart: unless-stopped
@@ -55,7 +54,7 @@ services:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 1337
-      PUBLIC_URL: https://conteudos-dev.mulheresrurais.com.br
+      PUBLIC_URL: https://conteudos.mulheresrurais.com.br
       # O CMS compartilha o mesmo servidor Postgres do app, em banco separado.
       DATABASE_CLIENT: postgres
       DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
@@ -78,108 +77,9 @@ services:
       # conteudo legado (SQLite) foi exportado e importado no Postgres.
       - $DEV_PATH/cms/.tmp:/app/.tmp
 
-  # ---------------------------------------------------------------------------
-  # Typebot (testes e validacao da pre-producao)
-  #
-  # O Typebot cadastra produtos/receitas pela API do site (/api/product,
-  # /api/recipe), que grava no Postgres e espelha no CMS.
-  #
-  # O login do Typebot e sempre por codigo enviado por e-mail, entao sobe um
-  # Mailpit interno: o Caddy publica a caixa de entrada em /mailpit no dominio
-  # do builder, protegida por senha (MAILPIT_USER/MAILPIT_PASSWORD no .env).
-  # ---------------------------------------------------------------------------
-  pre-quintal-mailpit:
-    container_name: pre-quintal-mailpit
-    image: axllent/mailpit:latest
-    restart: unless-stopped
-    environment:
-      # UI e API em https://typebot-dev.mulheresrurais.com.br/mailpit
-      MP_WEBROOT: /mailpit
-      # O Typebot autentica no SMTP com usuario/senha proprios.
-      MP_SMTP_AUTH_ACCEPT_ANY: "true"
-      MP_MAX_MESSAGES: "200"
-      MP_DATABASE: /data/mailpit.db
-    volumes:
-      - typebot_mailpit_data:/data
-    networks:
-      - app_network
-
-  pre-quintal-typebot-redis:
-    container_name: pre-quintal-typebot-redis
-    image: redis:alpine
-    restart: unless-stopped
-    command: --save 60 1 --loglevel warning
-    volumes:
-      - typebot_redis_data:/data
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 3s
-    networks:
-      - app_network
-
-  pre-quintal-typebot-builder:
-    container_name: pre-quintal-typebot-builder
-    image: baptistearno/typebot-builder:latest
-    restart: unless-stopped
-    # ENCRYPTION_SECRET (exatamente 32 caracteres; o workflow garante) e,
-    # opcionalmente, ADMIN_EMAIL e DISABLE_SIGNUP vem do .env do deploy.
-    env_file:
-      - $DEV_PATH/.env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/typebot
-      REDIS_URL: redis://pre-quintal-typebot-redis:6379
-      NEXTAUTH_URL: https://typebot-dev.mulheresrurais.com.br
-      NEXTAUTH_URL_INTERNAL: http://pre-quintal-typebot-builder:3000
-      NEXT_PUBLIC_VIEWER_URL: https://bot-dev.mulheresrurais.com.br
-      # Mailpit interno: e dele que sai o codigo de login.
-      SMTP_HOST: pre-quintal-mailpit
-      SMTP_PORT: "1025"
-      SMTP_USERNAME: typebot
-      SMTP_PASSWORD: typebot
-      SMTP_SECURE: "false"
-      SMTP_IGNORE_TLS: "true"
-      SMTP_FROM: "Typebot <typebot@quintal.local>"
-      NEXT_PUBLIC_SMTP_FROM: "Typebot <typebot@quintal.local>"
-      NODE_OPTIONS: --no-node-snapshot
-    networks:
-      - app_network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      pre-quintal-typebot-redis:
-        condition: service_healthy
-      pre-quintal-mailpit:
-        condition: service_started
-
-  pre-quintal-typebot-viewer:
-    container_name: pre-quintal-typebot-viewer
-    image: baptistearno/typebot-viewer:latest
-    restart: unless-stopped
-    env_file:
-      - $DEV_PATH/.env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/typebot
-      REDIS_URL: redis://pre-quintal-typebot-redis:6379
-      NEXTAUTH_URL: https://typebot-dev.mulheresrurais.com.br
-      NEXTAUTH_URL_INTERNAL: http://pre-quintal-typebot-viewer:3000
-      NEXT_PUBLIC_VIEWER_URL: https://bot-dev.mulheresrurais.com.br
-      NODE_OPTIONS: --no-node-snapshot
-    networks:
-      - app_network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      pre-quintal-typebot-redis:
-        condition: service_healthy
-
 networks:
   app_network:
     driver: bridge
 
 volumes:
   postgres_data:
-  typebot_mailpit_data:
-  typebot_redis_data:

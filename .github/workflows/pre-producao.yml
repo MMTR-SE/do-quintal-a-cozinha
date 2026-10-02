@@ -8,6 +8,7 @@ on:
 
 env:
   GHCR_IMAGE: ghcr.io/mmtr-se/do-quintal-a-cozinha-cms
+  APP_IMAGE: ghcr.io/mmtr-se/do-quintal-a-cozinha
 
 jobs:
   cozinhando:
@@ -59,6 +60,22 @@ jobs:
           cache-from: type=gha,scope=pre-producao-cms
           cache-to: type=gha,mode=max,scope=pre-producao-cms
 
+      # A VPS tem 1.9 GB de RAM e o `next build` la dentro derrubava a maquina
+      # (swap cheio, load ~100). Agora a imagem da aplicacao sai pronta daqui.
+      - name: Construindo e publicando a aplicacao
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/pre-producao/Dockerfile
+          push: true
+          build-args: |
+            NEXT_PUBLIC_STRAPI_URL=https://conteudos.mulheresrurais.com.br
+          tags: |
+            ${{ env.APP_IMAGE }}:pre-producao
+            ${{ env.APP_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha,scope=pre-producao-app
+          cache-to: type=gha,mode=max,scope=pre-producao-app
+
   deploy:
     name: Servindo para testar
     environment: Pre-Producao
@@ -78,8 +95,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          # O build da imagem do app na VPS passa de 5 min; o padrão de 10 min
-          # do passo cortava o deploy no meio.
+          # O build da imagem na VPS passava de 10 min; o padrao do passo
+          # cortava o deploy no meio.
           command_timeout: 30m
           envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
@@ -135,82 +152,31 @@ jobs:
             ensure_secret CMS_JWT_SECRET
             ensure_secret CMS_ENCRYPTION_KEY
 
-            # --- Typebot (testes e validação da pré-produção) --------------------
-            # O login do Typebot é por código enviado por e-mail, então o Mailpit
-            # interno recebe esses e-mails; a caixa de entrada fica em
-            # https://typebot-dev.mulheresrurais.com.br/mailpit (protegida por senha).
-            ensure_secret MAILPIT_PASSWORD
-            if ! grep -q '^MAILPIT_USER=' .env; then
-              printf 'MAILPIT_USER=quintal\n' >> .env
-            fi
-            # O Typebot exige o ENCRYPTION_SECRET com exatamente 32 caracteres.
-            if ! grep -qE '^ENCRYPTION_SECRET=.{32}$' .env; then
-              sed -i '/^ENCRYPTION_SECRET=/d' .env
-              printf 'ENCRYPTION_SECRET=%s\n' "$(openssl rand -hex 16)" >> .env
-            fi
-            # Se um ADMIN_EMAIL foi definido no .env, tranca o cadastro nele.
-            if grep -qE '^ADMIN_EMAIL=.+@' .env && ! grep -q '^DISABLE_SIGNUP=' .env; then
-              printf 'DISABLE_SIGNUP=true\n' >> .env
-            fi
-
             cd ../caddy
             if [ ! -f Caddyfile ]; then
               echo "Caddyfile não encontrado em $(pwd)" >&2
               exit 1
             fi
-
-            # Endereço próprio do CMS em pré-produção. O domínio antigo segue no
-            # Caddyfile de propósito: as mídias já sincronizadas apontam para ele
-            # (e a aplicação de produção usa essa URL).
-            if ! grep -qF 'conteudos-dev.mulheresrurais.com.br' Caddyfile; then
-              printf '\nconteudos-dev.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
-                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
-            fi
-
-            # Typebot: builder (com a caixa de entrada do Mailpit em /mailpit) e viewer.
-            MAILPIT_USER="$(grep -m1 '^MAILPIT_USER=' $DEV_PATH/.env | cut -d= -f2-)"
-            MAILPIT_PASSWORD="$(grep -m1 '^MAILPIT_PASSWORD=' $DEV_PATH/.env | cut -d= -f2-)"
-            MAILPIT_HASH="$(docker compose exec -T caddy caddy hash-password --plaintext "$MAILPIT_PASSWORD" | tr -d '\r\n')"
-            if ! grep -qF 'reverse_proxy pre-quintal-typebot-builder:3000' Caddyfile; then
-              printf '\ntypebot-dev.mulheresrurais.com.br {\n\thandle /mailpit* {\n\t\tbasic_auth {\n\t\t\t%s %s\n\t\t}\n\t\treverse_proxy pre-quintal-mailpit:8025\n\t}\n\treverse_proxy pre-quintal-typebot-builder:3000\n}\n' \
-                "$MAILPIT_USER" "$MAILPIT_HASH" \
-                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
-            fi
-            if ! grep -qF 'reverse_proxy pre-quintal-typebot-viewer:3000' Caddyfile; then
-              printf '\nbot-dev.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-typebot-viewer:3000\n}\n' \
+            if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
+              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
                 | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
             fi
 
             printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
             trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
 
+            # Limpeza pontual: containers do Typebot de teste que chegaram a subir
+            # na pre-producao e foram removidos do compose (a VPS nao tem RAM
+            # para eles). Sem efeito depois da primeira execucao.
+            docker rm -f pre-quintal-typebot-builder pre-quintal-typebot-viewer \
+              pre-quintal-typebot-redis pre-quintal-mailpit 2>/dev/null || true
+
             docker compose pull pre-quintal-cms
             docker compose up -d --no-build pre-quintal-cms
-
-            # Banco do Typebot no Postgres da pré-produção (idempotente). O
-            # comando roda depois do CMS para garantir que o Postgres já subiu.
-            docker exec -i pre-quintal-postgres sh -s <<'EOSQL'
-            if psql -U "$POSTGRES_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='typebot'" | grep -q 1; then
-              echo "Banco typebot já existe."
-            else
-              psql -U "$POSTGRES_USER" -d postgres -c "CREATE DATABASE typebot OWNER $POSTGRES_USER;"
-              echo "Banco typebot criado."
-            fi
-            EOSQL
-
-            # Typebot (builder, viewer, Redis e Mailpit). As imagens oficiais já
-            # existem na VPS; o compose só cria/atualiza os containers.
-            docker compose up -d --no-build \
-              pre-quintal-mailpit \
-              pre-quintal-typebot-redis \
-              pre-quintal-typebot-builder \
-              pre-quintal-typebot-viewer
+            # A imagem da aplicacao vem pronta do GHCR (construida no runner).
+            docker compose pull pre-quintal
+            docker compose up -d --no-build --no-deps pre-quintal
             docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
-
-            # O build do app fica por último de propósito: é o passo mais lento
-            # (~5 min) e, se algo falhar nele, o CMS/Typebot já estão no ar e o
-            # Caddy já foi recarregado com os endereços novos.
-            docker compose up -d --build --no-deps pre-quintal
 
       - name: Verificando a publicação
         run: |
@@ -224,19 +190,3 @@ jobs:
           done
           echo "A publicação não respondeu via HTTPS." >&2
           exit 1
-
-      - name: Conferindo CMS e Typebot (informativo)
-        # Enquanto os registros DNS dos endereços novos não existirem, estes
-        # checks falham sem derrubar o deploy (os serviços já estão no ar).
-        continue-on-error: true
-        run: |
-          for url in \
-            https://conteudos-dev.mulheresrurais.com.br/_health \
-            https://typebot-dev.mulheresrurais.com.br/ \
-            https://bot-dev.mulheresrurais.com.br/ \
-            https://typebot-dev.mulheresrurais.com.br/mailpit/
-          do
-            code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
-              --location --max-time 20 "$url" || true)"
-            echo "${url} -> HTTP ${code:-sem resposta}"
-          done
