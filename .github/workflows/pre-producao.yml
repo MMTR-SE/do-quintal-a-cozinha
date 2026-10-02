@@ -184,25 +184,13 @@ jobs:
               echo "Caddyfile não encontrado em $(pwd)" >&2
               exit 1
             fi
-            # Endereço próprio do CMS em pré-produção. O domínio antigo segue no
-            # Caddyfile de propósito: as mídias já sincronizadas apontam para ele
-            # (e a aplicação de produção usa essa URL).
-            if ! grep -qF 'conteudos-dev.mulheresrurais.com.br' Caddyfile; then
-              printf '\nconteudos-dev.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
-                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
+            if grep -qF 'typebot-dev.mulheresrurais.com.br {' Caddyfile; then
+              docker compose exec -T --user root caddy sh -c \
+                "sed -i '/^typebot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^bot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^conteudos-dev\.mulheresrurais\.com\.br {/,/^}/d' /etc/caddy/Caddyfile"
+              echo "Caddyfile: blocos do Typebot/CMS-dev removidos."
             fi
-
-            # Typebot: builder (com a caixa de entrada do Mailpit em /mailpit) e viewer.
-            MAILPIT_USER="$(grep -m1 '^MAILPIT_USER=' $DEV_PATH/.env | cut -d= -f2-)"
-            MAILPIT_PASSWORD="$(grep -m1 '^MAILPIT_PASSWORD=' $DEV_PATH/.env | cut -d= -f2-)"
-            MAILPIT_HASH="$(docker compose exec -T caddy caddy hash-password --plaintext "$MAILPIT_PASSWORD" | tr -d '\r\n')"
-            if ! grep -qF 'reverse_proxy pre-quintal-typebot-builder:3000' Caddyfile; then
-              printf '\ntypebot-dev.mulheresrurais.com.br {\n\thandle /mailpit* {\n\t\tbasic_auth {\n\t\t\t%s %s\n\t\t}\n\t\treverse_proxy pre-quintal-mailpit:8025\n\t}\n\treverse_proxy pre-quintal-typebot-builder:3000\n}\n' \
-                "$MAILPIT_USER" "$MAILPIT_HASH" \
-                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
-            fi
-            if ! grep -qF 'reverse_proxy pre-quintal-typebot-viewer:3000' Caddyfile; then
-              printf '\nbot-dev.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-typebot-viewer:3000\n}\n' \
+            if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
+              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
                 | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
             fi
 
