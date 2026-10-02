@@ -35,6 +35,26 @@ docker compose -f docker/desenvolvimento/docker-compose.yml up -d  # Port 3001 (
 
 Services in `docker/desenvolvimento/docker-compose.yml`: `dev-quintal` (app, port 3001), `postgres` (port 5432), `cms` (Strapi, port 1337, DB `quintal_cms`), `typebot-builder` (port 3002), `typebot-viewer` (port 3003), `typebot-redis`, `mailpit` (SMTP dev para os magic links do Typebot, UI em http://localhost:8025).
 
+### Pré-produção
+
+O deploy de pré-produção é feito pelo workflow `.github/workflows/pre-producao.yml` (push na branch `pre-producao`): ele builda a imagem do CMS para o GHCR e, na VPS, faz `git pull` em `$DEV_PATH`, garante os segredos no `$DEV_PATH/.env`, sobe os containers pelo compose do projeto `caddy` e recarrega o Caddy.
+
+O compose que roda na VPS é `/var/www/caddy/docker-compose.yml`, que faz `include` dos compose deste repositório (`docker/pre-producao/docker-compose.yml` e `docker/producao/docker-compose.yml`) — ou seja, **mexer no compose do repositório é o que muda a VPS**.
+
+| Endereço | Serviço |
+|----------|---------|
+| https://dev.mulheresrurais.com.br | site (container `pre-quintal`, branch `pre-producao`) |
+| https://conteudos-dev.mulheresrurais.com.br | CMS/Strapi (`pre-quintal-cms`); o antigo `conteudos.mulheresrurais.com.br` continua respondendo (mídias já sincronizadas apontam para ele) |
+| https://typebot-dev.mulheresrurais.com.br | builder do Typebot (`pre-quintal-typebot-builder`) |
+| https://bot-dev.mulheresrurais.com.br | viewer do Typebot (`pre-quintal-typebot-viewer`) |
+| https://typebot-dev.mulheresrurais.com.br/mailpit/ | caixa de entrada do Mailpit (`pre-quintal-mailpit`), com HTTP basic auth |
+
+Os três endereços novos exigem registros DNS `A` apontando para o IP da VPS (`177.39.18.151`); sem eles o Caddy não emite o certificado.
+
+- **Typebot de pré-produção**: o login é sempre por código enviado por e-mail (o Typebot não tem login por senha), então os e-mails caem no **Mailpit** interno — a senha da caixa de entrada fica em `MAILPIT_USER`/`MAILPIT_PASSWORD` no `$DEV_PATH/.env` (`ssh quintal "grep MAILPIT_USER /var/www/dev.mulheresrurais.com.br/.env"`). O banco do Typebot é o `typebot` dentro do próprio `pre-quintal-postgres`; o `ENCRYPTION_SECRET` (32 caracteres exatos) é gerado pelo workflow se não existir.
+- Para dar plano ilimitado ao primeiro usuário e fechar o cadastro, defina `ADMIN_EMAIL` no `$DEV_PATH/.env` — o workflow adiciona `DISABLE_SIGNUP=true` automaticamente nesse caso.
+- O `cms/public/uploads` e o `prisma` são montados a partir do checkout da VPS, por isso o `git pull` do deploy já atualiza código e migrations.
+
 ## Architecture
 
 Next.js App Router + TypeScript + PostgreSQL/Prisma + Tailwind CSS + React Query + shadcn/ui
