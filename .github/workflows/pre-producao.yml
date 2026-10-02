@@ -158,10 +158,12 @@ jobs:
               exit 1
             fi
             # Remove blocos que chegaram a ser adicionados para o Typebot de teste
-            # e para o CMS em endereço novo (não existem mais).
+            # e para o CMS em endereço novo (não existem mais). O Caddyfile é um
+            # bind mount de arquivo único: `sed -i` falha com "Resource busy",
+            # então reescrevemos o conteúdo por cima.
             if grep -qF 'typebot-dev.mulheresrurais.com.br {' Caddyfile; then
               docker compose exec -T --user root caddy sh -c \
-                "sed -i '/^typebot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^bot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^conteudos-dev\.mulheresrurais\.com\.br {/,/^}/d' /etc/caddy/Caddyfile"
+                "sed '/^typebot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^bot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^conteudos-dev\.mulheresrurais\.com\.br {/,/^}/d' /etc/caddy/Caddyfile > /tmp/Caddyfile.novo && cat /tmp/Caddyfile.novo > /etc/caddy/Caddyfile && rm -f /tmp/Caddyfile.novo"
               echo "Caddyfile: blocos do Typebot/CMS-dev removidos."
             fi
             if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
