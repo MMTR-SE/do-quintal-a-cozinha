@@ -35,42 +35,25 @@ docker compose -f docker/desenvolvimento/docker-compose.yml up -d  # Port 3001 (
 
 Services in `docker/desenvolvimento/docker-compose.yml`: `dev-quintal` (app, port 3001), `postgres` (port 5432), `cms` (Strapi, port 1337, DB `quintal_cms`), `typebot-builder` (port 3002), `typebot-viewer` (port 3003), `typebot-redis`, `mailpit` (SMTP dev para os magic links do Typebot, UI em http://localhost:8025).
 
-### Pré-produção (VPS)
+### Pré-produção
 
-O deploy é feito pelo workflow `.github/workflows/pre-producao.yml` (push na branch `pre-producao`). Na VPS o compose que roda é `/var/www/caddy/docker-compose.yml`, que faz `include` dos compose deste repositório (`docker/pre-producao/docker-compose.yml` e `docker/producao/docker-compose.yml`) — ou seja, é o repositório que define os serviços.
+O deploy de pré-produção é feito pelo workflow `.github/workflows/pre-producao.yml` (push na branch `pre-producao`): ele builda a imagem do CMS para o GHCR e, na VPS, faz `git pull` em `$DEV_PATH`, garante os segredos no `$DEV_PATH/.env`, sobe os containers pelo compose do projeto `caddy` e recarrega o Caddy.
 
-- Endereços:
-  | Endereço | Serviço |
-  |----------|---------|
-  | `https://dev.mulheresrurais.com.br` | site (container `pre-quintal`) |
-  | `https://conteudos-dev.mulheresrurais.com.br` | CMS/Strapi (`pre-quintal-cms`) |
-  | `https://typebot-dev.mulheresrurais.com.br` | builder do Typebot (`pre-quintal-typebot-builder`) |
-  | `https://bot-dev.mulheresrurais.com.br` | viewer do Typebot (`pre-quintal-typebot-viewer`) |
-  | `https://typebot-dev.mulheresrurais.com.br/mailpit/` | caixa de entrada do Mailpit (`pre-quintal-mailpit`), com HTTP basic auth |
+O compose que roda na VPS é `/var/www/caddy/docker-compose.yml`, que faz `include` dos compose deste repositório (`docker/pre-producao/docker-compose.yml` e `docker/producao/docker-compose.yml`) — ou seja, **mexer no compose do repositório é o que muda a VPS**.
 
-  O `https://conteudos.mulheresrurais.com.br` continua respondendo ao mesmo container de CMS **de propósito**: é a URL que a aplicação de produção usa. O site de pré-produção descobre o CMS por `NEXT_PUBLIC_STRAPI_URL`, que o Next **embute no bundle durante o build** — por isso ele é passado como build-arg no workflow (mudar só a variável de ambiente não tem efeito).
-- A VPS tem **~1.9 GB de RAM**: as imagens (app e CMS) são construídas no runner do GitHub e publicadas no GHCR, e o deploy só faz `pull` — não rode `docker compose build` lá (o `next build` esgota a memória e derruba a máquina, inclusive o Typebot de produção).
-- O Typebot de pré-produção roda na mesma VPS com o objetivo de **testar e validar os fluxos**. Para não competir com o Typebot de produção, ele reusa o banco `typebot` do próprio `pre-quintal-postgres` (sem Postgres novo) e as mesmas imagens já baixadas, e cada container tem `mem_limit` — se algo estourar, quem morre (e reinicia) é o container de teste, não o Caddy nem o Typebot de produção. Ainda assim, evite treinar/buildar fluxos pesados ao mesmo tempo que um deploy de produção.
-- O login do Typebot é sempre por código enviado por e-mail, então os códigos caem no **Mailpit** interno: a senha está em `MAILPIT_USER`/`MAILPIT_PASSWORD` no `$DEV_PATH/.env` (`ssh quintal "grep MAILPIT_USER /var/www/dev.mulheresrurais.com.br/.env"`). O `ENCRYPTION_SECRET` (32 caracteres exatos) é gerado pelo workflow se não existir; definir `ADMIN_EMAIL` no `.env` faz o workflow acrescentar `DISABLE_SIGNUP=true`.
-- Os três endereços novos exigem registros DNS `A` apontando para o IP da VPS (`177.39.18.151`) — já configurados.
-- **Importar os fluxos para o Typebot de pré-produção**: `bash docker/pre-producao/typebot-flows/importar-fluxos.sh` (na raiz do repositório, com `MAILPIT_USER`/`MAILPIT_PASSWORD` no ambiente — estão no `$DEV_PATH/.env`). Ele lê os `*.json` versionados em `docker/desenvolvimento/typebot-flows/` (uma cópia só no repositório), troca dentro do fluxo o endereço da API do site (padrão `https://dev.mulheresrurais.com.br/api`) e a `API_KEY` pelo valor do container `pre-quintal` (a chave nunca entra no repositório), faz login pelo Mailpit, importa, publica com `publicId` terminando em `-dev` e remapeia os links entre os fluxos. Variáveis: `TSB_FLUXOS_DIR`, `TSB_API_BASE`, `TSB_SUFIXO`, `TSB_DOCKER` (padrão `ssh quintal docker`), `TYPEBOT_EMAIL`.
-- O **primeiro login** no Typebot de dev cria o dono do workspace. O builder sobe com `DEFAULT_WORKSPACE_PLAN=UNLIMITED` — sem isso, fluxos com bloco de upload de arquivo não podem ser publicados (plano FREE).
+| Endereço | Serviço |
+|----------|---------|
+| https://dev.mulheresrurais.com.br | site (container `pre-quintal`, branch `pre-producao`) |
+| https://conteudos-dev.mulheresrurais.com.br | CMS/Strapi (`pre-quintal-cms`); o antigo `conteudos.mulheresrurais.com.br` continua respondendo (mídias já sincronizadas apontam para ele) |
+| https://typebot-dev.mulheresrurais.com.br | builder do Typebot (`pre-quintal-typebot-builder`) |
+| https://bot-dev.mulheresrurais.com.br | viewer do Typebot (`pre-quintal-typebot-viewer`) |
+| https://typebot-dev.mulheresrurais.com.br/mailpit/ | caixa de entrada do Mailpit (`pre-quintal-mailpit`), com HTTP basic auth |
 
-### Produção (VPS)
+Os três endereços novos exigem registros DNS `A` apontando para o IP da VPS (`177.39.18.151`); sem eles o Caddy não emite o certificado.
 
-O deploy é o workflow `.github/workflows/producao.yml` — **merge/push na `main` publica em produção**. Ele constrói a imagem no runner (com `NEXT_PUBLIC_STRAPI_URL` como build-arg), faz `pull` na VPS, roda `prisma migrate deploy` e falha se o site não responder.
-
-- Primeira subida (volume `postgres_data` vazio): depois do deploy, importar o SQLite antigo **uma vez** —
-  ```bash
-  docker compose exec -T quintal sh -c 'SQLITE_SRC=/app/prisma/prod.db node prisma/scripts/importar-sqlite.mjs --dry-run'
-  docker compose exec -T quintal sh -c 'SQLITE_SRC=/app/prisma/prod.db node prisma/scripts/importar-sqlite.mjs'
-  ```
-  O `prod.db` fica em `$PROD_PATH/prisma/` e depois serve de backup.
-- O compose do site (`docker/producao/docker-compose.yml`) roda dentro do projeto `/var/www/caddy` (que faz `include` dele), mas **não usa interpolação**: todo o ambiente vem de `$PROD_PATH/.env`. Esse mesmo arquivo alimenta o site **e** o `quintal-postgres` — então `DATABASE_URL` tem que apontar para o host `postgres` e a senha precisa ser igual a `POSTGRES_PASSWORD`. No `/var/www/caddy/.env` só precisa existir `PROD_PATH` (o caminho do checkout).
-  Não repita variáveis em `environment:` no compose: variável interpolada e ausente no `.env` do projeto chega **vazia** e sobrepõe o que veio do `env_file`.
-- O `$PROD_PATH/.env` precisa de `DATABASE_URL`, `POSTGRES_USER`/`POSTGRES_PASSWORD`/`POSTGRES_DB`, `TZ`, `API_KEY`, `STRAPI_API_TOKEN` (token **Full access do CMS de produção**), `NEXT_PUBLIC_STRAPI_URL` e `GROQ_API_KEY`.
-- O CMS de produção precisa rodar o mesmo código do `cms/` (content type `produtora` + hooks) e ter `SITE_SYNC_URL` (ex.: `http://quintal:3000`, se estiver na mesma rede, ou `https://mulheresrurais.com.br`) e `SITE_SYNC_API_KEY` = `API_KEY` do site.
-- Imagens enviadas pelo painel ficam em `https://conteudos.mulheresrurais.com.br/uploads/...`: os domínios `conteudos*.mulheresrurais.com.br` estão liberados em `next.config.ts`.
+- **Typebot de pré-produção**: o login é sempre por código enviado por e-mail (o Typebot não tem login por senha), então os e-mails caem no **Mailpit** interno — a senha da caixa de entrada fica em `MAILPIT_USER`/`MAILPIT_PASSWORD` no `$DEV_PATH/.env` (`ssh quintal "grep MAILPIT_USER /var/www/dev.mulheresrurais.com.br/.env"`). O banco do Typebot é o `typebot` dentro do próprio `pre-quintal-postgres`; o `ENCRYPTION_SECRET` (32 caracteres exatos) é gerado pelo workflow se não existir.
+- Para dar plano ilimitado ao primeiro usuário e fechar o cadastro, defina `ADMIN_EMAIL` no `$DEV_PATH/.env` — o workflow adiciona `DISABLE_SIGNUP=true` automaticamente nesse caso.
+- O `cms/public/uploads` e o `prisma` são montados a partir do checkout da VPS, por isso o `git pull` do deploy já atualiza código e migrations.
 
 ## Architecture
 
