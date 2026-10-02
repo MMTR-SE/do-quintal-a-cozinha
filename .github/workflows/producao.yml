@@ -94,8 +94,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          command_timeout: 30m
           envs: GHCR_USERNAME,GHCR_TOKEN,PROD_PATH
+          # O build da imagem na VPS passa de 5 min; o padrão de 10 min do passo
+          # cortava o deploy no meio.
+          command_timeout: 30m
           script: |
             set -eu
 
