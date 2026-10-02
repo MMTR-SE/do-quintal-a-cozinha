@@ -157,6 +157,13 @@ jobs:
               echo "Caddyfile não encontrado em $(pwd)" >&2
               exit 1
             fi
+            # Remove blocos que chegaram a ser adicionados para o Typebot de teste
+            # e para o CMS em endereço novo (não existem mais).
+            if grep -qF 'typebot-dev.mulheresrurais.com.br {' Caddyfile; then
+              docker compose exec -T --user root caddy sh -c \
+                "sed -i '/^typebot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^bot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^conteudos-dev\.mulheresrurais\.com\.br {/,/^}/d' /etc/caddy/Caddyfile"
+              echo "Caddyfile: blocos do Typebot/CMS-dev removidos."
+            fi
             if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
               printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
                 | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
