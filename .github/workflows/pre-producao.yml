@@ -78,6 +78,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          # O build da imagem do app na VPS passa de 5 min; o padrão de 10 min
+          # do passo cortava o deploy no meio.
+          command_timeout: 30m
           envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
             set -eu
@@ -183,7 +186,6 @@ jobs:
 
             docker compose pull pre-quintal-cms
             docker compose up -d --no-build pre-quintal-cms
-            docker compose up -d --build --no-deps pre-quintal
 
             # Banco do Typebot no Postgres da pré-produção (idempotente). O
             # comando roda depois do CMS para garantir que o Postgres já subiu.
@@ -204,6 +206,11 @@ jobs:
               pre-quintal-typebot-builder \
               pre-quintal-typebot-viewer
             docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+
+            # O build do app fica por último de propósito: é o passo mais lento
+            # (~5 min) e, se algo falhar nele, o CMS/Typebot já estão no ar e o
+            # Caddy já foi recarregado com os endereços novos.
+            docker compose up -d --build --no-deps pre-quintal
 
       - name: Verificando a publicação
         run: |
