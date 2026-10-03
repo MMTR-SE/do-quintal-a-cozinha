@@ -144,11 +144,9 @@ login() {
 # workspace do usuário logado (via banco do Typebot)
 # ---------------------------------------------------------------------------
 workspace() {
-  # O SQL vai por stdin: com TSB_DOCKER="ssh quintal docker" as aspas do comando
-  # se perdem no caminho (o ssh junta os argumentos) e o psql falharia calado.
-  printf '%s\n' \
-    "select m.\"workspaceId\" from \"MemberInWorkspace\" m join \"User\" u on u.id = m.\"userId\" where u.email = '$EMAIL' limit 1;" \
-    | $DOCKER exec -i "$CONTAINER" psql -U "$USUARIO" -d "$DB" -tA | tr -d ' \r\n'
+  $DOCKER exec "$CONTAINER" psql -U "$USUARIO" -d "$DB" -tAc \
+    "select m.\"workspaceId\" from \"MemberInWorkspace\" m join \"User\" u on u.id = m.\"userId\" where u.email = '$EMAIL' order by m.\"createdAt\" limit 1" \
+    2>/dev/null | tr -d ' \r'
 }
 
 orpc() { # $1 = procedimento, $2 = corpo json

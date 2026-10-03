@@ -152,6 +152,9 @@ services:
       NEXTAUTH_URL: https://typebot-dev.mulheresrurais.com.br
       NEXTAUTH_URL_INTERNAL: http://pre-quintal-typebot-builder:3000
       NEXT_PUBLIC_VIEWER_URL: https://bot-dev.mulheresrurais.com.br
+      # O workspace criado no primeiro login nasce com plano ilimitado: fluxos
+      # com bloco de upload de arquivo nao podem ser publicados no plano FREE.
+      DEFAULT_WORKSPACE_PLAN: ${DEFAULT_WORKSPACE_PLAN:-UNLIMITED}
       # Mailpit interno: e dele que sai o codigo de login.
       SMTP_HOST: pre-quintal-mailpit
       SMTP_PORT: "1025"
