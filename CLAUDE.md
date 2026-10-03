@@ -35,6 +35,18 @@ docker compose -f docker/desenvolvimento/docker-compose.yml up -d  # Port 3001 (
 
 Services in `docker/desenvolvimento/docker-compose.yml`: `dev-quintal` (app, port 3001), `postgres` (port 5432), `cms` (Strapi, port 1337, DB `quintal_cms`), `typebot-builder` (port 3002), `typebot-viewer` (port 3003), `typebot-redis`, `mailpit` (SMTP dev para os magic links do Typebot, UI em http://localhost:8025).
 
+### Typebot + WhatsApp local (Evolution API)
+
+Para testar os fluxos do Typebot com um número de WhatsApp de verdade, o ambiente de desenvolvimento tem a **Evolution API** (Baileys) integrada ao Typebot local:
+
+```bash
+bash docker/desenvolvimento/typebot-whatsapp.sh subir                        # typebot + evolution (+ banco evolution)
+bash docker/desenvolvimento/typebot-whatsapp.sh criar                        # cria a instância e salva o QR em /tmp/evolution-qrcode.png
+bash docker/desenvolvimento/typebot-whatsapp.sh typebot <id-publico-do-bot>  # liga a instância ao fluxo
+```
+
+Serviços extras: `evolution-api` (http://localhost:8080), `evolution-manager` (http://localhost:8180) e `evolution-redis` (banco `evolution` no mesmo Postgres). É **só local** — nada disso vai para a VPS. Passo a passo completo em `docker/desenvolvimento/TYPEBOT-WHATSAPP.md`.
+
 ### Pré-produção (VPS)
 
 O deploy é feito pelo workflow `.github/workflows/pre-producao.yml` (push na branch `pre-producao`). Na VPS o compose que roda é `/var/www/caddy/docker-compose.yml`, que faz `include` dos compose deste repositório (`docker/pre-producao/docker-compose.yml` e `docker/producao/docker-compose.yml`) — ou seja, é o repositório que define os serviços.
