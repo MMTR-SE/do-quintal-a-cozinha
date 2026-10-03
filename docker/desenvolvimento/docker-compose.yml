@@ -110,6 +110,16 @@ services:
       SMTP_IGNORE_TLS: "true"
       SMTP_FROM: "Typebot <typebot@quintal.local>"
       NEXT_PUBLIC_SMTP_FROM: "Typebot <typebot@quintal.local>"
+      # Os fluxos do projeto usam bloco de upload de arquivo, que o plano FREE
+      # nao deixa publicar ("File upload blocks can't be published on the free
+      # plan"). No self-host isso e configuracao: ADMIN_EMAIL ganha UNLIMITED e
+      # DEFAULT_WORKSPACE_PLAN vale para workspaces novos.
+      ADMIN_EMAIL: ${TYPEBOT_ADMIN_EMAIL:-admin@quintal.local}
+      DEFAULT_WORKSPACE_PLAN: ${TYPEBOT_DEFAULT_PLAN:-UNLIMITED}
+      # O Typebot bloqueia chamadas para faixas privadas (SSRF); como o fluxo
+      # chama o site local (http://dev-quintal:3000/api), liberamos esse host.
+      # Sem isso o webhook falha com "Access to private network range ...".
+      SSRF_ALLOWED_HOSTS: dev-quintal
       NODE_OPTIONS: --no-node-snapshot
     networks:
       - app_network
@@ -131,6 +141,9 @@ services:
       NEXTAUTH_URL_INTERNAL: http://typebot-viewer:3000
       NEXT_PUBLIC_VIEWER_URL: ${TYPEBOT_VIEWER_URL:-http://localhost:3003}
       ENCRYPTION_SECRET: ${TYPEBOT_ENCRYPTION_SECRET:-typebot-dev-enc-secret-123456789}
+      # Os webhooks do fluxo rodam aqui no viewer: sem liberar o host interno o
+      # Typebot recusa chamar http://dev-quintal:3000/api (protecao SSRF).
+      SSRF_ALLOWED_HOSTS: dev-quintal
       NODE_OPTIONS: --no-node-snapshot
     networks:
       - app_network
@@ -159,6 +172,76 @@ services:
     networks:
       - app_network
 
+  # ---------------------------------------------------------------------------
+  # Evolution API: liga um numero de WhatsApp (Baileys) aos fluxos do Typebot
+  # que rodam na sua maquina. Serve para testar os fluxos com um numero de
+  # verdade, localmente -- nada disso sobe para a VPS.
+  # Passo a passo: docker/desenvolvimento/TYPEBOT-WHATSAPP.md
+  # ---------------------------------------------------------------------------
+  evolution-redis:
+    container_name: evolution-redis
+    image: redis:alpine
+    restart: unless-stopped
+    command: --save 60 1 --loglevel warning
+    volumes:
+      - evolution_redis_data:/data
+    networks:
+      - app_network
+
+  evolution-api:
+    container_name: evolution-api
+    image: evoapicloud/evolution-api:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_URL: http://localhost:8080
+      # Chave usada nas chamadas (o script le direto do container)
+      AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY:-quintal-evolution-dev}
+      LANGUAGE: pt-BR
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/evolution?schema=evolution_api
+      DATABASE_SAVE_DATA_INSTANCE: "true"
+      CACHE_REDIS_ENABLED: "true"
+      CACHE_REDIS_URI: redis://evolution-redis:6379/6
+      CACHE_REDIS_PREFIX_KEY: evolution
+      # Nome que aparece no aparelho conectado
+      CONFIG_SESSION_PHONE_CLIENT: Quintal (dev)
+      CONFIG_SESSION_PHONE_NAME: Chrome
+      QRCODE_LIMIT: "30"
+      DEL_INSTANCE: "false"
+      TELEMETRY_ENABLED: "false"
+      LOG_LEVEL: ERROR,WARN
+      LOG_BAILEYS: error
+      # Integracao com o Typebot: a Evolution chama o viewer pela rede interna
+      TYPEBOT_ENABLED: "true"
+      TYPEBOT_API_VERSION: latest
+    volumes:
+      - evolution_instances:/evolution/instances
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      evolution-redis:
+        condition: service_started
+
+  # Interface web da Evolution (opcional, so para ver QR/status pelo navegador)
+  evolution-manager:
+    container_name: evolution-manager
+    image: evoapicloud/evolution-manager:latest
+    restart: unless-stopped
+    ports:
+      - "8180:80"
+    volumes:
+      # A imagem oficial vem com um nginx.conf invalido (`gzip_proxied ...
+      # must-revalidate`), entao o nginx nao sobe; montamos o arquivo corrigido.
+      - ./evolution-manager-nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+    networks:
+      - app_network
+    depends_on:
+      - evolution-api
+
 networks:
   app_network:
     driver: bridge
@@ -166,5 +249,7 @@ networks:
 volumes:
   cms_data:
   cms_uploads:
+  evolution_instances:
+  evolution_redis_data:
   postgres_data:
   redis_data:

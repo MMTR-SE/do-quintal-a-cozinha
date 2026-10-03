@@ -1,0 +1,177 @@
+# Typebot + WhatsApp local (Evolution API)
+
+Como ligar um número de WhatsApp aos fluxos do Typebot que rodam **na sua máquina**.
+Nada aqui sobe para a VPS: são serviços apenas do ambiente de desenvolvimento.
+
+## O que sobe
+
+| Serviço | Endereço | Para que serve |
+|---|---|---|
+| `typebot-builder` | http://localhost:3002 | criar/editar os fluxos |
+| `typebot-viewer` | http://localhost:3003 | executar os fluxos (é ele que a Evolution chama) |
+| `mailpit` | http://localhost:8025 | caixa de entrada dos códigos de login do Typebot |
+| `evolution-api` | http://localhost:8080 | ponte WhatsApp ↔ Typebot (Baileys) |
+| `evolution-manager` | http://localhost:8180 | interface para ver QR/status no navegador |
+| `dev-quintal` | http://localhost:3001 | o site (API `/api/product`, `/api/recipe`) |
+| `cms` | http://localhost:1337 | painel do CMS |
+
+## Passo a passo
+
+1. **Subir tudo** (na raiz do repositório):
+
+   ```bash
+   bash docker/desenvolvimento/typebot-whatsapp.sh subir
+   ```
+
+2. **Entrar no Typebot**: http://localhost:3002 → *Sign in* com o seu e-mail → o
+   **código de login** chega no Mailpit (http://localhost:8025) → crie um fluxo e
+   **publique**. Guarde o **id público** do bot (aparece ao compartilhar/publicar,
+   algo como `meu-fluxo-abc123`).
+
+3. **Parear o WhatsApp**:
+
+   ```bash
+   bash docker/desenvolvimento/typebot-whatsapp.sh criar
+   ```
+
+   O QR é salvo em `/tmp/evolution-qrcode.png` — abra e escaneie em
+   *WhatsApp → Aparelhos conectados → Conectar um aparelho*.
+   Alternativa: abra http://localhost:8180 e informe `http://localhost:8080` e a
+   chave (padrão `quintal-evolution-dev`; também disponível em
+   `docker exec evolution-api printenv AUTHENTICATION_API_KEY`).
+
+4. **Ligar a instância ao bot**:
+
+   ```bash
+   bash docker/desenvolvimento/typebot-whatsapp.sh typebot <id-publico-do-bot>
+   ```
+
+5. **Testar**: mande uma mensagem para o número pareado — o fluxo responde.
+   `#SAIR` encerra a sessão.
+
+6. **Conferir**: `bash docker/desenvolvimento/typebot-whatsapp.sh status`
+
+## Chamando a API do site dentro do fluxo
+
+Nos blocos **Webhook** (HTTP request) do Typebot, use a rede interna do Docker:
+
+- URL: `http://dev-quintal:3000/api/product` (ou `/api/recipe`)
+- Header: `API_KEY: <valor de API_KEY do seu .env>`
+- Body (JSON), por exemplo:
+
+  ```json
+  {
+    "product_name": "{{nome do produto}}",
+    "phone_number": "{{telefone}}",
+    "category": "AGRICOLA",
+    "price": "12.50",
+    "media": []
+  }
+  ```
+
+O item cai no Postgres do site (aparece em http://localhost:3001) e é espelhado no CMS.
+
+A Evolution também envia variáveis prontas para o fluxo: `remoteJid`, `pushName`,
+`instanceName`, `serverUrl`, `apiKey` e `ownerJid`.
+
+## Fluxos versionados (os que rodam hoje na VPS)
+
+Os fluxos **publicados** no Typebot da VPS estão versionados em
+[`typebot-flows/`](typebot-flows/README.md) — 7 fluxos (v6.1), exportados por
+`SELECT` no banco do Typebot, já com a API_KEY de produção substituída pelo
+placeholder `TROCAR-PELA-API-KEY-LOCAL` e apontando para
+`http://dev-quintal:3000/api`.
+
+```bash
+# 1) suba o Typebot
+bash docker/desenvolvimento/typebot-whatsapp.sh subir
+
+# 2) importe e publique os fluxos de uma vez (login automático pelo Mailpit)
+bash docker/desenvolvimento/typebot-flows/importar-fluxos.sh
+```
+
+3. Ligue a instância de WhatsApp a um deles (o `publicId` ganha o sufixo `-local`):
+   `bash docker/desenvolvimento/typebot-whatsapp.sh typebot mulheres-main-local`
+
+O importador troca o placeholder `TROCAR-PELA-API-KEY-LOCAL` pela `API_KEY` do seu
+ambiente **só no fluxo importado**; os arquivos do repositório seguem sem chave.
+Para importar na mão (ou trocar a chave manualmente) veja
+[`typebot-flows/README.md`](typebot-flows/README.md).
+
+Para atualizar as cópias depois de mudar algo na VPS:
+
+```bash
+SSH_HOST=quintal TSB_CONTAINER=typebot-typebot-db-1 TSB_USER=postgres \
+  bash docker/desenvolvimento/typebot-flows/exportar-fluxos.sh
+```
+
+(esse comando só lê o banco do Typebot da VPS — não altera nada lá)
+
+## Qual número, qual fluxo e quais conversas
+
+- O número do bot é o **da instância** — o WhatsApp que você pareou pelo QR. Não
+  existe configuração de número no Typebot: o vínculo é feito na Evolution.
+- **Um fluxo por instância**. Para trocar:
+  `bash docker/desenvolvimento/typebot-whatsapp.sh typebot <publicId>` (o script
+  apaga a configuração anterior antes de criar a nova).
+- Com `triggerType=all` (o padrão do script) o fluxo responde a **qualquer**
+  mensagem que chegar naquele número — de qualquer conversa, não só de contatos
+  específicos. Para restringir, use a API da Evolution
+  (`POST /typebot/create/<instância>`):
+  - `triggerType: keyword` + `triggerValue` (ex.: `^oi$` com `triggerOperator: regex`)
+    → só dispara quando a mensagem casar;
+  - `keywordFinish: "#SAIR"` encerra a sessão do contato;
+  - `ignoreJids: ["...@g.us"]` ignora grupos (e outros JIDs);
+  - `listeningFromMe`, `stopBotFromMe`, `expire` (min), `debounceTime` (s), `keepOpen`.
+- Quer o bot em **outro número**? Crie outra instância e ligue o fluxo nela:
+  ```bash
+  EVOLUTION_INSTANCE=quintal-2 bash docker/desenvolvimento/typebot-whatsapp.sh criar
+  EVOLUTION_INSTANCE=quintal-2 bash docker/desenvolvimento/typebot-whatsapp.sh typebot mulheres-main-local
+  ```
+- Filtrar por remetente dentro do fluxo: a Evolution envia as variáveis
+  `remoteJid`, `pushName`, `instanceName`, `serverUrl`, `apiKey` e `ownerJid`; e a
+  API do site só responde para **perfil cadastrado** (número desconhecido recebe
+  "Profile not found").
+
+## Problemas comuns
+
+- **O QR expirou** (a Evolution limita a 30 s): rode
+  `bash docker/desenvolvimento/typebot-whatsapp.sh conectar` de novo.
+- **Não chega o código de login do Typebot**: veja o Mailpit
+  (http://localhost:8025) — o SMTP do dev aponta para ele.
+- **O fluxo responde mas não grava nada no site**: confira o header `API_KEY` do
+  bloco **Webhook** (deve ser a chave do seu `.env`) e a base usada
+  (`{{baseUrl}}` → `http://dev-quintal:3000/api`).
+- **A UI da Evolution não abre**: ela depende do `nginx.conf` corrigido
+  (`evolution-manager-nginx.conf`) montado pelo compose — se trocar a imagem,
+  confira isso.
+- **`{"statusCode":400,"message":"Security validation failed: Invalid URL format"}`**
+  ao testar um bloco Webhook no builder: o Typebot valida a URL antes de chamar, e
+  `{{baseUrl}}`/`{{userPhoneNumber}}` estão vazias porque o bloco foi testado
+  isolado — quem preenche `baseUrl` é o bloco **Set variable** (que só roda quando
+  o fluxo começa). Teste o **fluxo inteiro** (Preview/WhatsApp) ou preencha os
+  valores de teste do bloco com `baseUrl=http://dev-quintal:3000/api` e um telefone
+  **sem o `+`** (ex.: `557998561633`; com `+` a API responde 404).
+- **`Access to private network range ... is not allowed`**: é a proteção SSRF do
+  Typebot barrando o host interno; o compose já libera com
+  `SSRF_ALLOWED_HOSTS=dev-quintal` (builder e viewer).
+- **Botões exigem o texto exato** (ex.: a confirmação `Sim 👍` / `Não ❌`): o
+  Typebot casa a resposta com o rótulo **completo, emoji incluído**. **Tocando no
+  botão funciona**; digitando só "Sim" ele responde `Invalid message. Please, try
+  again.` (mensagem do próprio bloco de escolha, em inglês — não é o
+  `unknownMessage` da Evolution). Para aceitar texto digitado, troque os rótulos
+  no fluxo (na VPS, que é a fonte) e re-exporte com `exportar-fluxos.sh`.
+- **Instância presa em `connecting`**: é o pareamento pendente; gere o QR e
+  escaneie.
+
+## Observações
+
+- **Não use em produção**: o canal Baileys é não oficial e o número pode ser
+  banido — use um chip de teste.
+- Os dados da Evolution ficam no banco `evolution` (Postgres) e no volume
+  `evolution_instances`.
+- Para apagar a instância: `bash docker/desenvolvimento/typebot-whatsapp.sh apagar`.
+- Para *ler* conversas de um grupo (extração de conhecimento), existe o
+  `whatsapp-extractor/` na branch `test/quart` — é outro caso de uso.
+- A VPS não é tocada por este setup: os serviços estão só no
+  `docker/desenvolvimento/docker-compose.yml`.

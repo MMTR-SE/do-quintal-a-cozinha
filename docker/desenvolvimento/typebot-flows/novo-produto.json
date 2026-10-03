@@ -1,0 +1,1338 @@
+{
+  "typebot": {
+    "id": "cketor63k011m9bole7usb06",
+    "name": "Novo Produto",
+    "publicId": "novo-produto-e7usb06",
+    "version": "6.1",
+    "icon": null,
+    "groups": [
+      {
+        "id": "f48s8dbnzdzi4kv35fjc2y2i",
+        "title": "Group #2",
+        "blocks": [
+          {
+            "id": "acx4cd1bj2oenqyk9nq0mt55",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✨ Legal! Vamos começar o cadastro do seu produto."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "zo4yfk9vm4omk0f5swybcqrp",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📝 Qual é o nome do produto?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "mias5bic4i3pn9l7ce9bgskz",
+            "type": "text input",
+            "options": {
+              "variableId": "zxdm0xuv1963gj39b0fyty7n"
+            }
+          },
+          {
+            "id": "t003y1laet2a0bt3o4jtg709",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔍 Só confirmando... o nome do seu produto é "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{productName}}"
+                    },
+                    {
+                      "text": ", certo?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ga9c8i535zbhcb8p5ubryb8r",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "sjhub3b7jt40h3o7gvgitv48",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "v26jldikvc8gni5qt2yq4b7s"
+              },
+              {
+                "id": "b8v2q87u7de0vkf783qgxy8i",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "w0rz2qisfl2w2zffii6rtzmk",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem, vamos tentar de novo! 💪  "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "n4q2lnsgx6zwsi55ioah3wq1"
+          }
+        ],
+        "graphCoordinates": {
+          "x": -196.76,
+          "y": -18.96
+        }
+      },
+      {
+        "id": "bbrrazckmcmxkoff5n60ekan",
+        "title": "Group #3",
+        "blocks": [
+          {
+            "id": "n1o7ppg1i869nj73yv3z3e7l",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🌾 Em qual dessas categorias o seu produto se encaixa?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "c4udof0bq3dot0ic96i7er3r",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "vyf7cewucws616kse6gcffj5",
+                "content": "🧑‍🌾 Agrícola",
+                "outgoingEdgeId": "bg7omds5ypycg9mbazb9i3ro"
+              },
+              {
+                "id": "lebvwae3uzd4df90prly37gd",
+                "content": "🎨 Artesanato",
+                "outgoingEdgeId": "tz0qwc82hlh31kawikir8ob5"
+              },
+              {
+                "id": "z2u0p678soun0w80h8mvp6um",
+                "content": "🏭 Processado",
+                "outgoingEdgeId": "c8shxfonusp3vwir3q9hw33x"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1397.46,
+          "y": 308.94
+        }
+      },
+      {
+        "id": "m5e3cwzvnyauocd1jss2jw6l",
+        "title": "",
+        "blocks": [
+          {
+            "id": "e8fel4vr1mjdx97p202zdmoo",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📷 Você pode me enviar "
+                    },
+                    {
+                      "bold": true,
+                      "text": "uma"
+                    },
+                    {
+                      "text": " foto do seu produto? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xwzpdb86pkxrivm0woj31x6k",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "⚠️ Só pode ser "
+                    },
+                    {
+                      "bold": true,
+                      "text": "1 foto"
+                    },
+                    {
+                      "text": ", tá bom?  "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "wz5bmxp5e73k08tj3mgi4nbl",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Se tiver mais de uma, manda a que você acha mais bonita! 😊"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "jv2bycs020prsic44drergij",
+            "type": "file input",
+            "options": {
+              "variableId": "ykvazysaieplgh2u4z1fx7lg",
+              "visibility": "Public"
+            },
+            "outgoingEdgeId": "juqy7kfn2cz3hukna0xz5c35"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1822.8,
+          "y": 368.6
+        }
+      },
+      {
+        "id": "pnxiekudkpumd5x7cavkaauf",
+        "title": "Group #5 (1)",
+        "blocks": [
+          {
+            "id": "pxdygqm515ief0fxsp593u6h",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📌 Agora me conta um pouquinho sobre o seu produto?  "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "hgg47thbx9n1yab3klv3tc3n",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Pode ser uma frase simples, tá bom? 💕 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "wggqn8fg60p45wqj0aq109hv",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✨ Exemplo: “Bolo de cenoura com cobertura de chocolate, feito com muito carinho!”"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "v35ckzqq9j1txcxwh7l1k3e3",
+            "type": "text input",
+            "options": {
+              "variableId": "nedbr8bdrsdsj66iqq2rhz0e"
+            }
+          },
+          {
+            "id": "vzxwfpe2w9va9vdtw719f0ak",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "XEUeCJ4_t8",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Só pra confirmar... a descrição do seu produto é essa aqui?  "
+                    }
+                  ]
+                },
+                {
+                  "id": "fqNyq-n3RF",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": "{{productDescription}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "aq5wuenaknjeqm5eyk0dhzbh",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "x6jcumu3cz9f0j92pyshyl99",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "uruzyjjdligc416p94nitp74"
+              },
+              {
+                "id": "ug3yos1k9demr48u2fo85b6m",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "yrfm7z0wcvgpjarscpu1vapv",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Sem problema! Vamos tentar de novo? 💪  "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "yomcb59sj8gjxw1szmwvruq0",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Me escreve de novo a descrição do seu produto 📝"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "m57db7lmqsj41n1ry1y8z4h9"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 219.69,
+          "y": -65.13
+        }
+      },
+      {
+        "id": "u8lvs8prn49psf98g6smuev4",
+        "title": "Cadastrar Audio",
+        "blocks": [
+          {
+            "id": "q5th6ed322wmat9pv4lgrppe",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🎤 Você quer gravar um áudio contando por que esse produto é especial e deve ser comprado? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xtg99zbbklkgpzvqvl3xg2vp",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "miaxdn31jtjfajhfs24a2rwf",
+                "content": "Sim 👍"
+              },
+              {
+                "id": "xybcwr0baq1970hhf73uxxri",
+                "content": "Não ❌",
+                "outgoingEdgeId": "ibgrein0opvsh50iosasqq5q"
+              }
+            ]
+          },
+          {
+            "id": "wbhtky0gvjb0r386nqrxj8wm",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Perfeito! Me envie o seu áudio quando estiver pronta, tá bom? 💜 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "kikn9164xu6m5ot4rxulsvai",
+            "type": "file input",
+            "options": {
+              "variableId": "o4ic6mwv8fuwidem27y4buvs",
+              "visibility": "Public"
+            },
+            "outgoingEdgeId": "bi1xkprx8yl5fqv3w4nminzj"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2205.63,
+          "y": 802.93
+        }
+      },
+      {
+        "id": "n8uni2jeqrwmrvegl4vy1fb1",
+        "title": "Cadastrar Video",
+        "blocks": [
+          {
+            "id": "i2bg5wgavmxsw3li4sqnqshx",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🎥 Você quer me enviar um vídeo do seu produto? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "x8ekja2gwfkoej9gz1yccryj",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Não é obrigatório, mas ajuda muuuito a deixar seu anúncio mais atrativo! ✨ "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ld57io1gfvwbxypl4xj3j4v1",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "nlntvo39ugps7s20bkfuw2jl",
+                "content": "Sim 👍"
+              },
+              {
+                "id": "jmh1fobwn8x1p6lxq4rvydv6",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "jp36swii5pql5clpdnfhmhky",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Show! Pode me mandar o vídeo quando estiver pronta 💜 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "z5z6egot3qj3msvxa4nzhqqp",
+            "type": "file input",
+            "options": {
+              "variableId": "k1r33qgxyhek1gdlb35504kp",
+              "visibility": "Public"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2810.13,
+          "y": 745.43
+        }
+      },
+      {
+        "id": "wvw3ednpughu3wcevuloxdgb",
+        "title": "",
+        "blocks": [
+          {
+            "id": "aorkajzgll8121d7bq9cibam",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/product",
+                "body": "{\n  \"product_name\": \"{{productName}}\",\n  \"description\": \"{{productDescription}}\",\n  \"category\": \"{{productCategory}}\",\n  \"price\": \"{{parsedPrice}}\",\n  \"phone_number\": \"{{profilePhoneNumber}}\",\n  \"media\": [\n    {\n      \"url\": \"{{productImage}}\",\n      \"media_type\": \"IMAGE\"\n    },\n    {\n      \"url\": \"{{productAudio}}\",\n      \"media_type\": \"AUDIO\"\n    },\n    {\n      \"url\": \"{{productVideo}}\",\n      \"media_type\": \"VIDEO\"\n    }\n  ]\n}",
+                "headers": [
+                  {
+                    "id": "rg6xlwud75rmtjiqbmwoj9et",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": true,
+              "responseVariableMapping": [
+                {
+                  "id": "fpbnjyr4n04nmabuoo43cfin",
+                  "bodyPath": "statusCode",
+                  "variableId": "vb3yjqjiz9ziyqexni2e8wlq"
+                },
+                {
+                  "id": "sux4e5lmc3f9v3xejeea6pl4",
+                  "bodyPath": "data",
+                  "variableId": "vaxjfii5rfl4udy5j02pbnwc2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "nyujvtjli1mgglzq23iy9jx3",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "nr110imx4rnpjv7avjnema7y",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "jhgdbl0z27o678mb2jfzar53",
+                      "value": "200",
+                      "variableId": "vb3yjqjiz9ziyqexni2e8wlq",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "rrgr9ca8mhlnybpb7h49o8hk",
+                      "value": "299",
+                      "variableId": "vb3yjqjiz9ziyqexni2e8wlq",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "x3apgr3w0158pw0vb9vy0cc0"
+              }
+            ]
+          },
+          {
+            "id": "dx85fu6oe5aeir1ucnwdek50",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Opa! Parece que deu um probleminha pra cadastrar seu produto."
+                    },
+                    {
+                      "text": " "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "q1ek47gzo33u72xz5ops9swz",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔁 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Tenta de novo mais tarde, tá bom?"
+                    },
+                    {
+                      "text": " "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3237.33,
+          "y": 302.88
+        }
+      },
+      {
+        "id": "hmhjgrru3tfx2l9vfjefymzt",
+        "title": "Group #10",
+        "blocks": [
+          {
+            "id": "bqgi17q71vk2hipdy2138zlb",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "ao50oyzb6u3nri32qaedyxy0",
+              "expressionToEvaluate": "AGRICOLA"
+            },
+            "outgoingEdgeId": "oyukcdvkzcgeopemj2xo0s9h"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1817.83,
+          "y": -232.12
+        }
+      },
+      {
+        "id": "nt4blpk505ghh32ypzoskg1k",
+        "title": "Group #10",
+        "blocks": [
+          {
+            "id": "n3qvoc06tkxo67f8cmy6s271",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "ao50oyzb6u3nri32qaedyxy0",
+              "expressionToEvaluate": "ARTESANATO"
+            },
+            "outgoingEdgeId": "m0y6e27xduy2ieig957miitq"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1818.84,
+          "y": -55.76
+        }
+      },
+      {
+        "id": "vh11lkpeqlxllln06xf2drjw",
+        "title": "Group #10",
+        "blocks": [
+          {
+            "id": "n4zcbdewjybh8d20gnwnxujg",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "ao50oyzb6u3nri32qaedyxy0",
+              "expressionToEvaluate": "PROCESSADO"
+            },
+            "outgoingEdgeId": "ws2zkhv96279vr7kti7kgasp"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1815.03,
+          "y": 106.5
+        }
+      },
+      {
+        "id": "v0m3e5lj36r5xmzdqktke44h",
+        "title": "Group #6",
+        "blocks": [
+          {
+            "id": "nfos0tb0havqjcr2czovm3w1",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🎉 Prontinho! Seu produto foi publicado com sucesso!  "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "n9vny89epec8mjvc78eu105l",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Obrigada por cadastrar, ele já está visível para todo mundo! 💜"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "qirjun14crjke1h71w08fgqs"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3649.06,
+          "y": 284.03
+        }
+      },
+      {
+        "id": "jpjobyihf5tx7q07se6iq20y",
+        "title": "Group #19",
+        "blocks": [
+          {
+            "id": "vxc9va915orir4pfvmxj5j92",
+            "type": "Set variable",
+            "options": {
+              "variableId": "jzbtsk1psan1uqqvkzw322fp",
+              "expressionToEvaluate": "http://dev-quintal:3000/api"
+            }
+          },
+          {
+            "id": "bvdkfg86nrvkge9ig1zmdxme",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{userPhoneNumber}}",
+                "method": "GET",
+                "headers": [
+                  {
+                    "id": "vmtnz6rv7jlhhvq3jj2usjkv",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "variablesForTest": [
+                {
+                  "id": "eqr3stvpfpx81s9cdgy33bob",
+                  "value": "5579998115065",
+                  "variableId": "t1epwm1jgzxavrser8vkruzf"
+                }
+              ],
+              "responseVariableMapping": [
+                {
+                  "id": "r7nmh48cndft1pdltk7u18j0",
+                  "bodyPath": "statusCode",
+                  "variableId": "bzh03wxdbbcb2wt25bgcnx7e"
+                },
+                {
+                  "id": "d16zpmtoqvwumbz9q0n9u9y8",
+                  "bodyPath": "data.profile.name",
+                  "variableId": "bxaawnqjxn9qfc58rou8rzhe"
+                },
+                {
+                  "id": "s443qsitx52c1eiz8u7rxlqy",
+                  "bodyPath": "data.profile.phone_number",
+                  "variableId": "wu0pwv4epes65h6t9ruv4v2x"
+                },
+                {
+                  "id": "mdm11y2tpi1jfbohjbvwdd0i",
+                  "bodyPath": "data.profile.social_name",
+                  "variableId": "ep8n3imrpel3fh3ys4c1w0kw"
+                },
+                {
+                  "id": "wv8urkj31tx22fsjsyjqygtw",
+                  "bodyPath": "data.profile.instagram",
+                  "variableId": "hpjc1guitf3x8ugi24mjween"
+                }
+              ]
+            },
+            "outgoingEdgeId": "y4imhsr2loxjky906zmqtgmh"
+          }
+        ],
+        "graphCoordinates": {
+          "x": -653.01,
+          "y": -17.3
+        }
+      },
+      {
+        "id": "pwcalokad4ay6cgya22rg1kt",
+        "title": "",
+        "blocks": [
+          {
+            "id": "nw8fnyp6dh2yactny7m1mvsc",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "VpAISagSg6",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "💰 Você quer adicionar um preço para esse produto agora?"
+                    }
+                  ]
+                },
+                {
+                  "id": "uzwCvkinTP",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Se preferir, pode pular e adicionar depois, sem problema! 😄"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "fk9jj8kvr9z6m3e7g8int725",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "f427942xrukk6ij7g2z9nlf3",
+                "content": "Sim 👍"
+              },
+              {
+                "id": "uo25z3t23fwksluap0q8ntp8",
+                "content": "Não ❌",
+                "outgoingEdgeId": "fah1ze6rak2iwmwg8rkuaexd"
+              }
+            ]
+          },
+          {
+            "id": "g119hgg5i01nyfvckdnzxuqo",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "ujLXHEx7_0",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "💰 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Perfeito! Agora me envia o preço do produto."
+                    }
+                  ]
+                },
+                {
+                  "id": "1ONYa35ySK",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "jMnWbtfCdN",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você pode digitar no formato que quiser, por exemplo:"
+                    }
+                  ]
+                },
+                {
+                  "id": "kWNYdbG6kx",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "q0ICCsWczg",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "- 25,90\n- 25"
+                    }
+                  ]
+                },
+                {
+                  "id": "ZR4q_QiFN5",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "2Z7c780qjG",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Não precisa colocar "
+                    },
+                    {
+                      "text": "R$",
+                      "italic": true
+                    },
+                    {
+                      "text": ", eu cuido disso depois 😉"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "zx6wdnqvn5bbv028wdx2a3aq",
+            "type": "text input",
+            "options": {
+              "variableId": "vikxgja7brhzp7vkft0zyot89"
+            }
+          },
+          {
+            "id": "yzm2meyzgx9ej2d2qfr55v21",
+            "type": "Code",
+            "options": {
+              "content": "// value received from Typebot variable\nconst price = {{price}};\n\n// Function to parse price formats like: R$25,90 / 25,9 / 25.900,50 / 25\nfunction parseToDecimal(value) {\n  if (!value) return null;\n\n  return Number(\n    value\n      .toString()\n      .replace(/[R$\\s]/gi, \"\") // remove R$, $\n      .replace(/\\./g, \"\")      // remove thousand separators\n      .replace(\",\", \".\")       // convert decimal comma to dot\n  );\n}\n\n// Parse and store in Typebot variable\nconst parsedPrice = parseToDecimal(price);\n\nsetVariable(\"parsedPrice\", parsedPrice);\n",
+              "isExecutedOnClient": false
+            }
+          },
+          {
+            "id": "t9th6giso28k2zuzsdzbk84n",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "W29qbd3VLK",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Então, só confirmando...\n O novo preço será "
+                    },
+                    {
+                      "text": "R${{price}}",
+                      "italic": true
+                    },
+                    {
+                      "text": ", certo? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "cvrz9m4rb11cebxwk6x1bd6m",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "b2oss8cpuoh3jgrivhste4fy",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "be9zo7y8qxl7hdqve7q80uxk"
+              },
+              {
+                "id": "nzhjd8d05w8grslugqlbk4tr",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "pi93e0pgiky30gta131crq46",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "rHUdaVcQuv",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Sem problema! Vamos tentar novamente 💪"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "c8jbj8vhyxlfi78lqqsfghjq"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 644.84,
+          "y": 26.45
+        }
+      },
+      {
+        "id": "zkgtl71cbrn9p5j9p4bfy2p4",
+        "title": "Menu Produtos",
+        "blocks": [
+          {
+            "id": "lu2eyn92iskt7xl18vra00vg",
+            "type": "Typebot link",
+            "options": {
+              "groupId": "ciac5hchq4mxgao3qxxnzvlq",
+              "typebotId": "cgwngldu7zivxntevzed4uhg"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3993.83,
+          "y": 346.16
+        }
+      }
+    ],
+    "variables": [
+      {
+        "id": "vaxjfii5rfl4udy5j02pbnwc2",
+        "name": "productId",
+        "isSessionVariable": true
+      },
+      {
+        "id": "npy8jrgt497axoajbm1vyslk",
+        "name": "parsedPrice",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vikxgja7brhzp7vkft0zyot89",
+        "name": "price",
+        "isSessionVariable": false
+      },
+      {
+        "id": "jzbtsk1psan1uqqvkzw322fp",
+        "name": "baseUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "t1epwm1jgzxavrser8vkruzf",
+        "name": "phoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "bzh03wxdbbcb2wt25bgcnx7e",
+        "name": "profileCreatedStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "bxaawnqjxn9qfc58rou8rzhe",
+        "name": "profileName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "ep8n3imrpel3fh3ys4c1w0kw",
+        "name": "profileSocialName",
+        "isSessionVariable": true
+      },
+      {
+        "id": "hpjc1guitf3x8ugi24mjween",
+        "name": "profileInstagram",
+        "isSessionVariable": true
+      },
+      {
+        "id": "oqdd28wauzo8bjkvez89a65k",
+        "name": "userPhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "zxdm0xuv1963gj39b0fyty7n",
+        "name": "productName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "ykvazysaieplgh2u4z1fx7lg",
+        "name": "productImage",
+        "isSessionVariable": false
+      },
+      {
+        "id": "nedbr8bdrsdsj66iqq2rhz0e",
+        "name": "productDescription",
+        "isSessionVariable": false
+      },
+      {
+        "id": "o4ic6mwv8fuwidem27y4buvs",
+        "name": "productAudio",
+        "isSessionVariable": false
+      },
+      {
+        "id": "k1r33qgxyhek1gdlb35504kp",
+        "name": "productVideo",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vb3yjqjiz9ziyqexni2e8wlq",
+        "name": "apiStatus",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ao50oyzb6u3nri32qaedyxy0",
+        "name": "productCategory",
+        "isSessionVariable": true
+      },
+      {
+        "id": "wu0pwv4epes65h6t9ruv4v2x",
+        "name": "profilePhoneNumber",
+        "isSessionVariable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "v26jldikvc8gni5qt2yq4b7s",
+        "to": {
+          "groupId": "pnxiekudkpumd5x7cavkaauf"
+        },
+        "from": {
+          "itemId": "sjhub3b7jt40h3o7gvgitv48",
+          "blockId": "ga9c8i535zbhcb8p5ubryb8r"
+        }
+      },
+      {
+        "id": "bg7omds5ypycg9mbazb9i3ro",
+        "to": {
+          "groupId": "hmhjgrru3tfx2l9vfjefymzt"
+        },
+        "from": {
+          "itemId": "vyf7cewucws616kse6gcffj5",
+          "blockId": "c4udof0bq3dot0ic96i7er3r"
+        }
+      },
+      {
+        "id": "tz0qwc82hlh31kawikir8ob5",
+        "to": {
+          "groupId": "nt4blpk505ghh32ypzoskg1k"
+        },
+        "from": {
+          "itemId": "lebvwae3uzd4df90prly37gd",
+          "blockId": "c4udof0bq3dot0ic96i7er3r"
+        }
+      },
+      {
+        "id": "c8shxfonusp3vwir3q9hw33x",
+        "to": {
+          "groupId": "vh11lkpeqlxllln06xf2drjw"
+        },
+        "from": {
+          "itemId": "z2u0p678soun0w80h8mvp6um",
+          "blockId": "c4udof0bq3dot0ic96i7er3r"
+        }
+      },
+      {
+        "id": "ibgrein0opvsh50iosasqq5q",
+        "to": {
+          "groupId": "n8uni2jeqrwmrvegl4vy1fb1"
+        },
+        "from": {
+          "itemId": "xybcwr0baq1970hhf73uxxri",
+          "blockId": "xtg99zbbklkgpzvqvl3xg2vp"
+        }
+      },
+      {
+        "id": "x3apgr3w0158pw0vb9vy0cc0",
+        "to": {
+          "groupId": "v0m3e5lj36r5xmzdqktke44h"
+        },
+        "from": {
+          "itemId": "nr110imx4rnpjv7avjnema7y",
+          "blockId": "nyujvtjli1mgglzq23iy9jx3"
+        }
+      },
+      {
+        "id": "oyukcdvkzcgeopemj2xo0s9h",
+        "to": {
+          "groupId": "m5e3cwzvnyauocd1jss2jw6l"
+        },
+        "from": {
+          "blockId": "bqgi17q71vk2hipdy2138zlb"
+        }
+      },
+      {
+        "id": "m0y6e27xduy2ieig957miitq",
+        "to": {
+          "groupId": "m5e3cwzvnyauocd1jss2jw6l"
+        },
+        "from": {
+          "blockId": "n3qvoc06tkxo67f8cmy6s271"
+        }
+      },
+      {
+        "id": "ws2zkhv96279vr7kti7kgasp",
+        "to": {
+          "groupId": "m5e3cwzvnyauocd1jss2jw6l"
+        },
+        "from": {
+          "blockId": "n4zcbdewjybh8d20gnwnxujg"
+        }
+      },
+      {
+        "id": "jv2skhsmfvkg1zrl8bx2u9cl",
+        "to": {
+          "groupId": "jpjobyihf5tx7q07se6iq20y"
+        },
+        "from": {
+          "eventId": "dadcpn9s824xcfeepayo8zwp"
+        }
+      },
+      {
+        "id": "y4imhsr2loxjky906zmqtgmh",
+        "to": {
+          "groupId": "f48s8dbnzdzi4kv35fjc2y2i"
+        },
+        "from": {
+          "blockId": "bvdkfg86nrvkge9ig1zmdxme"
+        }
+      },
+      {
+        "id": "n4q2lnsgx6zwsi55ioah3wq1",
+        "to": {
+          "blockId": "zo4yfk9vm4omk0f5swybcqrp",
+          "groupId": "f48s8dbnzdzi4kv35fjc2y2i"
+        },
+        "from": {
+          "blockId": "w0rz2qisfl2w2zffii6rtzmk"
+        }
+      },
+      {
+        "id": "fah1ze6rak2iwmwg8rkuaexd",
+        "to": {
+          "groupId": "bbrrazckmcmxkoff5n60ekan"
+        },
+        "from": {
+          "itemId": "uo25z3t23fwksluap0q8ntp8",
+          "blockId": "fk9jj8kvr9z6m3e7g8int725"
+        }
+      },
+      {
+        "id": "uruzyjjdligc416p94nitp74",
+        "to": {
+          "groupId": "pwcalokad4ay6cgya22rg1kt"
+        },
+        "from": {
+          "itemId": "x6jcumu3cz9f0j92pyshyl99",
+          "blockId": "aq5wuenaknjeqm5eyk0dhzbh"
+        }
+      },
+      {
+        "id": "m57db7lmqsj41n1ry1y8z4h9",
+        "to": {
+          "blockId": "v35ckzqq9j1txcxwh7l1k3e3",
+          "groupId": "pnxiekudkpumd5x7cavkaauf"
+        },
+        "from": {
+          "blockId": "yomcb59sj8gjxw1szmwvruq0"
+        }
+      },
+      {
+        "id": "be9zo7y8qxl7hdqve7q80uxk",
+        "to": {
+          "groupId": "bbrrazckmcmxkoff5n60ekan"
+        },
+        "from": {
+          "itemId": "b2oss8cpuoh3jgrivhste4fy",
+          "blockId": "cvrz9m4rb11cebxwk6x1bd6m"
+        }
+      },
+      {
+        "id": "c8jbj8vhyxlfi78lqqsfghjq",
+        "to": {
+          "blockId": "g119hgg5i01nyfvckdnzxuqo",
+          "groupId": "pwcalokad4ay6cgya22rg1kt"
+        },
+        "from": {
+          "blockId": "pi93e0pgiky30gta131crq46"
+        }
+      },
+      {
+        "id": "bi1xkprx8yl5fqv3w4nminzj",
+        "to": {
+          "groupId": "n8uni2jeqrwmrvegl4vy1fb1"
+        },
+        "from": {
+          "blockId": "kikn9164xu6m5ot4rxulsvai"
+        }
+      },
+      {
+        "id": "qirjun14crjke1h71w08fgqs",
+        "to": {
+          "blockId": "lu2eyn92iskt7xl18vra00vg",
+          "groupId": "zkgtl71cbrn9p5j9p4bfy2p4"
+        },
+        "from": {
+          "blockId": "n9vny89epec8mjvc78eu105l"
+        }
+      },
+      {
+        "id": "juqy7kfn2cz3hukna0xz5c35",
+        "to": {
+          "groupId": "wvw3ednpughu3wcevuloxdgb"
+        },
+        "from": {
+          "blockId": "jv2bycs020prsic44drergij"
+        }
+      }
+    ],
+    "theme": {},
+    "settings": {},
+    "events": [
+      {
+        "id": "dadcpn9s824xcfeepayo8zwp",
+        "type": "start",
+        "outgoingEdgeId": "jv2skhsmfvkg1zrl8bx2u9cl",
+        "graphCoordinates": {
+          "x": -1029.17,
+          "y": -5.84
+        }
+      }
+    ]
+  },
+  "version": "6.1"
+}
