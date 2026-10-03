@@ -43,9 +43,55 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          # O build da imagem na VPS passa de 5 min; o padrão de 10 min do passo
+          # cortava o deploy no meio.
+          command_timeout: 30m
           script: |
-            cd $PROD_PATH
+            set -eu
+
+            cd "$PROD_PATH"
+
             git checkout main
+
+            # A VPS pode ter alterações manuais nesses arquivos, impedindo o
+            # `git pull --rebase` (mesmo caso do docker/cms/Dockerfile na
+            # pré-produção). Preserva uma cópia recuperável e restaura a versão
+            # do Git antes de puxar.
+            for f in docker/producao/Dockerfile docker/producao/docker-compose.yml; do
+              if ! git diff --quiet -- "$f"; then
+                backup_file="/tmp/do-quintal-prod-$(basename "$f").$(date +%Y%m%d%H%M%S)"
+                cp "$f" "$backup_file"
+                echo "Backup da alteração local salvo em $backup_file"
+                git restore -- "$f"
+              fi
+            done
+
+            # Aborta cedo se ainda sobrarem alterações locais; não sobrescrevemos
+            # nada por engano.
+            if ! git diff --quiet || ! git diff --cached --quiet; then
+              echo "O checkout de deploy ainda possui alterações locais:" >&2
+              git status --short >&2
+              exit 1
+            fi
+
             git pull --rebase novo main
+
+            # O compose lê `env_file: $PROD_PATH/.env`; o arquivo precisa existir
+            # e ser legível pelo usuário do deploy. Se não for, paramos com
+            # mensagem clara em vez de deixar o compose falhar com
+            # "permission denied".
+            if [ ! -e .env ]; then
+              echo "Arquivo $PROD_PATH/.env não encontrado. Crie-o antes do deploy." >&2
+              exit 1
+            fi
+            if [ ! -r .env ]; then
+              # Se o arquivo for do próprio usuário, ajustar a permissão resolve.
+              chmod 600 .env 2>/dev/null || true
+            fi
+            if [ ! -r .env ]; then
+              echo "Não foi possível ler $PROD_PATH/.env. Ajuste dono/permissão na VPS." >&2
+              exit 1
+            fi
+
             cd ../caddy
             docker compose up -d --build quintal
