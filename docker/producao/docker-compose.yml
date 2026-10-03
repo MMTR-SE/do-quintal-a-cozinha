@@ -2,7 +2,7 @@ services:
   quintal:
     container_name: quintal
     # A imagem e construida no runner do GitHub e publicada no GHCR. 
-    #O bloco `build` fica para quem quiser construir na mao.
+    # O bloco `build` fica para quem quiser construir na mao.
     image: ghcr.io/mmtr-se/do-quintal-a-cozinha:producao
     build:
       context: $PROD_PATH
