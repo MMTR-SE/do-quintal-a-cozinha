@@ -104,10 +104,27 @@ ligar_typebot() {
     echo "informe o id publico do bot. Ex.: bash $0 typebot meu-fluxo-abc123" >&2
     exit 1
   fi
+
+  # A Evolution aceita uma configuracao de Typebot por instancia e o /typebot/create
+  # nao substitui a existente: apagamos as atuais antes de ligar a nova.
+  api "$API_URL/typebot/find/$INSTANCIA" | node -e '
+    let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+      try{const j=JSON.parse(s);const a=Array.isArray(j)?j:[j];
+        a.filter(c=>c&&c.id).forEach(c=>console.log(c.id));
+      }catch{}
+    })' | while read -r id; do
+    [ -n "$id" ] || continue
+    echo "  removendo configuracao anterior ($id)"
+    api -X DELETE "$API_URL/typebot/delete/$id/$INSTANCIA" >/dev/null
+  done
+
   echo "ligando a instancia $INSTANCIA ao bot $bot ($url)..."
   api -X POST "$API_URL/typebot/create/$INSTANCIA" \
     -d "{\"enabled\":true,\"url\":\"$url\",\"typebot\":\"$bot\",\"triggerType\":\"all\",\"triggerOperator\":\"contains\",\"triggerValue\":\"\",\"expire\":20,\"keywordFinish\":\"#SAIR\",\"delayMessage\":1000,\"unknownMessage\":\"Nao entendi, pode repetir?\",\"listeningFromMe\":false,\"stopBotFromMe\":false,\"keepOpen\":false,\"debounceTime\":10}" \
     | resumo
+  echo "pronto. Este fluxo responde a qualquer mensagem que chegar no numero pareado"
+  echo "(triggerType=all). Para mudar isso, use a API da Evolution:"
+  echo "  POST $API_URL/typebot/create/$INSTANCIA com triggerType=keyword e triggerValue=\"^oi\$\""
 }
 
 status() {

@@ -107,6 +107,32 @@ SSH_HOST=quintal TSB_CONTAINER=typebot-typebot-db-1 TSB_USER=postgres \
 
 (esse comando só lê o banco do Typebot da VPS — não altera nada lá)
 
+## Qual número, qual fluxo e quais conversas
+
+- O número do bot é o **da instância** — o WhatsApp que você pareou pelo QR. Não
+  existe configuração de número no Typebot: o vínculo é feito na Evolution.
+- **Um fluxo por instância**. Para trocar:
+  `bash docker/desenvolvimento/typebot-whatsapp.sh typebot <publicId>` (o script
+  apaga a configuração anterior antes de criar a nova).
+- Com `triggerType=all` (o padrão do script) o fluxo responde a **qualquer**
+  mensagem que chegar naquele número — de qualquer conversa, não só de contatos
+  específicos. Para restringir, use a API da Evolution
+  (`POST /typebot/create/<instância>`):
+  - `triggerType: keyword` + `triggerValue` (ex.: `^oi$` com `triggerOperator: regex`)
+    → só dispara quando a mensagem casar;
+  - `keywordFinish: "#SAIR"` encerra a sessão do contato;
+  - `ignoreJids: ["...@g.us"]` ignora grupos (e outros JIDs);
+  - `listeningFromMe`, `stopBotFromMe`, `expire` (min), `debounceTime` (s), `keepOpen`.
+- Quer o bot em **outro número**? Crie outra instância e ligue o fluxo nela:
+  ```bash
+  EVOLUTION_INSTANCE=quintal-2 bash docker/desenvolvimento/typebot-whatsapp.sh criar
+  EVOLUTION_INSTANCE=quintal-2 bash docker/desenvolvimento/typebot-whatsapp.sh typebot mulheres-main-local
+  ```
+- Filtrar por remetente dentro do fluxo: a Evolution envia as variáveis
+  `remoteJid`, `pushName`, `instanceName`, `serverUrl`, `apiKey` e `ownerJid`; e a
+  API do site só responde para **perfil cadastrado** (número desconhecido recebe
+  "Profile not found").
+
 ## Problemas comuns
 
 - **O QR expirou** (a Evolution limita a 30 s): rode
