@@ -47,8 +47,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # A VPS tem ~1.9 GB de RAM e o `next build` dentro dela derruba a maquina
-      # (swap cheio, load ~100). A imagem sai pronta daqui; a VPS so faz `pull`.
       - name: Construindo e publicando a aplicacao
         uses: docker/build-push-action@v6
         with:
