@@ -1,4 +1,4 @@
-import { RecipeDifficulty } from "@prisma/client";
+import type { RecipeDifficulty } from "@prisma/client";
 
 /**
  * Recipe type definitions for listing and detail views.
