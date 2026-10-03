@@ -155,6 +155,12 @@ SSH_HOST=quintal TSB_CONTAINER=typebot-typebot-db-1 TSB_USER=postgres \
 - **`Access to private network range ... is not allowed`**: é a proteção SSRF do
   Typebot barrando o host interno; o compose já libera com
   `SSRF_ALLOWED_HOSTS=dev-quintal` (builder e viewer).
+- **Botões exigem o texto exato** (ex.: a confirmação `Sim 👍` / `Não ❌`): o
+  Typebot casa a resposta com o rótulo **completo, emoji incluído**. **Tocando no
+  botão funciona**; digitando só "Sim" ele responde `Invalid message. Please, try
+  again.` (mensagem do próprio bloco de escolha, em inglês — não é o
+  `unknownMessage` da Evolution). Para aceitar texto digitado, troque os rótulos
+  no fluxo (na VPS, que é a fonte) e re-exporte com `exportar-fluxos.sh`.
 - **Instância presa em `connecting`**: é o pareamento pendente; gere o QR e
   escaneie.
 
