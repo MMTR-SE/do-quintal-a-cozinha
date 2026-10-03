@@ -53,7 +53,7 @@ Nada aqui sobe para a VPS: são serviços apenas do ambiente de desenvolvimento.
 
 ## Chamando a API do site dentro do fluxo
 
-Nos blocos **HTTP request** do Typebot, use a rede interna do Docker:
+Nos blocos **Webhook** (HTTP request) do Typebot, use a rede interna do Docker:
 
 - URL: `http://dev-quintal:3000/api/product` (ou `/api/recipe`)
 - Header: `API_KEY: <valor de API_KEY do seu .env>`
@@ -73,6 +73,52 @@ O item cai no Postgres do site (aparece em http://localhost:3001) e é espelhado
 
 A Evolution também envia variáveis prontas para o fluxo: `remoteJid`, `pushName`,
 `instanceName`, `serverUrl`, `apiKey` e `ownerJid`.
+
+## Fluxos versionados (os que rodam hoje na VPS)
+
+Os fluxos **publicados** no Typebot da VPS estão versionados em
+[`typebot-flows/`](typebot-flows/README.md) — 7 fluxos (v6.1), exportados por
+`SELECT` no banco do Typebot, já com a API_KEY de produção substituída pelo
+placeholder `TROCAR-PELA-API-KEY-LOCAL` e apontando para
+`http://dev-quintal:3000/api`.
+
+```bash
+# 1) suba o Typebot
+bash docker/desenvolvimento/typebot-whatsapp.sh subir
+
+# 2) troque o placeholder pela sua chave local (o repositório nunca guarda a chave)
+API_KEY=$(grep -m1 '^API_KEY=' .env | cut -d= -f2-)
+sed -i "s/TROCAR-PELA-API-KEY-LOCAL/$API_KEY/" docker/desenvolvimento/typebot-flows/*.json
+```
+
+3. No builder (http://localhost:3002), em **Create a new typebot** escolha
+   **Import a file** e selecione o JSON desejado.
+4. Publique o fluxo e ligue a instância ao **novo** id público:
+   `bash docker/desenvolvimento/typebot-whatsapp.sh typebot <id-publico>`
+
+Para atualizar as cópias depois de mudar algo na VPS:
+
+```bash
+SSH_HOST=quintal TSB_CONTAINER=typebot-typebot-db-1 TSB_USER=postgres \
+  bash docker/desenvolvimento/typebot-flows/exportar-fluxos.sh
+```
+
+(esse comando só lê o banco do Typebot da VPS — não altera nada lá)
+
+## Problemas comuns
+
+- **O QR expirou** (a Evolution limita a 30 s): rode
+  `bash docker/desenvolvimento/typebot-whatsapp.sh conectar` de novo.
+- **Não chega o código de login do Typebot**: veja o Mailpit
+  (http://localhost:8025) — o SMTP do dev aponta para ele.
+- **O fluxo responde mas não grava nada no site**: confira o header `API_KEY` do
+  bloco **Webhook** (deve ser a chave do seu `.env`) e a base usada
+  (`{{baseUrl}}` → `http://dev-quintal:3000/api`).
+- **A UI da Evolution não abre**: ela depende do `nginx.conf` corrigido
+  (`evolution-manager-nginx.conf`) montado pelo compose — se trocar a imagem,
+  confira isso.
+- **Instância presa em `connecting`**: é o pareamento pendente; gere o QR e
+  escaneie.
 
 ## Observações
 
