@@ -145,6 +145,16 @@ SSH_HOST=quintal TSB_CONTAINER=typebot-typebot-db-1 TSB_USER=postgres \
 - **A UI da Evolution não abre**: ela depende do `nginx.conf` corrigido
   (`evolution-manager-nginx.conf`) montado pelo compose — se trocar a imagem,
   confira isso.
+- **`{"statusCode":400,"message":"Security validation failed: Invalid URL format"}`**
+  ao testar um bloco Webhook no builder: o Typebot valida a URL antes de chamar, e
+  `{{baseUrl}}`/`{{userPhoneNumber}}` estão vazias porque o bloco foi testado
+  isolado — quem preenche `baseUrl` é o bloco **Set variable** (que só roda quando
+  o fluxo começa). Teste o **fluxo inteiro** (Preview/WhatsApp) ou preencha os
+  valores de teste do bloco com `baseUrl=http://dev-quintal:3000/api` e um telefone
+  **sem o `+`** (ex.: `557998561633`; com `+` a API responde 404).
+- **`Access to private network range ... is not allowed`**: é a proteção SSRF do
+  Typebot barrando o host interno; o compose já libera com
+  `SSRF_ALLOWED_HOSTS=dev-quintal` (builder e viewer).
 - **Instância presa em `connecting`**: é o pareamento pendente; gere o QR e
   escaneie.
 
