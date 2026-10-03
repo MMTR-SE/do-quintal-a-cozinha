@@ -39,9 +39,20 @@ Services in `docker/desenvolvimento/docker-compose.yml`: `dev-quintal` (app, por
 
 O deploy é feito pelo workflow `.github/workflows/pre-producao.yml` (push na branch `pre-producao`). Na VPS o compose que roda é `/var/www/caddy/docker-compose.yml`, que faz `include` dos compose deste repositório (`docker/pre-producao/docker-compose.yml` e `docker/producao/docker-compose.yml`) — ou seja, é o repositório que define os serviços.
 
-- Endereços: `https://dev.mulheresrurais.com.br` (site, container `pre-quintal`) e `https://conteudos.mulheresrurais.com.br` (CMS, container `pre-quintal-cms`).
+- Endereços:
+  | Endereço | Serviço |
+  |----------|---------|
+  | `https://dev.mulheresrurais.com.br` | site (container `pre-quintal`) |
+  | `https://conteudos-dev.mulheresrurais.com.br` | CMS/Strapi (`pre-quintal-cms`) |
+  | `https://typebot-dev.mulheresrurais.com.br` | builder do Typebot (`pre-quintal-typebot-builder`) |
+  | `https://bot-dev.mulheresrurais.com.br` | viewer do Typebot (`pre-quintal-typebot-viewer`) |
+  | `https://typebot-dev.mulheresrurais.com.br/mailpit/` | caixa de entrada do Mailpit (`pre-quintal-mailpit`), com HTTP basic auth |
+
+  O `https://conteudos.mulheresrurais.com.br` continua respondendo ao mesmo container de CMS **de propósito**: é a URL que a aplicação de produção usa. O site de pré-produção descobre o CMS por `NEXT_PUBLIC_STRAPI_URL`, que o Next **embute no bundle durante o build** — por isso ele é passado como build-arg no workflow (mudar só a variável de ambiente não tem efeito).
 - A VPS tem **~1.9 GB de RAM**: as imagens (app e CMS) são construídas no runner do GitHub e publicadas no GHCR, e o deploy só faz `pull` — não rode `docker compose build` lá (o `next build` esgota a memória e derruba a máquina, inclusive o Typebot de produção).
-- O Typebot de pré-produção **não roda** nessa VPS (não há RAM para um segundo stack); para testar o fluxo do Typebot, use um bot de teste na instância que já existe em `typebot.mulheresrurais.com.br` apontando para a API do site de pré-produção.
+- O Typebot de pré-produção roda na mesma VPS com o objetivo de **testar e validar os fluxos**. Para não competir com o Typebot de produção, ele reusa o banco `typebot` do próprio `pre-quintal-postgres` (sem Postgres novo) e as mesmas imagens já baixadas, e cada container tem `mem_limit` — se algo estourar, quem morre (e reinicia) é o container de teste, não o Caddy nem o Typebot de produção. Ainda assim, evite treinar/buildar fluxos pesados ao mesmo tempo que um deploy de produção.
+- O login do Typebot é sempre por código enviado por e-mail, então os códigos caem no **Mailpit** interno: a senha está em `MAILPIT_USER`/`MAILPIT_PASSWORD` no `$DEV_PATH/.env` (`ssh quintal "grep MAILPIT_USER /var/www/dev.mulheresrurais.com.br/.env"`). O `ENCRYPTION_SECRET` (32 caracteres exatos) é gerado pelo workflow se não existir; definir `ADMIN_EMAIL` no `.env` faz o workflow acrescentar `DISABLE_SIGNUP=true`.
+- Os três endereços novos exigem registros DNS `A` apontando para o IP da VPS (`177.39.18.151`) — já configurados.
 
 ## Architecture
 
