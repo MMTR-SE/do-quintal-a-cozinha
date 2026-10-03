@@ -36,7 +36,8 @@ PLACEHOLDER="TROCAR-PELA-API-KEY-LOCAL"
 filtro="${1:-}"
 
 JAR="$(mktemp -t typebot-import.XXXXXX)"
-trap 'rm -f "$JAR"' EXIT
+ESTADO="$(mktemp -d -t typebot-fluxos.XXXXXX)"
+trap 'rm -f "$JAR"; rm -rf "$ESTADO"' EXIT
 
 # ---------------------------------------------------------------------------
 # chave local da API do site (vai no lugar do placeholder dentro do fluxo)
@@ -172,6 +173,21 @@ for arquivo in "$AQUI"/*.json; do
 
   slug="$(node -e 'const n=require(process.argv[1]).typebot.name;console.log(n.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+process.argv[2])' "$arquivo" "$SUFIXO")"
 
+  # guarda o essencial para a segunda passada (remapear os links entre fluxos)
+  node -e '
+    const fs = require("fs");
+    const [arquivo, destino, localId, resposta] = process.argv.slice(1);
+    const j = JSON.parse(fs.readFileSync(arquivo, "utf8"));
+    const r = JSON.parse(resposta);
+    const typebot = (r.json && r.json.typebot) || {};
+    fs.writeFileSync(destino, JSON.stringify({
+      vpsId: j.typebot.id,
+      localId,
+      nome: j.typebot.name,
+      groups: typebot.groups || j.typebot.groups,
+    }));
+  ' "$arquivo" "$ESTADO/$(basename "$arquivo")" "$id" "$resposta"
+
   orpc typebot/updateTypebot "{\"json\":{\"typebotId\":\"$id\",\"typebot\":{\"publicId\":\"$slug\"}}}" >/dev/null
   publicacao="$(orpc typebot/publishTypebot "{\"json\":{\"typebotId\":\"$id\"}}")"
 
@@ -189,6 +205,52 @@ for arquivo in "$AQUI"/*.json; do
     total=$((total + 1))
     falhas=$((falhas + 1))
   fi
+done
+
+echo
+echo "remapeando os links entre os fluxos (ids da VPS -> ids locais)..."
+node -e '
+  const fs = require("fs");
+  const path = require("path");
+  const dir = process.argv[1];
+  const bots = fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")));
+  const mapa = Object.fromEntries(bots.map((b) => [b.vpsId, b.localId]));
+  let algum = false;
+  for (const b of bots) {
+    let trocas = 0;
+    (function anda(o) {
+      if (Array.isArray(o)) return o.forEach(anda);
+      if (!o || typeof o !== "object") return;
+      if (typeof o.typebotId === "string" && mapa[o.typebotId]) {
+        o.typebotId = mapa[o.typebotId];
+        trocas++;
+      }
+      Object.values(o).forEach(anda);
+    })(b.groups);
+    if (trocas) {
+      fs.writeFileSync(
+        path.join(dir, "update-" + b.localId + ".json"),
+        JSON.stringify({ json: { typebotId: b.localId, typebot: { groups: b.groups } } })
+      );
+      console.log("  " + b.nome + ": " + trocas + " link(s) remapeado(s)");
+      algum = true;
+    }
+  }
+  if (!algum) console.log("  (nenhum link entre fluxos para remapear)");
+' "$ESTADO"
+
+for atualizacao in "$ESTADO"/update-*.json; do
+  [ -e "$atualizacao" ] || continue
+  id_local="$(basename "$atualizacao" .json | sed 's/^update-//')"
+  curl -s -b "$JAR" -X POST "$TYPEBOT_URL/api/orpc/typebot/updateTypebot" \
+    -H 'Content-Type: application/json' \
+    -H "Origin: $TYPEBOT_URL" \
+    -H "Referer: $TYPEBOT_URL/typebots" \
+    --data-binary @"$atualizacao" >/dev/null
+  orpc typebot/publishTypebot "{\"json\":{\"typebotId\":\"$id_local\"}}" >/dev/null
 done
 
 echo

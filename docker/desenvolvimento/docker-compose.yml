@@ -116,6 +116,10 @@ services:
       # DEFAULT_WORKSPACE_PLAN vale para workspaces novos.
       ADMIN_EMAIL: ${TYPEBOT_ADMIN_EMAIL:-admin@quintal.local}
       DEFAULT_WORKSPACE_PLAN: ${TYPEBOT_DEFAULT_PLAN:-UNLIMITED}
+      # O Typebot bloqueia chamadas para faixas privadas (SSRF); como o fluxo
+      # chama o site local (http://dev-quintal:3000/api), liberamos esse host.
+      # Sem isso o webhook falha com "Access to private network range ...".
+      SSRF_ALLOWED_HOSTS: dev-quintal
       NODE_OPTIONS: --no-node-snapshot
     networks:
       - app_network
@@ -137,6 +141,9 @@ services:
       NEXTAUTH_URL_INTERNAL: http://typebot-viewer:3000
       NEXT_PUBLIC_VIEWER_URL: ${TYPEBOT_VIEWER_URL:-http://localhost:3003}
       ENCRYPTION_SECRET: ${TYPEBOT_ENCRYPTION_SECRET:-typebot-dev-enc-secret-123456789}
+      # Os webhooks do fluxo rodam aqui no viewer: sem liberar o host interno o
+      # Typebot recusa chamar http://dev-quintal:3000/api (protecao SSRF).
+      SSRF_ALLOWED_HOSTS: dev-quintal
       NODE_OPTIONS: --no-node-snapshot
     networks:
       - app_network

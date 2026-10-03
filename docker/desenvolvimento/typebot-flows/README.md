@@ -67,6 +67,18 @@ desenvolvimento já sobe com `DEFAULT_WORKSPACE_PLAN=UNLIMITED` e
 docker exec postgres psql -U quintal -d typebot -c "update \"Workspace\" set plan='UNLIMITED';"
 ```
 
+### Dois detalhes que o importador resolve
+
+- **Links entre fluxos**: os fluxos apontam uns para os outros (o menu "Mulheres
+  Main" chama Cadastro, Perfil, Novo Produto, Editar, Remover e Nova Receita). O
+  export traz os **ids da VPS** dentro desses blocos, e o importador remapeia
+  para os ids locais — sem isso o viewer para logo no começo com
+  `Failed to link typebot: Typebot with ID ... not found` e o bot não responde nada.
+- **Webhook para o site local**: o Typebot recusa chamadas para faixas privadas
+  (proteção SSRF). O compose libera o host interno no builder e no viewer com
+  `SSRF_ALLOWED_HOSTS=dev-quintal`; sem isso o bloco Webhook falha com
+  `Access to private network range (172.16.0.0/12) is not allowed`.
+
 ### Trocar o placeholder manualmente (opcional)
 
 ```bash
