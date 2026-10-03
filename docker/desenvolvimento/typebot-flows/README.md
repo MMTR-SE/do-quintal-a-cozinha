@@ -31,24 +31,51 @@ produção — por isso alguma imagem pode não abrir localmente.
 
 ## Como importar no Typebot local
 
-1. Suba o Typebot (`bash docker/desenvolvimento/typebot-whatsapp.sh subir`) e
-   entre em http://localhost:3002 (o código de login chega no Mailpit, em
-   http://localhost:8025).
-2. No builder, em **Create a new typebot**, escolha **Import a file** e selecione o
-   JSON desta pasta (é o mesmo caminho do export/import oficial:
-   <https://docs.typebot.com/editor/export-import>). Repita para os fluxos que
-   quiser testar.
-3. **Troque o placeholder pela sua chave local** (uma vez, nos arquivos):
+Com o Typebot de pé, o script faz tudo: loga sozinho (o código de login é lido no
+Mailpit), importa cada fluxo, define o `publicId` (`<nome>-local`) e publica.
 
-   ```bash
-   API_KEY=$(grep -m1 '^API_KEY=' .env | cut -d= -f2-)
-   sed -i "s/TROCAR-PELA-API-KEY-LOCAL/$API_KEY/" docker/desenvolvimento/typebot-flows/*.json
-   ```
+```bash
+bash docker/desenvolvimento/typebot-flows/importar-fluxos.sh                # todos
+bash docker/desenvolvimento/typebot-flows/importar-fluxos.sh mulheres-main  # um só
+```
 
-   (Alternativa: manter `{{apiKey}}` nos headers e definir a variável `apiKey` no
-   próprio Typebot — assim a chave não fica em arquivo nenhum.)
-4. Publique o fluxo e use o **novo** id público dele ao ligar a instância de
-   WhatsApp: `bash docker/desenvolvimento/typebot-whatsapp.sh typebot <id-publico>`.
+Ele troca `TROCAR-PELA-API-KEY-LOCAL` pela `API_KEY` do ambiente local **apenas no
+fluxo importado** — os arquivos do repositório seguem com o placeholder.
+
+Depois ligue a instância de WhatsApp ao fluxo:
+
+```bash
+bash docker/desenvolvimento/typebot-whatsapp.sh typebot mulheres-main-local
+```
+
+### Se preferir importar na mão
+
+1. No builder (http://localhost:3002), em **Create a new typebot** escolha
+   **Import a file** e selecione o JSON desta pasta (é o mesmo caminho do
+   export/import oficial: <https://docs.typebot.com/editor/export-import>).
+2. Publique e use o **novo** id público dele ao ligar a instância de WhatsApp.
+   (Sem o script, troque antes o placeholder pela chave local — veja abaixo.)
+
+### Plano do workspace
+
+Os fluxos usam bloco de **upload de arquivo**, que o plano FREE não deixa
+publicar (`File upload blocks can't be published on the free plan`). O compose de
+desenvolvimento já sobe com `DEFAULT_WORKSPACE_PLAN=UNLIMITED` e
+`ADMIN_EMAIL=admin@quintal.local`. Se o seu workspace foi criado antes disso:
+
+```bash
+docker exec postgres psql -U quintal -d typebot -c "update \"Workspace\" set plan='UNLIMITED';"
+```
+
+### Trocar o placeholder manualmente (opcional)
+
+```bash
+API_KEY=$(grep -m1 '^API_KEY=' .env | cut -d= -f2-)
+sed -i "s/TROCAR-PELA-API-KEY-LOCAL/$API_KEY/" docker/desenvolvimento/typebot-flows/*.json
+```
+
+(Alternativa: manter `{{apiKey}}` nos headers e definir a variável `apiKey` no
+próprio Typebot — assim a chave não fica em arquivo nenhum.)
 
 ## Como atualizar estas cópias (quando o fluxo mudar na VPS)
 

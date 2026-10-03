@@ -86,15 +86,17 @@ placeholder `TROCAR-PELA-API-KEY-LOCAL` e apontando para
 # 1) suba o Typebot
 bash docker/desenvolvimento/typebot-whatsapp.sh subir
 
-# 2) troque o placeholder pela sua chave local (o repositório nunca guarda a chave)
-API_KEY=$(grep -m1 '^API_KEY=' .env | cut -d= -f2-)
-sed -i "s/TROCAR-PELA-API-KEY-LOCAL/$API_KEY/" docker/desenvolvimento/typebot-flows/*.json
+# 2) importe e publique os fluxos de uma vez (login automático pelo Mailpit)
+bash docker/desenvolvimento/typebot-flows/importar-fluxos.sh
 ```
 
-3. No builder (http://localhost:3002), em **Create a new typebot** escolha
-   **Import a file** e selecione o JSON desejado.
-4. Publique o fluxo e ligue a instância ao **novo** id público:
-   `bash docker/desenvolvimento/typebot-whatsapp.sh typebot <id-publico>`
+3. Ligue a instância de WhatsApp a um deles (o `publicId` ganha o sufixo `-local`):
+   `bash docker/desenvolvimento/typebot-whatsapp.sh typebot mulheres-main-local`
+
+O importador troca o placeholder `TROCAR-PELA-API-KEY-LOCAL` pela `API_KEY` do seu
+ambiente **só no fluxo importado**; os arquivos do repositório seguem sem chave.
+Para importar na mão (ou trocar a chave manualmente) veja
+[`typebot-flows/README.md`](typebot-flows/README.md).
 
 Para atualizar as cópias depois de mudar algo na VPS:
 

@@ -110,6 +110,12 @@ services:
       SMTP_IGNORE_TLS: "true"
       SMTP_FROM: "Typebot <typebot@quintal.local>"
       NEXT_PUBLIC_SMTP_FROM: "Typebot <typebot@quintal.local>"
+      # Os fluxos do projeto usam bloco de upload de arquivo, que o plano FREE
+      # nao deixa publicar ("File upload blocks can't be published on the free
+      # plan"). No self-host isso e configuracao: ADMIN_EMAIL ganha UNLIMITED e
+      # DEFAULT_WORKSPACE_PLAN vale para workspaces novos.
+      ADMIN_EMAIL: ${TYPEBOT_ADMIN_EMAIL:-admin@quintal.local}
+      DEFAULT_WORKSPACE_PLAN: ${TYPEBOT_DEFAULT_PLAN:-UNLIMITED}
       NODE_OPTIONS: --no-node-snapshot
     networks:
       - app_network
