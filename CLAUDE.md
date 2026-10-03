@@ -99,6 +99,7 @@ CMS (Strapi) → lifecycle hook → POST /api/cms-sync → Postgres (quintal) �
 ```
 
 - `src/lib/cms-sync.ts` + `POST /api/cms-sync` (protegida pelo `API_KEY` do middleware): puxa o conteúdo do Strapi e faz upsert no Postgres. Com `{ action: "delete", collection, site_id | documentId }` ela **remove** do Postgres o item apagado no CMS (`removerDoPostgres`).
+- Só o que está **publicado** no CMS entra no site: rascunho fica apenas no painel. Ao despublicar (ou apagar), o item que nasceu no CMS (id `strapi-<documentId>`) sai do site; itens que vieram do site (`site_id`) continuam, porque quem manda neles é o site/Typebot.
 - `cms/src/utils/cms-sync.ts` + `lifecycles.ts` de cada content type: ao criar/atualizar/publicar no CMS, avisa o site para puxar o conteúdo (→ `agendarSincronizacao`); ao remover, manda o id do item (`→ agendarRemocao`, payload de delete). Atraso de ~2,5s para o item já estar visível na API REST. Requer `SITE_SYNC_URL` no ambiente do CMS.
 - `src/lib/site-to-cms.ts`: o inverso — ao cadastrar/atualizar **ou apagar** produto ou receita **pela API** (fluxo do Typebot), o item também é criado/atualizado/removido no CMS (`after()` do Next, sem atrasar a resposta), então o painel mostra tudo. Não há loop: a sincronização do CMS escreve direto no Prisma, sem passar pela API.
 - **Histórias são editadas apenas no CMS** (não há rota de API para elas): criar/editar/apagar em `cms` reflete no Postgres do site via os hooks acima.

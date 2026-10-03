@@ -31,6 +31,7 @@ export interface SyncStats {
   historias: number;
   receitas: number;
   midias: number;
+  removidos: number;
 }
 
 const field = (obj: any, ...names: string[]) => {
@@ -110,24 +111,62 @@ const mapDifficulty = (value: unknown) => {
   return map[String(value || "").toLowerCase()] || "INTERMEDIARY";
 };
 
-async function fetchCollection(plural: CmsCollection): Promise<any[]> {
-  const base = `${CMS_URL}/api/${plural}?populate=*&pagination%5BpageSize%5D=100`;
-  const items = new Map<string, any>();
+const PAGE_SIZE = 100;
 
-  for (const suffix of ["", "&status=draft"]) {
-    try {
-      const res = await fetch(base + suffix, {
-        headers: { Authorization: `Bearer ${CMS_TOKEN}` },
-        cache: "no-store",
-      });
-      if (!res.ok) continue;
-      const json = await res.json();
-      for (const item of json.data || []) items.set(entityId(item), item);
-    } catch {
-      // CMS fora do ar: mantem o que ja existe no Postgres
-    }
+/**
+ * Busca uma colecao no CMS.
+ *
+ * Sem o parametro `status`, o Strapi devolve apenas os itens **publicados**:
+ * rascunho vive so no CMS. `ok` diz se a resposta veio; `completo` diz se ela
+ * trouxe a colecao inteira (usado para nao remover nada por engano quando a
+ * resposta falha ou fica truncada pela paginacao).
+ */
+async function fetchCollection(
+  plural: CmsCollection
+): Promise<{ items: any[]; ok: boolean; completo: boolean }> {
+  const url = `${CMS_URL}/api/${plural}?populate=*&pagination%5BpageSize%5D=${PAGE_SIZE}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${CMS_TOKEN}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return { items: [], ok: false, completo: false };
+
+    const json = await res.json();
+    const items: any[] = json.data || [];
+    return { items, ok: true, completo: items.length < PAGE_SIZE };
+  } catch {
+    // CMS fora do ar: mantem o que ja existe no Postgres
+    return { items: [], ok: false, completo: false };
   }
-  return [...items.values()];
+}
+
+/**
+ * Remove do Postgres os itens que nasceram no CMS (id `strapi-<documentId>`) e
+ * nao estao mais publicados la (viraram rascunho ou foram apagados).
+ *
+ * Itens que vieram do site carregam `site_id` e continuam com o id original --
+ * esses sao do site (e do fluxo do Typebot) e nao sao tocados por aqui.
+ */
+async function removerDespublicados(
+  collection: "produtos" | "historias" | "receitas",
+  items: any[]
+): Promise<number> {
+  const mantidos = items.map((item) => `strapi-${entityId(item)}`);
+  const where = { id: { startsWith: "strapi-", notIn: mantidos } };
+
+  const { count } =
+    collection === "produtos"
+      ? await prisma.product.deleteMany({ where })
+      : collection === "historias"
+        ? await prisma.story.deleteMany({ where })
+        : await prisma.recipe.deleteMany({ where });
+
+  if (count > 0) {
+    console.log(`[cms-sync] ${count} item(ns) de ${collection} saiu do site (nao esta mais publicado no CMS)`);
+  }
+  return count;
 }
 
 async function ensureProfile(data: { key: string; name?: string; phone?: string; socialName?: string; instagram?: string }) {
@@ -168,7 +207,12 @@ async function ensureMedia(url: string) {
 }
 
 async function syncProdutoras(stats: SyncStats) {
-  for (const item of await fetchCollection("produtoras")) {
+  // Produtoras nao entram na reconciliacao: o id delas no Postgres e gerado pelo
+  // site (casado por telefone), nao carrega o prefixo `strapi-` e apagar um
+  // perfil levaria junto os produtos/receitas dele (cascade).
+  const { items } = await fetchCollection("produtoras");
+
+  for (const item of items) {
     await ensureProfile({
       key: entityId(item),
       name: field(item, "nome", "Nome", "name"),
@@ -182,8 +226,9 @@ async function syncProdutoras(stats: SyncStats) {
 
 async function syncProdutos(stats: SyncStats) {
   const fallbackProfile = await ensureProfile({ key: "default", name: "MMTR-SE", phone: "sem-telefone-mmtr" });
+  const { items, ok, completo } = await fetchCollection("produtos");
 
-  for (const item of await fetchCollection("produtos")) {
+  for (const item of items) {
     const id = recordId(item);
     const produtora = field(item, "produtora", "Produtora");
     const produtoraObj = typeof produtora === "object" ? produtora : null;
@@ -213,10 +258,14 @@ async function syncProdutos(stats: SyncStats) {
     }
     stats.produtos++;
   }
+
+  if (ok && completo) stats.removidos += await removerDespublicados("produtos", items);
 }
 
 async function syncHistorias(stats: SyncStats) {
-  for (const item of await fetchCollection("historias")) {
+  const { items, ok, completo } = await fetchCollection("historias");
+
+  for (const item of items) {
     const id = recordId(item);
     const name = field(item, "nome", "name") || field(item, "titulo", "title") || "Historia sem nome";
     const regiao = field(item, "regiao", "region");
@@ -240,12 +289,15 @@ async function syncHistorias(stats: SyncStats) {
     }
     stats.historias++;
   }
+
+  if (ok && completo) stats.removidos += await removerDespublicados("historias", items);
 }
 
 async function syncReceitas(stats: SyncStats) {
   const fallbackProfile = await ensureProfile({ key: "default", name: "MMTR-SE", phone: "sem-telefone-mmtr" });
+  const { items, ok, completo } = await fetchCollection("receitas");
 
-  for (const item of await fetchCollection("receitas")) {
+  for (const item of items) {
     const id = recordId(item);
     const produtora = field(item, "produtora", "Produtora");
     const produtoraName = typeof produtora === "object" ? field(produtora, "nome", "name") : produtora;
@@ -286,6 +338,8 @@ async function syncReceitas(stats: SyncStats) {
     }
     stats.receitas++;
   }
+
+  if (ok && completo) stats.removidos += await removerDespublicados("receitas", items);
 }
 
 /**
@@ -293,7 +347,7 @@ async function syncReceitas(stats: SyncStats) {
  * Sem `collection`, sincroniza tudo (usado pelos hooks de publicacao).
  */
 export async function syncCmsContent(collection?: CmsCollection): Promise<SyncStats> {
-  const stats: SyncStats = { produtoras: 0, produtos: 0, historias: 0, receitas: 0, midias: 0 };
+  const stats: SyncStats = { produtoras: 0, produtos: 0, historias: 0, receitas: 0, midias: 0, removidos: 0 };
 
   if (!CMS_TOKEN) {
     throw new Error("CMS_SYNC_TOKEN/STRAPI_API_TOKEN nao configurado");
