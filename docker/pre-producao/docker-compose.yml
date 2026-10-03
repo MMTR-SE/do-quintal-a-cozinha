@@ -108,8 +108,11 @@ services:
     environment:
       # A UI e a API ficam sob /mailpit no dominio do builder.
       MP_WEBROOT: /mailpit
-      # O Typebot autentica no SMTP com usuario/senha proprios.
+      # O Typebot autentica no SMTP com usuario/senha proprios. O Mailpit recusa
+      # AUTH em conexao sem TLS a menos que ALLOW_INSECURE esteja ligado -- sem
+      # ele o container morre no start ("authentication requires STARTTLS").
       MP_SMTP_AUTH_ACCEPT_ANY: "true"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "true"
       MP_MAX_MESSAGES: "200"
       MP_DATABASE: /data/mailpit.db
     volumes:
