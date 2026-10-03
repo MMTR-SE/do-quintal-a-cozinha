@@ -128,7 +128,6 @@ const nextConfig: NextConfig = {
   // Whitelisted domains for Next.js Image optimization
   images: {
     remotePatterns: [
-      ...(strapiImagePattern ? [strapiImagePattern] : []),
       {
         protocol: "https",
         hostname: "typebot.luisotee.com",

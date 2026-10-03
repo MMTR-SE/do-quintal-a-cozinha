@@ -5,11 +5,11 @@ import { prisma } from "@/lib/prisma";
 interface Options { search?: string; tags?: string[]; profileId?: string; }
 
 /**
- * Lista as receitas do banco Postgres (conteudo migrado do CMS).
+ * Lista as receitas do banco do site (Prisma/SQLite).
  */
 export async function getAllRecipes(options?: Options) {
   const where: any = options?.search
-    ? { title: { contains: options.search, mode: "insensitive" } }
+    ? { title: { contains: options.search } }
     : {};
 
   return prisma.recipe.findMany({

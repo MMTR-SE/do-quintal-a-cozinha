@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
 
 /**
@@ -29,6 +28,7 @@ interface PriceCondition {
 interface Where {
   category?: CategorySearch
   product_name?: { contains: string; mode?: "insensitive" }
+  product_name?: { contains: string; mode?: "insensitive" }
   OR?: Array<{ price: PriceCondition }>
 }
 
@@ -38,7 +38,7 @@ interface Where {
  * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
  * Price ranges: under-50, 50-100, 100-200, over-200
  *
- * Fonte unica: banco Postgres via Prisma (conteudo migrado do CMS).
+ * Fonte unica: banco do site via Prisma.
  *
  * @param options - Filter options (search, categories, price ranges)
  * @returns Array of products matching the criteria
@@ -55,7 +55,6 @@ export async function getAllProducts(options?: Options) {
   if (options?.search) {
     where.product_name = {
       contains: options.search,
-      mode: "insensitive",
     }
   }
 
@@ -112,12 +111,8 @@ export async function getAllProducts(options?: Options) {
 
   // Convert Decimal to number for client component serialization
   return products.map(product => ({
+  return products.map(product => ({
     ...product,
     price: product.price ? Number(product.price) : null,
-    // Produtos nao guardam slug: ele e derivado da produtora + nome.
-    slug: buildProductSlug({
-      produtora: product.profile?.name,
-      nome: product.product_name,
-    }),
   }));
 }
