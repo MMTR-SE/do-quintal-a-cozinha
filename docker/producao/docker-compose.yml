@@ -1,9 +1,8 @@
 services:
   quintal:
     container_name: quintal
-    # A imagem e construida no runner do GitHub e publicada no GHCR: a VPS tem
-    # ~1.9 GB de RAM e o `next build` la dentro derruba a maquina. O bloco
-    # `build` fica para quem quiser construir na mao.
+    # A imagem e construida no runner do GitHub e publicada no GHCR. 
+    #O bloco `build` fica para quem quiser construir na mao.
     image: ghcr.io/mmtr-se/do-quintal-a-cozinha:producao
     build:
       context: $PROD_PATH
