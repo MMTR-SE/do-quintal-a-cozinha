@@ -82,7 +82,7 @@ Page ("use client") → React Query hook (src/hooks/) → Server Action (src/app
 
 ### O site não lê o CMS em runtime
 
-Todo o conteúdo do site vem do banco do próprio site, via Prisma, nas server actions de `src/app/actions/`. O painel do CMS (pasta `cms/`) é apenas o editor de conteúdo: o site **não** consulta a API do CMS em nenhuma requisição de leitura. `NEXT_PUBLIC_STRAPI_URL` aparece só na escrita (`src/lib/site-to-cms.ts`) e na sincronização (`src/lib/cms-sync.ts`), nunca para renderizar conteúdo.
+Todo o conteúdo do site vem do banco do próprio site, via Prisma, nas server actions de `src/app/actions/`. O painel do CMS (pasta `cms/`) é apenas o editor de conteúdo: o site **não** consulta a API do CMS em nenhuma requisição. Nada de `NEXT_PUBLIC_STRAPI_URL` no app.
 
 ### Prisma Decimal Serialization (CRITICAL)
 

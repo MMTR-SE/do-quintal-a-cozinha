@@ -2,6 +2,9 @@
 
 import { prisma } from "@/lib/prisma";
 
+/**
+ * Busca uma historia pelo slug no banco do site (Prisma/SQLite).
+ */
 export async function getStoryBySlug({ slug }: { slug: string }) {
   return prisma.story.findUnique({
     select: {

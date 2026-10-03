@@ -5,6 +5,9 @@ import type { Prisma } from "@prisma/client";
 
 interface Options { search?: string; tags?: string[]; profileId?: string; }
 
+/**
+ * Lista as receitas do banco do site (Prisma/SQLite).
+ */
 export async function getAllRecipes(options?: Options) {
   const where: Prisma.RecipeWhereInput = options?.search
     ? { title: { contains: options.search, mode: "insensitive" } }
