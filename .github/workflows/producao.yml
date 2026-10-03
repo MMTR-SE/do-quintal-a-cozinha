@@ -6,10 +6,16 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  APP_IMAGE: ghcr.io/mmtr-se/do-quintal-a-cozinha
+
 jobs:
   cozinhando:
-    name: Cozinhando para validar (build)
+    name: Cozinhando e publicando a imagem
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Sincronizando repositorio
         uses: actions/checkout@v4
@@ -30,22 +36,63 @@ jobs:
           npm run build --if-present
         env:
           GROQ_API_KEY: "some-key"
+
+      - name: Preparando Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Autenticando no GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # A VPS tem ~1.9 GB de RAM e o `next build` dentro dela derruba a maquina
+      # (swap cheio, load ~100). A imagem sai pronta daqui; a VPS so faz `pull`.
+      - name: Construindo e publicando a aplicacao
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/producao/Dockerfile
+          push: true
+          tags: |
+            ${{ env.APP_IMAGE }}:producao
+            ${{ env.APP_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha,scope=producao-app
+          cache-to: type=gha,mode=max,scope=producao-app
+
   deploy:
     name: Servindo em produção
     environment: Producao
     needs: cozinhando
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Servindo o cozido
         uses: appleboy/ssh-action@v1
+        env:
+          GHCR_USERNAME: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
+            set -eu
+
             cd $PROD_PATH
             git checkout main
             git pull --rebase novo main
+
+            printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
+            trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
+
             cd ../caddy
-            docker compose up -d --build quintal
+            # A imagem vem pronta do GHCR (construida no runner): a VPS so baixa.
+            docker compose pull quintal
+            docker compose up -d --no-build quintal
