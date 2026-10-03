@@ -69,7 +69,9 @@ jobs:
           file: docker/pre-producao/Dockerfile
           push: true
           build-args: |
-            NEXT_PUBLIC_STRAPI_URL=https://conteudos.mulheresrurais.com.br
+            # O Next embute esta URL no bundle: e assim que o site encontra o CMS
+            # de pre-producao (leitura via cms-sync e escrita via site-to-cms).
+            NEXT_PUBLIC_STRAPI_URL=https://conteudos-dev.mulheresrurais.com.br
           tags: |
             ${{ env.APP_IMAGE }}:pre-producao
             ${{ env.APP_IMAGE }}:${{ github.sha }}
@@ -157,40 +159,100 @@ jobs:
             # mesma chave deste arquivo, entao os dois lados combinam sozinhos.
             ensure_secret API_KEY
 
+            # --- Typebot de pre-producao (teste dos fluxos) ----------------------
+            # O login do Typebot e sempre por codigo enviado por e-mail: quem recebe
+            # esses codigos e o Mailpit interno. A caixa de entrada sai em
+            # https://typebot-dev.mulheresrurais.com.br/mailpit, protegida por senha.
+            ensure_secret MAILPIT_PASSWORD
+            if ! grep -q '^MAILPIT_USER=' .env; then
+              printf 'MAILPIT_USER=quintal\n' >> .env
+            fi
+            # O Typebot exige ENCRYPTION_SECRET com exatamente 32 caracteres.
+            if ! grep -qE '^ENCRYPTION_SECRET=.{32}$' .env; then
+              sed -i '/^ENCRYPTION_SECRET=/d' .env
+              printf 'ENCRYPTION_SECRET=%s\n' "$(openssl rand -hex 16)" >> .env
+            fi
+            # Com ADMIN_EMAIL definido, o cadastro fica fechado nele.
+            if grep -qE '^ADMIN_EMAIL=.+@' .env && ! grep -q '^DISABLE_SIGNUP=' .env; then
+              printf 'DISABLE_SIGNUP=true\n' >> .env
+            fi
+
             cd ../caddy
             if [ ! -f Caddyfile ]; then
               echo "Caddyfile não encontrado em $(pwd)" >&2
               exit 1
             fi
-            # Remove blocos que chegaram a ser adicionados para o Typebot de teste
-            # e para o CMS em endereço novo (não existem mais). O Caddyfile é um
-            # bind mount de arquivo único: `sed -i` falha com "Resource busy",
-            # então reescrevemos o conteúdo por cima.
-            if grep -qF 'typebot-dev.mulheresrurais.com.br {' Caddyfile; then
-              docker compose exec -T --user root caddy sh -c \
-                "sed '/^typebot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^bot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^conteudos-dev\.mulheresrurais\.com\.br {/,/^}/d' /etc/caddy/Caddyfile > /tmp/Caddyfile.novo && cat /tmp/Caddyfile.novo > /etc/caddy/Caddyfile && rm -f /tmp/Caddyfile.novo"
-              echo "Caddyfile: blocos do Typebot/CMS-dev removidos."
-            fi
-            if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
+            # O Caddyfile é um bind mount de arquivo único: `sed -i` falha com
+            # "Resource busy", então os blocos são acrescentados por `cat >>`.
+            # O backup permite voltar atrás se o arquivo ficar inválido.
+            cp Caddyfile /tmp/Caddyfile.do-quintal.bak
+            # O domínio antigo do CMS continua de propósito: o container do CMS é o
+            # mesmo e a aplicação de produção aponta para essa URL.
+            if ! grep -qF 'conteudos.mulheresrurais.com.br {' Caddyfile; then
               printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
+                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
+            fi
+            # Endereço próprio do CMS de pré-produção.
+            if ! grep -qF 'conteudos-dev.mulheresrurais.com.br {' Caddyfile; then
+              printf '\nconteudos-dev.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
+                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
+            fi
+            # Builder do Typebot em typebot-dev, com o Mailpit (código de login) em
+            # /mailpit protegido por HTTP basic auth.
+            if ! grep -qF 'pre-quintal-typebot-builder:3000' Caddyfile; then
+              MAILPIT_USER_VALUE="$(grep -m1 '^MAILPIT_USER=' $DEV_PATH/.env | cut -d= -f2-)"
+              MAILPIT_PASSWORD_VALUE="$(grep -m1 '^MAILPIT_PASSWORD=' $DEV_PATH/.env | cut -d= -f2-)"
+              MAILPIT_HASH="$(docker compose exec -T caddy caddy hash-password --plaintext "$MAILPIT_PASSWORD_VALUE" | tr -d '\r\n')"
+              printf '\ntypebot-dev.mulheresrurais.com.br {\n\thandle /mailpit* {\n\t\tbasic_auth {\n\t\t\t%s %s\n\t\t}\n\t\treverse_proxy pre-quintal-mailpit:8025\n\t}\n\thandle {\n\t\treverse_proxy pre-quintal-typebot-builder:3000\n\t}\n}\n' \
+                "${MAILPIT_USER_VALUE:-quintal}" "$MAILPIT_HASH" \
+                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
+            fi
+            # Viewer do Typebot (é este endereço que aparece dentro dos fluxos).
+            if ! grep -qF 'pre-quintal-typebot-viewer:3000' Caddyfile; then
+              printf '\nbot-dev.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-typebot-viewer:3000\n}\n' \
                 | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
             fi
 
             printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USERNAME" --password-stdin
             trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
 
-            # Limpeza pontual: containers do Typebot de teste que chegaram a subir
-            # na pre-producao e foram removidos do compose (a VPS nao tem RAM
-            # para eles). Sem efeito depois da primeira execucao.
-            docker rm -f pre-quintal-typebot-builder pre-quintal-typebot-viewer \
-              pre-quintal-typebot-redis pre-quintal-mailpit 2>/dev/null || true
+            # Banco do Typebot dentro do Postgres da pre-producao (idempotente).
+            docker exec -i pre-quintal-postgres sh -s <<'EOSQL'
+            if psql -U "$POSTGRES_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='typebot'" | grep -q 1; then
+              echo "Banco typebot ja existe."
+            else
+              psql -U "$POSTGRES_USER" -d postgres -c "CREATE DATABASE typebot OWNER $POSTGRES_USER;"
+              echo "Banco typebot criado."
+            fi
+            EOSQL
 
             docker compose pull pre-quintal-cms
             docker compose up -d --no-build pre-quintal-cms
             # A imagem da aplicacao vem pronta do GHCR (construida no runner).
             docker compose pull pre-quintal
             docker compose up -d --no-build --no-deps pre-quintal
-            docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+
+            # Typebot de teste + Mailpit. Usam as mesmas imagens do Typebot de
+            # producao (que ja estao na VPS) e os limites de memoria definidos no
+            # compose para nao derrubarem o Caddy nem o Typebot de producao.
+            echo "Memoria antes de subir o Typebot de teste:"; free -m || true
+            docker compose up -d --no-build \
+              pre-quintal-mailpit \
+              pre-quintal-typebot-redis \
+              pre-quintal-typebot-builder \
+              pre-quintal-typebot-viewer
+
+            # Só recarrega o Caddy depois de validar: um Caddyfile inválido
+            # derrubaria todos os sites da VPS. Se estiver inválido, volta o
+            # arquivo anterior (o Caddy segue com a config que já está em memória).
+            if docker compose exec -T caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile; then
+              docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+            else
+              echo "Caddyfile inválido: restaurando a versão anterior." >&2
+              cp /tmp/Caddyfile.do-quintal.bak Caddyfile
+              exit 1
+            fi
+            echo "Memoria depois de subir o Typebot de teste:"; free -m || true
 
       - name: Verificando a publicação
         run: |
@@ -204,3 +266,19 @@ jobs:
           done
           echo "A publicação não respondeu via HTTPS." >&2
           exit 1
+
+      - name: Conferindo CMS e Typebot de pré-produção (informativo)
+        # Não derruba o deploy: o site e o CMS antigos já estão no ar e o Typebot
+        # pode ainda estar emitindo o certificado do domínio novo.
+        continue-on-error: true
+        run: |
+          for url in \
+            https://conteudos-dev.mulheresrurais.com.br/_health \
+            https://typebot-dev.mulheresrurais.com.br/ \
+            https://bot-dev.mulheresrurais.com.br/ \
+            https://typebot-dev.mulheresrurais.com.br/mailpit/
+          do
+            code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+              --location --max-time 20 "$url" || true)"
+            echo "${url} -> HTTP ${code:-sem resposta}"
+          done
