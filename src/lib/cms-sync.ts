@@ -2,7 +2,7 @@
 import { randomUUID } from "node:crypto";
 
 import { prisma } from "@/lib/prisma";
-import { serializeIngredients } from "@/lib/recipe";
+import { serializeIngredients } from "@/lib/ingredients";
 
 /**
  * Sincroniza o conteudo do CMS (Strapi) para o Postgres do site.
