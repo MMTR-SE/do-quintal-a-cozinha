@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { prisma } from "@/lib/prisma";
+import { parseIngredients } from "@/lib/ingredients";
 
 /**
  * Espelha no CMS (Strapi) o conteudo cadastrado pela API do site (fluxo do
@@ -152,14 +153,8 @@ export async function enviarReceitaParaCms(recipeId: string): Promise<void> {
   if (receita.profile) await enviarProdutoraParaCms(receita.profile.id);
   const imagens = (await Promise.all(receita.media.map((m) => uploadMedia(m.media.url)))).filter(Boolean);
 
-  let ingredientes: unknown = receita.ingredients;
-  if (typeof ingredientes === "string") {
-    try {
-      ingredientes = JSON.parse(ingredientes);
-    } catch {
-      /* mantem a string */
-    }
-  }
+  // O CMS guarda uma lista (campo json): manda sempre a lista normalizada.
+  const ingredientes = parseIngredients(receita.ingredients);
 
   await upsertPorSiteId("receitas", receita.id, {
     titulo: receita.title,

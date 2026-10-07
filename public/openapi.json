@@ -975,12 +975,19 @@
                     "example": "INTERMEDIARY"
                   },
                   "ingredients": {
-                    "type": "array",
-                    "description": "Array of ingredient strings",
-                    "minItems": 1,
-                    "items": {
-                      "type": "string"
-                    },
+                    "description": "Lista de ingredientes. Também aceita um texto com um ingrediente por linha (ou separado por `;`) — o valor é normalizado antes de gravar.",
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
                     "example": ["500g fish", "200ml coconut milk", "2 tomatoes", "1 onion"]
                   },
                   "steps": {
@@ -1164,11 +1171,19 @@
                     "enum": ["EASY", "INTERMEDIARY", "HARD"]
                   },
                   "ingredients": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                      "type": "string"
-                    }
+                    "description": "Lista de ingredientes. Também aceita um texto com um ingrediente por linha (ou separado por `;`) — o valor é normalizado antes de gravar.",
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   },
                   "steps": {
                     "type": "array",
@@ -2209,7 +2224,7 @@
           },
           "ingredients": {
             "type": "array",
-            "description": "Array of ingredient strings (stored as JSON)",
+            "description": "Array de ingredientes. No banco o campo é Json e fica gravado como string JSON (lista); nas respostas da API sai no formato gravado.",
             "items": {
               "type": "string"
             }
