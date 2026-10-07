@@ -2,6 +2,7 @@
 import { randomUUID } from "node:crypto";
 
 import { prisma } from "@/lib/prisma";
+import { serializeIngredients } from "@/lib/ingredients";
 
 /**
  * Sincroniza o conteudo do CMS (Strapi) para o Postgres do site.
@@ -305,8 +306,9 @@ async function syncReceitas(stats: SyncStats) {
       ? await ensureProfile({ key: entityId(item), name: produtoraName })
       : fallbackProfile;
 
-    const ingredientes = field(item, "ingredientes", "ingredients") || [];
-    const ingredients = typeof ingredientes === "string" ? ingredientes : JSON.stringify(ingredientes);
+    // Sempre no formato canonico (lista em string JSON): conteudo com
+    // codificacao a mais vindo do CMS e desembrulhado aqui.
+    const ingredients = serializeIngredients(field(item, "ingredientes", "ingredients"));
 
     const passos = field(item, "passos", "steps") || [];
     const steps = (Array.isArray(passos) ? passos : []).map((step: any, index: number) => ({

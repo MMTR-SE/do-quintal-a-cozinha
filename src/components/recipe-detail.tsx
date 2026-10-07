@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageLightbox } from "@/components/image-lightbox";
 import { formatMinutes, formatRecipeDifficulty } from "@/lib/utils";
+import { parseIngredients } from "@/lib/ingredients";
 import { RecipeWithDetail } from "@/types/recipe";
 import { Clock, Users, ChefHat, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -227,16 +228,14 @@ export function RecipeDetail({ recipe, isLoading }: RecipeDetailProps) {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
-                  {(Array.from(JSON.parse(recipe.ingredients)) as string[]).map(
-                    (ingredient, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                        <span className="text-foreground leading-relaxed">
-                          {ingredient}
-                        </span>
-                      </li>
-                    )
-                  )}
+                  {parseIngredients(recipe.ingredients).map((ingredient, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-foreground leading-relaxed">
+                        {ingredient}
+                      </span>
+                    </li>
+                  ))}
                 </ul>
               </CardContent>
             </Card>

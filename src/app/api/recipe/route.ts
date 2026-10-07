@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
+import { parseIngredients, serializeIngredients } from "@/lib/ingredients";
 import { after, type NextRequest } from "next/server";
 import { RecipeDifficulty, MediaType } from "@prisma/client";
 import { enviarReceitaParaCms } from "@/lib/site-to-cms";
@@ -24,7 +25,10 @@ export async function POST(request: Request) {
   const difficulty = body.difficulty?.trim() || undefined;
   const media: MediaItem[] = body.media || [];
   const steps: RecipeStepItem[] = body.steps || [];
-  const ingredients = body.ingredients;
+  // Aceita lista ou texto (um ingrediente por linha): normalizamos antes de
+  // validar para nunca gravar string dentro de string — era isso que fazia a
+  // tela renderizar um caractere por linha.
+  const ingredients = parseIngredients(body.ingredients);
 
   // Parse numeric fields
   const preparationTime = body.preparation_time_in_minutes;
@@ -111,17 +115,10 @@ export async function POST(request: Request) {
   }
 
   // Validate ingredients
-  if (!ingredients) {
+  if (body.ingredients === undefined || body.ingredients === null) {
     return new Response(JSON.stringify({ error: "Ingredients are required" }), {
       status: 400,
     });
-  }
-
-  if (!Array.isArray(ingredients)) {
-    return new Response(
-      JSON.stringify({ error: "Ingredients must be an array" }),
-      { status: 400 }
-    );
   }
 
   if (ingredients.length === 0) {
@@ -245,7 +242,7 @@ export async function POST(request: Request) {
           cooking_time_in_minutes: cookingTime,
           number_of_servings: servings,
           difficulty,
-          ingredients: JSON.stringify(ingredients),
+          ingredients: serializeIngredients(ingredients),
           profile_id: profile.id,
         },
       });
