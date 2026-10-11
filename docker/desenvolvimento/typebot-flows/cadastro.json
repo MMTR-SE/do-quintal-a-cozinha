@@ -1,0 +1,872 @@
+{
+  "typebot": {
+    "id": "sir32x0nmvybe9i0xdlqa9rd",
+    "name": "Cadastro",
+    "publicId": "cadastro-dlqa9rd",
+    "version": "6.1",
+    "icon": null,
+    "groups": [
+      {
+        "id": "ge9yjrberndbf3e7pdewlbsu",
+        "title": "Onboarding",
+        "blocks": [
+          {
+            "id": "nwduce53hiua0dkxnqy17u29",
+            "type": "Set variable",
+            "options": {
+              "variableId": "ltyomcosmo46cneg1yp27m0f",
+              "expressionToEvaluate": "http://dev-quintal:3000/api"
+            }
+          },
+          {
+            "id": "dep25snzfa9kd7ki9cpaqit1",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "OHSY2uA5NE",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Oi, como vai? 👋"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "wwdmgooyys3rnp000eyp8iwt",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Aqui é Raimunda Raquel, do Movimento da Mulher Trabalhadora Rural de Sergipe 🌱"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "p2smor0f9ktp30am3ov4n5hv",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "iUkEwbykiD",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📌 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Dica importante:"
+                    },
+                    {
+                      "text": " A qualquer momento durante nossa conversa, você pode digitar "
+                    },
+                    {
+                      "bold": true,
+                      "text": "\"Voltar\""
+                    },
+                    {
+                      "text": " para retornar ao menu inicial e escolher outra opção. "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "znd8jq226yxkbg5othkxxrb3",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos começar? Precisamos fazer seu cadastro primeiro. Sem ele não podemos continuar. "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "v6ol4v9tdan6pfvrkaxh25ml",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Posso ajudar com seu cadastro no sistema 📝 e também registrar seus produtos 🌽🥔"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "vhlutr6bi9w3m9zbdnx3l600"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 502.34,
+          "y": -18.33
+        }
+      },
+      {
+        "id": "x9ss6ima6omcix66fic2uxj1",
+        "title": "Name",
+        "blocks": [
+          {
+            "id": "zq4aeffs5qiaceou8rp4yg3j",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos fazer seu cadastro! 📝 Se errar, não se preocupe, dá pra corrigir depois! "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "qa2lmkrr840usvix6ircfxg8",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Qual é o nome da trabalhadora? 👩‍🌾 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "suixbflpwsolayrjvk8rioc4",
+            "type": "text input",
+            "options": {
+              "variableId": "yqvip610i98iklwr1ekt5x5d"
+            }
+          },
+          {
+            "id": "cy883oopn13451s8a67aw0ua",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Confirmando: seu nome é  {{producerName}}? 🤔 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "t4sk21mlrtp7jzfqcxagy7cu",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "f67n1bf3m4lbd0gdd797ftlv",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "zb647x41fc4f4ltmmd2zpv4t"
+              },
+              {
+                "id": "em5kaah2z73rnnkuwb5o63ez",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "kcke5r59c59lkgk4dvfdnpv1",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Ok, vamos tentar de novo! 🔄 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1035.71,
+          "y": 29.05
+        }
+      },
+      {
+        "id": "wr0e8fxd5yushaiepm07a903",
+        "title": "Instagram Contact Asking",
+        "blocks": [
+          {
+            "id": "fvjq9vdvzv4l3vn8qmtv120q",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você quer cadastrar seu Instagram? 📸 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ubprwnwizvqoesf9kpgpk0q7",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "qvpe4azszp9qigsx5vy1srol",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "is0692v8okshe3iivxtvmxvn"
+              },
+              {
+                "id": "gpbh0bjnonlrjlvrr58tg6jh",
+                "content": "Não ❌",
+                "outgoingEdgeId": "mi9ccwo3yfyy7j7ztjahpnb5"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2415.92,
+          "y": -205.13
+        }
+      },
+      {
+        "id": "ako5lpuyj47n2s89xfz4r76d",
+        "title": "Instagram Contact",
+        "blocks": [
+          {
+            "id": "hliq3m9516jf95zjaj4zltio",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Qual é o seu Instagram? 📱 (exemplo: mulheresruraisdesergipe) "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "oqfrc0tq0bm2elmltk3l9pwq",
+            "type": "text input",
+            "options": {
+              "variableId": "hwu1vxub89mdx4sqb98fbyso"
+            }
+          },
+          {
+            "id": "lx6jdi9guqaj0bb4hq38wlvi",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Seu Instagram é: {{instagramUser}}? 🤔 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "s9j5icy1c30c5rs8z617gsly",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "ar0dqehrvbei6c67ox6dw3zb",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "vjg0zi19iusrklalvxd5uyh9"
+              },
+              {
+                "id": "kepceessm00jsgl70s53nz57",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "ni13m8stu4gmpo6wb4rlv1jy",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Ok, vamos tentar de novo! 🔄 "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "q0fg4o11dkzc0lw7phukglh0"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2459.93,
+          "y": 312.26
+        }
+      },
+      {
+        "id": "sdy6kco1r0pg36w2q42y39v1",
+        "title": "Ending",
+        "blocks": [
+          {
+            "id": "md7d2xtnusa46zqg7e7srzwz",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Cadastro concluído com sucesso! 🎉 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "kvcqeaoo2rif0cmp2gtkdvao",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "{{producerNickName}} foi cadastrada no sistema do Movimento da Mulher Trabalhadora Rural de Sergipe. 📝👩‍🌾 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "kgamaanv8mqlv17fk3ggxzjz",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Para continuar conversando comigo, é só mandar uma nova mensagem. 🌱 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3405.02,
+          "y": 40.82
+        }
+      },
+      {
+        "id": "lk4ksnnld25mem83wp7yffpu",
+        "title": "Whatsapp Contact",
+        "blocks": [
+          {
+            "id": "rywtwzv731cs8vxxo4ohpg1u",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos salvar seu número 📞 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "f8tfjp3r3vmuf1ej8dc60wly",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "👀 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Pelo que vi, o seu número é:"
+                    },
+                    {
+                      "text": "  {{userPhoneNumber}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "hzjaca7flh0jh21qgst962f2",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📌 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Vou cadastrar ele direitinho pra que outras pessoas possam entrar em contato com você, tá bom?"
+                    },
+                    {
+                      "text": " 💜 "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "ekbuu4mifoifo18yeoj1uluz"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2042.15,
+          "y": -213.1
+        }
+      },
+      {
+        "id": "p93bk2kjz95k29lmhzuyxpz9",
+        "title": "Nickname",
+        "blocks": [
+          {
+            "id": "l4w8zj4ug9ofp7m1s52lkjn2",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Qual o seu apelido ou nome social? Como você prefere que eu lhe chame? ✨ "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "i1d4t7kk4ua7rk0dbvwih317",
+            "type": "text input",
+            "options": {
+              "audioClip": {
+                "isEnabled": false,
+                "visibility": "Public",
+                "saveVariableId": "vyv3cq6v1zb073ii8bx1f2fhb"
+              },
+              "variableId": "vtb5zfelwe3ey8280y43z65a",
+              "attachments": {
+                "isEnabled": false
+              }
+            }
+          },
+          {
+            "id": "dvvuvuzor5qt9fkpakjrjal0",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você prefere ser chamada de {{producerNickName}}? 🤔 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "zcdfi5uvtgqum1d39p7re4xd",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "rxlcml3c0xjpfa46iq6tk6hs",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "gsr0bt8y1iytih3nsdhjruoe"
+              },
+              {
+                "id": "nlc3jrhlkyandeajx3a5bgvb",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "sb0zdjd398oxe5glf59nzlbc",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Ok, vamos tentar de novo! 🔄 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1568.17,
+          "y": 114.39
+        }
+      },
+      {
+        "id": "cj3ua7f31k6e1ivtapxs5zwy",
+        "title": "Create profile",
+        "blocks": [
+          {
+            "id": "jqxtysphnq865q6d29r7mm77",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile",
+                "body": "{\n    \"name\": \"{{producerName}}\",\n    \"phone_number\": \"{{userPhoneNumber}}\",\n    \"social_name\": \"{{producerNickName}}\",\n    \"instagram\": \"{{instagramUser}}\"\n}",
+                "headers": [
+                  {
+                    "id": "raovqh5ip4exlgc1he6k2daj",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": true,
+              "isAdvancedConfig": true,
+              "variablesForTest": [
+                {
+                  "id": "hitoxcreh7erviv5q1w9s3w1",
+                  "value": "5515991306053",
+                  "variableId": "ruk8y2yxvfk364z0pi2ljtuz"
+                },
+                {
+                  "id": "vymxgwvkck1kiphr6rord6kt",
+                  "value": "batata",
+                  "variableId": "yqvip610i98iklwr1ekt5x5d"
+                },
+                {
+                  "id": "rpdcysaqvqqkbubiqgwolzt9",
+                  "value": "batata",
+                  "variableId": "i8xeh413q0xbf1v1ow2p991l"
+                },
+                {
+                  "id": "ilg5xffbdlz8kqutuum63ylf",
+                  "value": "lol",
+                  "variableId": "hwu1vxub89mdx4sqb98fbyso"
+                }
+              ],
+              "responseVariableMapping": [
+                {
+                  "id": "uoqpghy0tq0l46c4o81ko73v",
+                  "bodyPath": "statusCode",
+                  "variableId": "vnpjqwt5f0zkrf1nzq2ktlip"
+                },
+                {
+                  "id": "ot9vjombphj63iusmhc2rrj8",
+                  "bodyPath": "data.error",
+                  "variableId": "vl38tsumqcm1mh5ykvfou2n0u"
+                }
+              ]
+            }
+          },
+          {
+            "id": "dmkmx1rmiq14siz7gvozxprb",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "bzym8jolhdiegozo7h5kzizx",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "dkuji65uwdc52ediiyn78o68",
+                      "value": "200",
+                      "variableId": "vnpjqwt5f0zkrf1nzq2ktlip",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "vtza7g3nmp6j7q547wrex9zl",
+                      "value": "299",
+                      "variableId": "vnpjqwt5f0zkrf1nzq2ktlip",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "uh0kvfpv5g6uef1pp0m6ff8b"
+              }
+            ]
+          },
+          {
+            "id": "q7s8hdcjtzibokt85gi2qqji",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Algo deu errado no cadastro."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ulg669ho70fni1z93hmg4ju5",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Mas calma, a gente vai te ajudar! 💜"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ce7zqxxuyu3id5vh73zgswe8",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📞 Fala com a gente no número "
+                    },
+                    {
+                      "bold": true,
+                      "text": "+55 99 9999-9999"
+                    },
+                    {
+                      "text": ", tá bom?"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2994.99,
+          "y": -226.51
+        }
+      }
+    ],
+    "variables": [
+      {
+        "id": "l0efglsnm27blq2q33f5t0iz",
+        "name": "userPhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ltyomcosmo46cneg1yp27m0f",
+        "name": "baseUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "yqvip610i98iklwr1ekt5x5d",
+        "name": "producerName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "hwu1vxub89mdx4sqb98fbyso",
+        "name": "instagramUser",
+        "isSessionVariable": false
+      },
+      {
+        "id": "ruk8y2yxvfk364z0pi2ljtuz",
+        "name": "whatsappPhone",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vtb5zfelwe3ey8280y43z65a",
+        "name": "producerNickName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "i8xeh413q0xbf1v1ow2p991l",
+        "name": "profileSocialName",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vnpjqwt5f0zkrf1nzq2ktlip",
+        "name": "httpRequestStatus",
+        "isSessionVariable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "vhlutr6bi9w3m9zbdnx3l600",
+        "to": {
+          "groupId": "x9ss6ima6omcix66fic2uxj1"
+        },
+        "from": {
+          "blockId": "v6ol4v9tdan6pfvrkaxh25ml"
+        }
+      },
+      {
+        "id": "zb647x41fc4f4ltmmd2zpv4t",
+        "to": {
+          "groupId": "p93bk2kjz95k29lmhzuyxpz9"
+        },
+        "from": {
+          "itemId": "f67n1bf3m4lbd0gdd797ftlv",
+          "blockId": "t4sk21mlrtp7jzfqcxagy7cu"
+        }
+      },
+      {
+        "id": "is0692v8okshe3iivxtvmxvn",
+        "to": {
+          "groupId": "ako5lpuyj47n2s89xfz4r76d"
+        },
+        "from": {
+          "itemId": "qvpe4azszp9qigsx5vy1srol",
+          "blockId": "ubprwnwizvqoesf9kpgpk0q7"
+        }
+      },
+      {
+        "id": "mi9ccwo3yfyy7j7ztjahpnb5",
+        "to": {
+          "groupId": "cj3ua7f31k6e1ivtapxs5zwy"
+        },
+        "from": {
+          "itemId": "gpbh0bjnonlrjlvrr58tg6jh",
+          "blockId": "ubprwnwizvqoesf9kpgpk0q7"
+        }
+      },
+      {
+        "id": "vjg0zi19iusrklalvxd5uyh9",
+        "to": {
+          "groupId": "cj3ua7f31k6e1ivtapxs5zwy"
+        },
+        "from": {
+          "itemId": "ar0dqehrvbei6c67ox6dw3zb",
+          "blockId": "s9j5icy1c30c5rs8z617gsly"
+        }
+      },
+      {
+        "id": "ekbuu4mifoifo18yeoj1uluz",
+        "to": {
+          "groupId": "wr0e8fxd5yushaiepm07a903"
+        },
+        "from": {
+          "blockId": "hzjaca7flh0jh21qgst962f2"
+        }
+      },
+      {
+        "id": "gsr0bt8y1iytih3nsdhjruoe",
+        "to": {
+          "groupId": "lk4ksnnld25mem83wp7yffpu"
+        },
+        "from": {
+          "itemId": "rxlcml3c0xjpfa46iq6tk6hs",
+          "blockId": "zcdfi5uvtgqum1d39p7re4xd"
+        }
+      },
+      {
+        "id": "uh0kvfpv5g6uef1pp0m6ff8b",
+        "to": {
+          "groupId": "sdy6kco1r0pg36w2q42y39v1"
+        },
+        "from": {
+          "itemId": "bzym8jolhdiegozo7h5kzizx",
+          "blockId": "dmkmx1rmiq14siz7gvozxprb"
+        }
+      },
+      {
+        "id": "b609ip4i4atjrma8yq3it0yf",
+        "to": {
+          "groupId": "ge9yjrberndbf3e7pdewlbsu"
+        },
+        "from": {
+          "blockId": "biojb3h92z936u6ut1rb1tos"
+        }
+      },
+      {
+        "id": "syz1d7wsqqdg063sna53zx8p",
+        "to": {
+          "groupId": "ge9yjrberndbf3e7pdewlbsu"
+        },
+        "from": {
+          "eventId": "r7zl5zuscqypzsoegbi4qtul"
+        }
+      },
+      {
+        "id": "q0fg4o11dkzc0lw7phukglh0",
+        "to": {
+          "blockId": "hliq3m9516jf95zjaj4zltio",
+          "groupId": "ako5lpuyj47n2s89xfz4r76d"
+        },
+        "from": {
+          "blockId": "ni13m8stu4gmpo6wb4rlv1jy"
+        }
+      }
+    ],
+    "theme": {},
+    "settings": {},
+    "events": [
+      {
+        "id": "r7zl5zuscqypzsoegbi4qtul",
+        "type": "start",
+        "outgoingEdgeId": "syz1d7wsqqdg063sna53zx8p",
+        "graphCoordinates": {
+          "x": -175,
+          "y": -15.83
+        }
+      }
+    ]
+  },
+  "version": "6.1"
+}

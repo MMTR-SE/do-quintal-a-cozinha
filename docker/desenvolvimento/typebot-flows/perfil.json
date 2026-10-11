@@ -1,0 +1,1760 @@
+{
+  "typebot": {
+    "id": "xzoi0i3634kpux3uiwe03tws",
+    "name": "Perfil",
+    "publicId": "perfil-we03tws",
+    "version": "6.1",
+    "icon": null,
+    "groups": [
+      {
+        "id": "nx1gb18ndo1twgxi2li1vy3v",
+        "title": "Init",
+        "blocks": [
+          {
+            "id": "iv8q8kkiprq3l72mvysfg6bu",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "O que você deseja fazer? 👇 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "kef7d3sjzorty88q4hkv387v",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "i9rkoj296q6nfc9rcvairt1c",
+                "content": "Editar Perfil ✏️",
+                "outgoingEdgeId": "n4pw3sxltroscug78obpdqrr"
+              },
+              {
+                "id": "ww28eh1kibm8y3qm5spjf9os",
+                "content": "Remover Perfil ❌",
+                "outgoingEdgeId": "koll19lp8uq82mflid2cppaj"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 759,
+          "y": 210
+        }
+      },
+      {
+        "id": "f8wg3cc3pzcv6pc5om7pv4ly",
+        "title": "Delete Profile Question",
+        "blocks": [
+          {
+            "id": "ktpoobee7oepfdcstklue35o",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Esta ação vai apagar seu cadastro do nosso sistema. ⚠️ "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "s0fjlpdiq2uhoaktebl97u4r",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você tem certeza? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "if6zg2xd0nv3umddbpqn9bvq",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vou apagar seus dados do nosso sistema. Todas suas informações serão removidas. ❌ "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "p9zfgj44uff9zgdpz3brwfur",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "pvg7icpodv2hro2remjnuxgn",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "kpwrut0dget0wn9qyfxw6078"
+              },
+              {
+                "id": "wrihqur4ji0qpzf7k2hui8qi",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "bpx6t1ntvw0dlhqhyl3omq8x",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Que bom! Seu perfil não foi removido. 👍 "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "hu5257zcwpkx5fjpv0fvkdcz"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 252.14,
+          "y": 662.54
+        }
+      },
+      {
+        "id": "nllqhpjk2z9djokqtk1zkqgi",
+        "title": "Stop Talk",
+        "blocks": [
+          {
+            "id": "h7g4ibfrd0h3tmpp70hg6j69",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Para continuar conversando comigo, é só mandar uma nova mensagem. 🌱 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 296.04,
+          "y": -154.21
+        }
+      },
+      {
+        "id": "lhb0bik7v2lqr8knvka408ky",
+        "title": "Delete Profile",
+        "blocks": [
+          {
+            "id": "vr7gof1131ktyayxlss5xjx4",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{profilePhoneNumber}}",
+                "method": "DELETE",
+                "headers": [
+                  {
+                    "id": "jli711xyzo5nm0zmzj2fysef",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": false,
+              "responseVariableMapping": [
+                {
+                  "id": "gzy3t3kah2zk80ddg25sfj84",
+                  "bodyPath": "statusCode",
+                  "variableId": "zh126622nqjp5j5lq9g9twui"
+                }
+              ]
+            }
+          },
+          {
+            "id": "zzlcgheyh34brqnbuitntoos",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "y21mryxg2xkiiopfse67nv2x",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "m2c4kkuawz1847e59dl7iffc",
+                      "value": "200",
+                      "variableId": "zh126622nqjp5j5lq9g9twui",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "ujazs91pua5cpcxvi0u99hsk",
+                      "value": "299",
+                      "variableId": "zh126622nqjp5j5lq9g9twui",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "lk1i9inn0b18qi1vafu8fi92"
+              }
+            ]
+          },
+          {
+            "id": "pt882u41svz2eukp4wla5y0y",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Algo deu errado."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "gil2bt5hmoaaddtul1mzt1no",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Por favor tente novamente mais tarde."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 248.33,
+          "y": 1292.52
+        }
+      },
+      {
+        "id": "c3rwyzqwjbuoffmko9h8rbcp",
+        "title": "Edit Profile Question",
+        "blocks": [
+          {
+            "id": "q4ajr9xj1bx53z00747d90nh",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "O que você quer mudar no seu cadastro? 📝 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "v11egy2lc430ej6i4o07bbr6",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "ohdx9dc9u1heww37ns0eom2j",
+                "content": "Nome",
+                "outgoingEdgeId": "kqa2o7kyqncjev1qn2md6glm"
+              },
+              {
+                "id": "zztyj8qj8fzwpeuh5bhggh0c",
+                "content": "Apelido",
+                "outgoingEdgeId": "zih7gvay1rxa001240nyl0fl"
+              },
+              {
+                "id": "kpzcalue84lqmnih3zk6x2uu",
+                "content": "Instagram",
+                "outgoingEdgeId": "gb2co6yyxk61mz6x36yfeu95"
+              }
+            ],
+            "options": {
+              "isMultipleChoice": false
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1401.73,
+          "y": -216.97
+        }
+      },
+      {
+        "id": "vyqjip0ni13yer2chjh50xfa",
+        "title": "Edit Name",
+        "blocks": [
+          {
+            "id": "uc0tnvizqmbp1eri9qrnn4be",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos mudar seu nome! 📝"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "cjoqwm12zzt10uhn70z3plni",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Seu nome atual é "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileName}} "
+                    },
+                    {
+                      "text": "👩‍🌾"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ybmbz3ra35r33ja6vw7yji1b",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você quer mesmo mudar? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "d7frfya7xposoywzli4erhu2",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "lmuusizuqdxeloijsd0n0648",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "g4t45fkyutdtcomef4azdu3c"
+              },
+              {
+                "id": "slxh2nf5woytxom5f5llja51",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "avdkm8x0zurftbot42rcihri",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem! Vamos deixar seu nome como está. 👍"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "kv2nre9xfgou2oq2spkxwk3i"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2089.44,
+          "y": -1240.44
+        }
+      },
+      {
+        "id": "uchpg153uuxys7fxxidkhuct",
+        "title": "Edit Name 2",
+        "blocks": [
+          {
+            "id": "ui6z9swc12j8pynz62fojn7f",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Qual nome você quer usar agora? 👩‍🌾"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "kj2j4o0lx7ysk8oh13hdwzou",
+            "type": "text input",
+            "options": {
+              "variableId": "w1f3sspvm3pb7s85gfdlbdim"
+            }
+          },
+          {
+            "id": "g9wex8x9hvr26sf8gsbslbzz",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Este nome está certo:  "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileNewName}}"
+                    },
+                    {
+                      "text": "?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "wipeciqiv5zvzjvvzlownt5o",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "btt2apkzmkwvmj9d9hrz8bfj",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "xu7eu0gfpbo6aabbbkc27uyz"
+              },
+              {
+                "id": "do7j1zy70yp46l662guvbk6q",
+                "content": "Não ❌",
+                "outgoingEdgeId": "jgnfpgnwl4cwrsgjznbtxc3c"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2852.14,
+          "y": -1278.54
+        }
+      },
+      {
+        "id": "lwmi9lm9cs5yg4hbki4nmj3l",
+        "title": "Edit Apelido 1",
+        "blocks": [
+          {
+            "id": "p0nkjw7r1441uux8dwyfejzq",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos mudar como eu te chamo! 📝"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "a77nd8jzobrjq3hkg3up6iw4",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "No momento, estou te chamando de "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileSocialName}}"
+                    },
+                    {
+                      "text": " 👩‍🌾"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "wls23bdytl6y47tjnsxqf4f2",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você quer mesmo mudar? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "hi3ewd52wu7xwf0tel3am3fb",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "gpudboq7jxstp7ceutzwlql2",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "py493n6l2iqudd5i0kscbgnz"
+              },
+              {
+                "id": "bcwslnmjtec3j2ck59p6pni4",
+                "content": "Não ❌",
+                "outgoingEdgeId": "frcq511c6047z8u3wzi3tjbo"
+              }
+            ]
+          },
+          {
+            "id": "ubiq0cdb3xmmc223rvrinawc",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem! Vamos deixar como está. 👍"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "z6plhuvvlzp8euwqsacq1awg"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2062.96,
+          "y": -337.22
+        }
+      },
+      {
+        "id": "nprwraguo0lzsxd56zkydgmn",
+        "title": "Edit Apelido 2",
+        "blocks": [
+          {
+            "id": "m8ri0dsvh13fbc9t9o6qndsz",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Como você quer que eu te chame agora? 👩‍🌾"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "v4y69w28vj4ya7extllzepc3",
+            "type": "text input",
+            "options": {
+              "variableId": "ydc9tgmx7fnbpuas6i5808l8"
+            }
+          },
+          {
+            "id": "cheqhiozq8820c9yt9uby4vw",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Este nome está certo: "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileNewSocialName}}"
+                    },
+                    {
+                      "text": "?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "a7p65ck0yn0naf6h769x7ik8",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "mz77a38gnnaj21chngqoqavv",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "r9r059w1qt14lwotbfzdk9hu"
+              },
+              {
+                "id": "apcl7j1pb0v763nvwtu4a7dy",
+                "content": "Não ❌",
+                "outgoingEdgeId": "i4s17elu50pkd4j3e6fp3yin"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2508.53,
+          "y": -350.58
+        }
+      },
+      {
+        "id": "df0v4ymvy50y3q5mr0jli6td",
+        "title": "Edit Instagram 1",
+        "blocks": [
+          {
+            "id": "yhk65ulhlr4cpalgnpvqfh19",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos mudar seu Instagram! 📸 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "p33j6t1zuzjgfpdrpujk6gc3",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Seu Instagram atual é "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileInstagram}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "tdppi9qmct33oqfudqli897b",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você quer mesmo mudar? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ooccikqomgpxtbzbdy0oy3l4",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "bqysw02c1rxc9k8dakixlygc",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "wxsxun6tv205912kbkj1w56z"
+              },
+              {
+                "id": "w28na9dcrdzze0cgzf5c6xom",
+                "content": "Não ❌",
+                "outgoingEdgeId": "n25p4edbqa60fyo6zudzuiud"
+              }
+            ]
+          },
+          {
+            "id": "z1fgbpkmjy5fa8xgm1yg13yw",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem! Vamos deixar como está. 👍"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "w31tpjr6bx0lycrtd63fk890"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1408.49,
+          "y": 329.81
+        }
+      },
+      {
+        "id": "pzg2dkqqm1lnmgqexw6yyh0t",
+        "title": "Edit Instagram 2",
+        "blocks": [
+          {
+            "id": "t1obm2130tcmbj21vsqvadzs",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Qual seu novo Instagram? Digite sem o @ (exemplo: mulheresruraisse) "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "yywkhyovap4qm0d0i0tz8s8m",
+            "type": "text input",
+            "options": {
+              "variableId": "s0eeto2t6yg4s2uqirhczau5"
+            }
+          },
+          {
+            "id": "bgeazsuxnsd2iqtqxi3i61ds",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Este Instagram está certo: "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileNewInstagram}}"
+                    },
+                    {
+                      "text": "? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "papvq3ci6tjy9hwfh18b41ao",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "g8x1n90kyvoa9erzv7ebnezq",
+                "content": "Sim ✅",
+                "outgoingEdgeId": "e1zw7lfmhe47qiqhg3hkghpw"
+              },
+              {
+                "id": "ykoi90v3m0ndeuwy3yrozicy",
+                "content": "Não ❌",
+                "outgoingEdgeId": "d85uprd6i89xtb3ea02si6xn"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2073.49,
+          "y": 331.16
+        }
+      },
+      {
+        "id": "p22nkts83uwl0yeh28ad6qs2",
+        "title": "Put Name",
+        "blocks": [
+          {
+            "id": "vfljmyqszzba8vfak085mmtj",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{profilePhoneNumber}}",
+                "body": "{\n    \"name\": \"{{profileNewName}}\"\n}",
+                "method": "PUT",
+                "headers": [
+                  {
+                    "id": "srpn5i7y0q26qan9x1v8nmzy",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": true,
+              "responseVariableMapping": [
+                {
+                  "id": "xou0rj611ore93r67zlx0pw1",
+                  "bodyPath": "statusCode",
+                  "variableId": "gal5dwoar7qadhb9itszwz60"
+                }
+              ]
+            }
+          },
+          {
+            "id": "ek2ca7u7v07ceurcc2y8j9qg",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "jmiy55d2yxc8cullise6u535",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "g9flgrpk52qu8dbsnr1e41cb",
+                      "value": "200",
+                      "variableId": "gal5dwoar7qadhb9itszwz60",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "swh8ydeqla92wj1cg1c0702j",
+                      "value": "299",
+                      "variableId": "gal5dwoar7qadhb9itszwz60",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "kymcfqk1epcyp49vh33zf1qo"
+              }
+            ]
+          },
+          {
+            "id": "dg9fy8qsolyeexy9ng7azc3u",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Algo deu errado no cadastro."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "iy3e08f6ftnrodpf4v4ggfo6",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Mas calma, a gente vai te ajudar! 💜"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "muckp1f2dqh1t95ur91iox8o",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📞 Fala com a gente no número "
+                    },
+                    {
+                      "bold": true,
+                      "text": "+55 99 9999-9999"
+                    },
+                    {
+                      "text": ", tá bom?"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3469.22,
+          "y": -1284.17
+        }
+      },
+      {
+        "id": "hll9ogcwuitdrh88lkopx35w",
+        "title": "Group #18",
+        "blocks": [
+          {
+            "id": "x6dmzb773rwrbbpnw6g4skqz",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Pronto! Seu nome agora é "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileNewName}} "
+                    },
+                    {
+                      "text": "✅"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "t62idb8wri738asvdcmo9zws"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 4048.25,
+          "y": -1023.94
+        }
+      },
+      {
+        "id": "p146he9r8jqzro8p7jcqrtwn",
+        "title": "Put Nickname",
+        "blocks": [
+          {
+            "id": "oer5pk12cj31ca0hggnh9i57",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{profilePhoneNumber}}",
+                "body": "{\n    \"social_name\": \"{{profileNewSocialName}}\"\n}",
+                "method": "PUT",
+                "headers": [
+                  {
+                    "id": "srpn5i7y0q26qan9x1v8nmzy",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": true,
+              "responseVariableMapping": [
+                {
+                  "id": "xou0rj611ore93r67zlx0pw1",
+                  "bodyPath": "statusCode",
+                  "variableId": "gal5dwoar7qadhb9itszwz60"
+                },
+                {
+                  "id": "nwcnj8wzuu1f2xsyez3kedd5",
+                  "bodyPath": "data",
+                  "variableId": "vsqjbwdpwtyol142l0p9dcpu0"
+                }
+              ]
+            }
+          },
+          {
+            "id": "zswuu4hs4mmk0bmj8vwn825i",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "iib0iu0hkfkm6shr2gttcmnc",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "g9flgrpk52qu8dbsnr1e41cb",
+                      "value": "200",
+                      "variableId": "gal5dwoar7qadhb9itszwz60",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "swh8ydeqla92wj1cg1c0702j",
+                      "value": "299",
+                      "variableId": "gal5dwoar7qadhb9itszwz60",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "plykkitfwzrngwwpv45t9rl2"
+              }
+            ]
+          },
+          {
+            "id": "u3nh0u142t1oedeadqvxc9oo",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Algo deu errado no cadastro."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "fdw257193ymgwyhfi4yw3x8f",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Mas calma, a gente vai te ajudar! 💜"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ntss4bsm53w3q1hyb3myxitr",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "9GlQj6OCfF",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📞 Fala com a gente no número "
+                    },
+                    {
+                      "bold": true,
+                      "text": "+55 "
+                    },
+                    {
+                      "text": "(79) 99856-1633, tá bom?"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3124.19,
+          "y": -359.81
+        }
+      },
+      {
+        "id": "hbskb2gfmbto24xm5yafvphb",
+        "title": "Group #20",
+        "blocks": [
+          {
+            "id": "hszgpk38mmsynkzlwvhp9r1x",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Pronto! Irei te chamar de "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileNewSocialName}}"
+                    },
+                    {
+                      "text": " ✅"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "i3qdvivnjflf2n56oik9v768"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3687.82,
+          "y": -98.69
+        }
+      },
+      {
+        "id": "nji64hzl7a4apzc4inwtjnog",
+        "title": "Put Name",
+        "blocks": [
+          {
+            "id": "iufk56q9k5lz3808o4sts2w3",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{profilePhoneNumber}}",
+                "body": "{\n    \"instagram\": \"{{profileNewInstagram}}\"\n}",
+                "method": "PUT",
+                "headers": [
+                  {
+                    "id": "srpn5i7y0q26qan9x1v8nmzy",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": true,
+              "responseVariableMapping": [
+                {
+                  "id": "xou0rj611ore93r67zlx0pw1",
+                  "bodyPath": "statusCode",
+                  "variableId": "gal5dwoar7qadhb9itszwz60"
+                },
+                {
+                  "id": "nwcnj8wzuu1f2xsyez3kedd5",
+                  "bodyPath": "data",
+                  "variableId": "vsqjbwdpwtyol142l0p9dcpu0"
+                }
+              ]
+            }
+          },
+          {
+            "id": "cjte0n1qji0li2pmacnfxvw1",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "fr6eymbjtv2883beeapziyh6",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "g9flgrpk52qu8dbsnr1e41cb",
+                      "value": "200",
+                      "variableId": "gal5dwoar7qadhb9itszwz60",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "swh8ydeqla92wj1cg1c0702j",
+                      "value": "299",
+                      "variableId": "gal5dwoar7qadhb9itszwz60",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "te8idticma0efrwva4vt8y9z"
+              }
+            ]
+          },
+          {
+            "id": "mjrz7dp5uzpl6m58f49470cy",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Algo deu errado no cadastro."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "shdpfpf4dktwwfkrkp0oanfd",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Mas calma, a gente vai te ajudar! 💜"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "h4pn1edn2y0y5a612o281imj",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📞 Fala com a gente no número "
+                    },
+                    {
+                      "bold": true,
+                      "text": "+55 99 9999-9999"
+                    },
+                    {
+                      "text": ", tá bom?"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2524.8,
+          "y": 336.34
+        }
+      },
+      {
+        "id": "qjo13f2op6tduph4j4k7ywxb",
+        "title": "Group #21",
+        "blocks": [
+          {
+            "id": "hjvph0kd1sd2wa5d1pnlmjil",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Pronto! Seu Instagram agora é "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{profileNewInstagram}}"
+                    },
+                    {
+                      "text": " ✅ "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "xe5hhcsn9ujcwkjgeafcpdvh"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2934.31,
+          "y": 481.93
+        }
+      },
+      {
+        "id": "rydjlhfo5k743lje0ikd4xlo",
+        "title": "Group #22",
+        "blocks": [
+          {
+            "id": "m68uet0wvb3tgjpmsx2eg294",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Seu perfil foi removido com sucesso. 👋 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 652.39,
+          "y": 1456.01
+        }
+      },
+      {
+        "id": "js1rnrdewbgp2l1giwyk1wh3",
+        "title": "Group #19",
+        "blocks": [
+          {
+            "id": "lpju3nug5ncw1b38v41wjfg2",
+            "type": "Set variable",
+            "options": {
+              "variableId": "vq19jc34alzytvfiuudr7bx2b",
+              "expressionToEvaluate": "http://dev-quintal:3000/api"
+            }
+          },
+          {
+            "id": "lfh947piiun9zaayxwiab9um",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{userPhoneNumber}}",
+                "method": "GET",
+                "headers": [
+                  {
+                    "id": "vmtnz6rv7jlhhvq3jj2usjkv",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "variablesForTest": [
+                {
+                  "id": "eqr3stvpfpx81s9cdgy33bob",
+                  "value": "5579998115065",
+                  "variableId": "n8j21hlng1lc8ogi90hlu1ym"
+                }
+              ],
+              "responseVariableMapping": [
+                {
+                  "id": "r7nmh48cndft1pdltk7u18j0",
+                  "bodyPath": "statusCode",
+                  "variableId": "erd4dbzzz4qvi9napmhifa1s"
+                },
+                {
+                  "id": "d16zpmtoqvwumbz9q0n9u9y8",
+                  "bodyPath": "data.profile.name",
+                  "variableId": "r94mvnozdpfe7y249qkmqqnd"
+                },
+                {
+                  "id": "s443qsitx52c1eiz8u7rxlqy",
+                  "bodyPath": "data.profile.phone_number",
+                  "variableId": "e8ltcp5a4550kete1uwhgm70"
+                },
+                {
+                  "id": "mdm11y2tpi1jfbohjbvwdd0i",
+                  "bodyPath": "data.profile.social_name",
+                  "variableId": "nndefc5jt13l42lfsfj9ykq0"
+                },
+                {
+                  "id": "wv8urkj31tx22fsjsyjqygtw",
+                  "bodyPath": "data.profile.instagram",
+                  "variableId": "rmesgy4vm5su4k3i4x1c5z3e"
+                }
+              ]
+            },
+            "outgoingEdgeId": "r0cgoymivaxcmw6fe2ob5o0f"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 188.1,
+          "y": 216.23
+        }
+      }
+    ],
+    "variables": [
+      {
+        "id": "n8j21hlng1lc8ogi90hlu1ym",
+        "name": "phoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "erd4dbzzz4qvi9napmhifa1s",
+        "name": "profileCreatedStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "w8j9xq22p2ty5gseefecbo1y",
+        "name": "userPhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vq19jc34alzytvfiuudr7bx2b",
+        "name": "baseUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "zh126622nqjp5j5lq9g9twui",
+        "name": "httpRequestStatus",
+        "isSessionVariable": true
+      },
+      {
+        "id": "w1f3sspvm3pb7s85gfdlbdim",
+        "name": "profileNewName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "ydc9tgmx7fnbpuas6i5808l8",
+        "name": "profileNewSocialName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "s0eeto2t6yg4s2uqirhczau5",
+        "name": "profileNewInstagram",
+        "isSessionVariable": false
+      },
+      {
+        "id": "gal5dwoar7qadhb9itszwz60",
+        "name": "profilePutRequest",
+        "isSessionVariable": true
+      },
+      {
+        "id": "e8ltcp5a4550kete1uwhgm70",
+        "name": "profilePhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "r94mvnozdpfe7y249qkmqqnd",
+        "name": "profileName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "nndefc5jt13l42lfsfj9ykq0",
+        "name": "profileSocialName",
+        "isSessionVariable": true
+      },
+      {
+        "id": "rmesgy4vm5su4k3i4x1c5z3e",
+        "name": "profileInstagram",
+        "isSessionVariable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "n4pw3sxltroscug78obpdqrr",
+        "to": {
+          "groupId": "c3rwyzqwjbuoffmko9h8rbcp"
+        },
+        "from": {
+          "itemId": "i9rkoj296q6nfc9rcvairt1c",
+          "blockId": "kef7d3sjzorty88q4hkv387v"
+        }
+      },
+      {
+        "id": "koll19lp8uq82mflid2cppaj",
+        "to": {
+          "groupId": "f8wg3cc3pzcv6pc5om7pv4ly"
+        },
+        "from": {
+          "itemId": "ww28eh1kibm8y3qm5spjf9os",
+          "blockId": "kef7d3sjzorty88q4hkv387v"
+        }
+      },
+      {
+        "id": "kpwrut0dget0wn9qyfxw6078",
+        "to": {
+          "groupId": "lhb0bik7v2lqr8knvka408ky"
+        },
+        "from": {
+          "itemId": "pvg7icpodv2hro2remjnuxgn",
+          "blockId": "p9zfgj44uff9zgdpz3brwfur"
+        }
+      },
+      {
+        "id": "hu5257zcwpkx5fjpv0fvkdcz",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "blockId": "bpx6t1ntvw0dlhqhyl3omq8x"
+        }
+      },
+      {
+        "id": "lk1i9inn0b18qi1vafu8fi92",
+        "to": {
+          "groupId": "rydjlhfo5k743lje0ikd4xlo"
+        },
+        "from": {
+          "itemId": "y21mryxg2xkiiopfse67nv2x",
+          "blockId": "zzlcgheyh34brqnbuitntoos"
+        }
+      },
+      {
+        "id": "kqa2o7kyqncjev1qn2md6glm",
+        "to": {
+          "groupId": "vyqjip0ni13yer2chjh50xfa"
+        },
+        "from": {
+          "itemId": "ohdx9dc9u1heww37ns0eom2j",
+          "blockId": "v11egy2lc430ej6i4o07bbr6"
+        }
+      },
+      {
+        "id": "zih7gvay1rxa001240nyl0fl",
+        "to": {
+          "groupId": "lwmi9lm9cs5yg4hbki4nmj3l"
+        },
+        "from": {
+          "itemId": "zztyj8qj8fzwpeuh5bhggh0c",
+          "blockId": "v11egy2lc430ej6i4o07bbr6"
+        }
+      },
+      {
+        "id": "gb2co6yyxk61mz6x36yfeu95",
+        "to": {
+          "groupId": "df0v4ymvy50y3q5mr0jli6td"
+        },
+        "from": {
+          "itemId": "kpzcalue84lqmnih3zk6x2uu",
+          "blockId": "v11egy2lc430ej6i4o07bbr6"
+        }
+      },
+      {
+        "id": "g4t45fkyutdtcomef4azdu3c",
+        "to": {
+          "groupId": "uchpg153uuxys7fxxidkhuct"
+        },
+        "from": {
+          "itemId": "lmuusizuqdxeloijsd0n0648",
+          "blockId": "d7frfya7xposoywzli4erhu2"
+        }
+      },
+      {
+        "id": "kv2nre9xfgou2oq2spkxwk3i",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "blockId": "avdkm8x0zurftbot42rcihri"
+        }
+      },
+      {
+        "id": "xu7eu0gfpbo6aabbbkc27uyz",
+        "to": {
+          "groupId": "p22nkts83uwl0yeh28ad6qs2"
+        },
+        "from": {
+          "itemId": "btt2apkzmkwvmj9d9hrz8bfj",
+          "blockId": "wipeciqiv5zvzjvvzlownt5o"
+        }
+      },
+      {
+        "id": "jgnfpgnwl4cwrsgjznbtxc3c",
+        "to": {
+          "blockId": "ui6z9swc12j8pynz62fojn7f",
+          "groupId": "uchpg153uuxys7fxxidkhuct"
+        },
+        "from": {
+          "itemId": "do7j1zy70yp46l662guvbk6q",
+          "blockId": "wipeciqiv5zvzjvvzlownt5o"
+        }
+      },
+      {
+        "id": "py493n6l2iqudd5i0kscbgnz",
+        "to": {
+          "groupId": "nprwraguo0lzsxd56zkydgmn"
+        },
+        "from": {
+          "itemId": "gpudboq7jxstp7ceutzwlql2",
+          "blockId": "hi3ewd52wu7xwf0tel3am3fb"
+        }
+      },
+      {
+        "id": "frcq511c6047z8u3wzi3tjbo",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "itemId": "bcwslnmjtec3j2ck59p6pni4",
+          "blockId": "hi3ewd52wu7xwf0tel3am3fb"
+        }
+      },
+      {
+        "id": "z6plhuvvlzp8euwqsacq1awg",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "blockId": "ubiq0cdb3xmmc223rvrinawc"
+        }
+      },
+      {
+        "id": "r9r059w1qt14lwotbfzdk9hu",
+        "to": {
+          "groupId": "p146he9r8jqzro8p7jcqrtwn"
+        },
+        "from": {
+          "itemId": "mz77a38gnnaj21chngqoqavv",
+          "blockId": "a7p65ck0yn0naf6h769x7ik8"
+        }
+      },
+      {
+        "id": "i4s17elu50pkd4j3e6fp3yin",
+        "to": {
+          "blockId": "m8ri0dsvh13fbc9t9o6qndsz",
+          "groupId": "nprwraguo0lzsxd56zkydgmn"
+        },
+        "from": {
+          "itemId": "apcl7j1pb0v763nvwtu4a7dy",
+          "blockId": "a7p65ck0yn0naf6h769x7ik8"
+        }
+      },
+      {
+        "id": "wxsxun6tv205912kbkj1w56z",
+        "to": {
+          "groupId": "pzg2dkqqm1lnmgqexw6yyh0t"
+        },
+        "from": {
+          "itemId": "bqysw02c1rxc9k8dakixlygc",
+          "blockId": "ooccikqomgpxtbzbdy0oy3l4"
+        }
+      },
+      {
+        "id": "n25p4edbqa60fyo6zudzuiud",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "itemId": "w28na9dcrdzze0cgzf5c6xom",
+          "blockId": "ooccikqomgpxtbzbdy0oy3l4"
+        }
+      },
+      {
+        "id": "w31tpjr6bx0lycrtd63fk890",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "blockId": "z1fgbpkmjy5fa8xgm1yg13yw"
+        }
+      },
+      {
+        "id": "e1zw7lfmhe47qiqhg3hkghpw",
+        "to": {
+          "groupId": "nji64hzl7a4apzc4inwtjnog"
+        },
+        "from": {
+          "itemId": "g8x1n90kyvoa9erzv7ebnezq",
+          "blockId": "papvq3ci6tjy9hwfh18b41ao"
+        }
+      },
+      {
+        "id": "d85uprd6i89xtb3ea02si6xn",
+        "to": {
+          "blockId": "t1obm2130tcmbj21vsqvadzs",
+          "groupId": "pzg2dkqqm1lnmgqexw6yyh0t"
+        },
+        "from": {
+          "itemId": "ykoi90v3m0ndeuwy3yrozicy",
+          "blockId": "papvq3ci6tjy9hwfh18b41ao"
+        }
+      },
+      {
+        "id": "kymcfqk1epcyp49vh33zf1qo",
+        "to": {
+          "groupId": "hll9ogcwuitdrh88lkopx35w"
+        },
+        "from": {
+          "itemId": "jmiy55d2yxc8cullise6u535",
+          "blockId": "ek2ca7u7v07ceurcc2y8j9qg"
+        }
+      },
+      {
+        "id": "t62idb8wri738asvdcmo9zws",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "blockId": "x6dmzb773rwrbbpnw6g4skqz"
+        }
+      },
+      {
+        "id": "plykkitfwzrngwwpv45t9rl2",
+        "to": {
+          "groupId": "hbskb2gfmbto24xm5yafvphb"
+        },
+        "from": {
+          "itemId": "iib0iu0hkfkm6shr2gttcmnc",
+          "blockId": "zswuu4hs4mmk0bmj8vwn825i"
+        }
+      },
+      {
+        "id": "i3qdvivnjflf2n56oik9v768",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "blockId": "hszgpk38mmsynkzlwvhp9r1x"
+        }
+      },
+      {
+        "id": "te8idticma0efrwva4vt8y9z",
+        "to": {
+          "groupId": "qjo13f2op6tduph4j4k7ywxb"
+        },
+        "from": {
+          "itemId": "fr6eymbjtv2883beeapziyh6",
+          "blockId": "cjte0n1qji0li2pmacnfxvw1"
+        }
+      },
+      {
+        "id": "xe5hhcsn9ujcwkjgeafcpdvh",
+        "to": {
+          "groupId": "nllqhpjk2z9djokqtk1zkqgi"
+        },
+        "from": {
+          "blockId": "hjvph0kd1sd2wa5d1pnlmjil"
+        }
+      },
+      {
+        "id": "jwqn5z2e9oyx73sl7s3xiyxk",
+        "to": {
+          "groupId": "js1rnrdewbgp2l1giwyk1wh3"
+        },
+        "from": {
+          "eventId": "zzghpj5jpbi338zmeyvckcjp"
+        }
+      },
+      {
+        "id": "r0cgoymivaxcmw6fe2ob5o0f",
+        "to": {
+          "groupId": "nx1gb18ndo1twgxi2li1vy3v"
+        },
+        "from": {
+          "blockId": "lfh947piiun9zaayxwiab9um"
+        }
+      }
+    ],
+    "theme": {},
+    "settings": {
+      "typingEmulation": {
+        "enabled": true,
+        "delayBetweenBubbles": 1
+      }
+    },
+    "events": [
+      {
+        "id": "zzghpj5jpbi338zmeyvckcjp",
+        "type": "start",
+        "outgoingEdgeId": "jwqn5z2e9oyx73sl7s3xiyxk",
+        "graphCoordinates": {
+          "x": -385.83,
+          "y": 218.32
+        }
+      }
+    ]
+  },
+  "version": "6.1"
+}

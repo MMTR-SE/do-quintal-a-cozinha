@@ -1,0 +1,786 @@
+{
+  "typebot": {
+    "id": "s8zroah2ibxtax1yjhfzpz5u",
+    "name": "Remover Produto",
+    "publicId": "remover-produto-hfzpz5u",
+    "version": "6.1",
+    "icon": null,
+    "groups": [
+      {
+        "id": "rrixfqd9573bkfqijtqsavpq",
+        "title": "Group #4 (8)",
+        "blocks": [
+          {
+            "id": "g2dpwa6pwz1w3vo6f8yqn9ag",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "😕 Opa! Não entendi esse número..."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "mt4qwpy5edle1hfe3ca5mq7e",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tenta de novo, por favor? Digita só o número do produto que você quer editar. 🔢"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1155.3,
+          "y": 287.07
+        }
+      },
+      {
+        "id": "jpvssuwoly9x2303f6kosfxh",
+        "title": "",
+        "blocks": [
+          {
+            "id": "wxk2e8n9pkxy0menmzjlbrj5",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📦 Esses são os seus produtos cadastrados até agora:"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "in44c1sgjn5knf6xv6ea43pu",
+            "type": "Code",
+            "options": {
+              "content": "const nomes = {{productArrayNames}}; // Ex: [\"Bolo de Cenoura\", \"Bolo de Fubá\"]\nconst descricoes = {{productArrayDescription}}; // Ex: [\"Delicioso...\", \"Feito com carinho...\"]\n\nconst listaFormatada = nomes\n  .map((nome, i) => `✨ *${i + 1}*: ${nome}\\n📝 _${descricoes[i]}_`)\n  .join(\"\\n\\n\");\n\nsetVariable(\"listaFormatada\", listaFormatada);\nsetVariable(\"nomesProdutos\", nomes);",
+              "isExecutedOnClient": false
+            }
+          },
+          {
+            "id": "i6bf0lltqnygn3czittws1cq",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "{{listaFormatada}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "mysunjkdsmhblozbgz3ntyj8",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Digite o número do produto que você quer remover, tá bom? 😊"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "phaj0uyqbfe7ky86ps4ljr3t",
+            "type": "text input",
+            "options": {
+              "isLong": false,
+              "variableId": "lbt5jmds0f391t1c46dqkiti"
+            }
+          },
+          {
+            "id": "gogw82xghpqwd4elu4ptfmjd",
+            "type": "Code",
+            "options": {
+              "content": "const nomes = {{nomesProdutos}};\nconst ids = {{productArrayId}};\nconst input = parseInt({{escolhaProduto}});\nconst index = input - 1;\n\nif (isNaN(input) || index < 0 || index >= nomes.length) {\n  setVariable(\"produtoEscolhido\", null);\n  setVariable(\"produtoIdEscolhido\", null);\n} else {\n  setVariable(\"produtoEscolhido\", nomes[index]);\n  setVariable(\"produtoIdEscolhido\", ids[index]);\n}\n",
+              "isExecutedOnClient": false
+            }
+          },
+          {
+            "id": "dkzv3i99hfohjc7mdziaeeb7",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "wvmnvzg4t7xu2d5wa7m8xkr9",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "rpto38zzpw1b1c59f1dscze3",
+                      "variableId": "n6olvv9btsin8abl3jlasgvg",
+                      "comparisonOperator": "Is empty"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "zc4u1mj4adnaebnr1751nwtn"
+              }
+            ]
+          },
+          {
+            "id": "j5wf35kmewmtbxr00hfu5pod",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✅ Beleza! Você escolheu remover o produto "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{produtoEscolhido}}"
+                    },
+                    {
+                      "text": "."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "tz6zlqsk0pk46figu001ek3x",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você tem certeza disso?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "l2d87c7wiyz67cabo38n27u9",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "o9vu02r6u1aw27qoeyr8k9jx",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "pv3bnwr4f2bn6vgj8ysz7dfj"
+              },
+              {
+                "id": "mt55m2t55orepf6zqy6dcsk5",
+                "content": "Não ❌",
+                "outgoingEdgeId": "urgmvb1izg1x5bexcily8g4a"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 807.84,
+          "y": 17.5
+        }
+      },
+      {
+        "id": "d1iw10d8xz5lxhmk4hegk49q",
+        "title": "",
+        "blocks": [
+          {
+            "id": "uexfk9wceirts1qsyl70g54r",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Ok. Para continuar conversando comigo, é só mandar uma nova mensagem. 🌱 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 780.66,
+          "y": 1042.65
+        }
+      },
+      {
+        "id": "iyutz99033w8jrqbc9ogm147",
+        "title": "Group #5 (3)",
+        "blocks": [
+          {
+            "id": "kzd6i9ksndc67vu10x75woia",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/product/{{produtoIdEscolhido}}",
+                "body": "{\n  \"product_name\": \"{{newProductName}}\",\n  \"description\": \"{{newProductDescription}}\",\n  \"category\": \"{{productCategory}}\",\n  \"image_url\": \"{{newPhotoURL}}\",\n  \"audio_url\": \"{{newProductAudio}}\",\n  \"video_url\": \"{{newVideoURL}}\"\n}",
+                "method": "DELETE",
+                "headers": [
+                  {
+                    "id": "fsrb0wuxbbws474pln55nbvp",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": false,
+              "responseVariableMapping": [
+                {
+                  "id": "jf6ymk27qavxoqle0th5qq4c",
+                  "bodyPath": "statusCode",
+                  "variableId": "n0wjcdazx58h2pq9r9zs8tnx"
+                }
+              ]
+            }
+          },
+          {
+            "id": "qur328237rmvul42q2iem52b",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "swp4trwzvh92k1n2qeq2kil3",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "urbnmqspdfc2dbbspf0b4ze0",
+                      "value": "200",
+                      "variableId": "n0wjcdazx58h2pq9r9zs8tnx",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "qfqm8alhvqo1f5lphbprhonp",
+                      "value": "299",
+                      "variableId": "n0wjcdazx58h2pq9r9zs8tnx",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "c3on5evoe2bg2lsjio8755gi"
+              }
+            ],
+            "outgoingEdgeId": "o08mw97rv8rw9dm0b24vqy7t"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1141.91,
+          "y": 602.57
+        }
+      },
+      {
+        "id": "y9fjx2pzlxrgk0pcktz5byms",
+        "title": "Group #6 (2)",
+        "blocks": [
+          {
+            "id": "jx3bi5ebzi53fvp7j20yohkl",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✅ Prontinho! O produto foi removido com sucesso. "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "g0uq6efmcozzxzv514pe1t0i"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1511.84,
+          "y": 566.74
+        }
+      },
+      {
+        "id": "bezv71rajcb4p1x4a2h345bt",
+        "title": "",
+        "blocks": [
+          {
+            "id": "ip88lblary3m415bx620alst",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Parece que algo deu errado na hora de atualizar. "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "v3af95qwc0q3npz6njaixa6t",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tenta novamente mais tarde, tá bom? Se continuar o erro, me chama que te ajudo! 😉 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1506.33,
+          "y": 895.51
+        }
+      },
+      {
+        "id": "tumovd0mcsddq771jfexe9x7",
+        "title": "Group #8 (1)",
+        "blocks": [
+          {
+            "id": "lerqpxaghl690d24slam8zk3",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "cxocoekqy1aunjjdcw1byff7",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "xzmlll6m8sedov5a8f728zwd",
+                      "variableId": "eaeqrllxgvvipvir7ojuk11k",
+                      "comparisonOperator": "Is empty"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "jzpafjqoef151om2uo8nw14q"
+              }
+            ],
+            "outgoingEdgeId": "ozzpznz6rn02uem56heghund"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 818.08,
+          "y": -223.79
+        }
+      },
+      {
+        "id": "zcutcx0ovud9nhqlezn5tm8w",
+        "title": "",
+        "blocks": [
+          {
+            "id": "ujx4f7rie4vnnbzehp7fdhp0",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "G8CTCQOi0h",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "⚠️ Parece que você ainda não tem nenhum produto cadastrado no seu perfil."
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "gsmgw3h1vw596g2h1w508xk5"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1141.68,
+          "y": -240.46
+        }
+      },
+      {
+        "id": "w78mag7qzouukqic30j262yg",
+        "title": "Account Info (2)",
+        "blocks": [
+          {
+            "id": "zixo1asd72okt83fglomixkb",
+            "type": "Set variable",
+            "options": {
+              "variableId": "kws7j5l7haqcgayzrejmx1dg",
+              "expressionToEvaluate": "http://dev-quintal:3000/api"
+            }
+          },
+          {
+            "id": "l31wsut1ns2j6s6tjeab7q7b",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/product?phone_number={{userPhoneNumber}}",
+                "method": "GET",
+                "headers": [
+                  {
+                    "id": "vmtnz6rv7jlhhvq3jj2usjkv",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ],
+                "queryParams": [
+                  {
+                    "id": "innqv6ot7fnhsry9s28rtayp"
+                  }
+                ]
+              },
+              "responseVariableMapping": [
+                {
+                  "id": "r7nmh48cndft1pdltk7u18j0",
+                  "bodyPath": "statusCode",
+                  "variableId": "f90bg51ai4bubil8m4uvk4jx"
+                },
+                {
+                  "id": "pne5c0c8bhqxczjejgtouuyc",
+                  "bodyPath": "data.data.flatMap(item => item.product_name)",
+                  "variableId": "eaeqrllxgvvipvir7ojuk11k"
+                },
+                {
+                  "id": "g4tssx90fgft5veevdexr87q",
+                  "bodyPath": "data.data.flatMap(item => item.description)",
+                  "variableId": "oq76qb1en3b8zz3xagbj54kp"
+                },
+                {
+                  "id": "pkj0kxgzhkkgnlfsniy6iwrf",
+                  "bodyPath": "data.data.flatMap(item => item.id)",
+                  "variableId": "i9r76hfertlc684mbnuun0wy"
+                }
+              ]
+            }
+          },
+          {
+            "id": "utnagzu1zya4t2jcggxti064",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "odif4vat58atvdpaam59ethy",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "g9flgrpk52qu8dbsnr1e41cb",
+                      "value": "200",
+                      "variableId": "f90bg51ai4bubil8m4uvk4jx",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "swh8ydeqla92wj1cg1c0702j",
+                      "value": "299",
+                      "variableId": "f90bg51ai4bubil8m4uvk4jx",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "qw74msk7hgm37ce5kw20i6gs"
+              }
+            ]
+          },
+          {
+            "id": "z2zwe3agqpb5q5foh0doys4f",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Aconteceu um probleminha aqui.\n"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "t5v88rn7vwpf2xxpssr75q5d",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": " Tenta de novo em alguns minutinhos, tá bom? 💜 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 468.03,
+          "y": -12.47
+        }
+      },
+      {
+        "id": "dgutywd80t9k3rr6kg30ezkv",
+        "title": "Voltar menu Produtos",
+        "blocks": [
+          {
+            "id": "kbg7ftfapm00xwnwmvdnf82r",
+            "type": "Typebot link",
+            "options": {
+              "groupId": "n1ye54kd6aa4zk3glmtzc3vj",
+              "typebotId": "cgwngldu7zivxntevzed4uhg"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1519,
+          "y": -189
+        }
+      }
+    ],
+    "variables": [
+      {
+        "id": "vzuctyayipli8i1s3bnzkz5av",
+        "name": "userPhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "kws7j5l7haqcgayzrejmx1dg",
+        "name": "baseUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "lbt5jmds0f391t1c46dqkiti",
+        "name": "escolhaProduto",
+        "isSessionVariable": false
+      },
+      {
+        "id": "n6olvv9btsin8abl3jlasgvg",
+        "name": "produtoEscolhido",
+        "isSessionVariable": true
+      },
+      {
+        "id": "n0wjcdazx58h2pq9r9zs8tnx",
+        "name": "putStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "eaeqrllxgvvipvir7ojuk11k",
+        "name": "productArrayNames",
+        "isSessionVariable": true
+      },
+      {
+        "id": "f90bg51ai4bubil8m4uvk4jx",
+        "name": "getProductRequestStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "oq76qb1en3b8zz3xagbj54kp",
+        "name": "productArrayDescription",
+        "isSessionVariable": true
+      },
+      {
+        "id": "i9r76hfertlc684mbnuun0wy",
+        "name": "productArrayId",
+        "isSessionVariable": true
+      },
+      {
+        "id": "i0q5eza7dsnvr5e2rpnkwh04",
+        "name": "listaFormatada",
+        "isSessionVariable": true
+      },
+      {
+        "id": "s31xhmgre7e7q29vil8x9ml3",
+        "name": "nomesProdutos",
+        "isSessionVariable": true
+      },
+      {
+        "id": "y8dlkoro2hnnydkb8q4yqiiy",
+        "name": "produtoIdEscolhido",
+        "isSessionVariable": true
+      },
+      {
+        "id": "mi29lo24wspdiifc2zbk9slx",
+        "name": "newProductName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "re2j47w6fbb7iz0tb0xrbw07",
+        "name": "newProductDescription",
+        "isSessionVariable": false
+      },
+      {
+        "id": "d7embk511qcziy6gx7q8c7az",
+        "name": "productCategory",
+        "isSessionVariable": true
+      },
+      {
+        "id": "hg7b4jv0mlqf8oacedkny1az",
+        "name": "newPhotoURL",
+        "isSessionVariable": false
+      },
+      {
+        "id": "i0cb2qc46ryrmcxi2t1cpe1j",
+        "name": "newProductAudio",
+        "isSessionVariable": false
+      },
+      {
+        "id": "fa456liu3722w2yplfqnjmw9",
+        "name": "newVideoURL",
+        "isSessionVariable": false
+      },
+      {
+        "id": "ho3ito05md2df9aks9yz91oi",
+        "name": "profilePhoneNumber",
+        "isSessionVariable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "zc4u1mj4adnaebnr1751nwtn",
+        "to": {
+          "groupId": "rrixfqd9573bkfqijtqsavpq"
+        },
+        "from": {
+          "itemId": "wvmnvzg4t7xu2d5wa7m8xkr9",
+          "blockId": "dkzv3i99hfohjc7mdziaeeb7"
+        }
+      },
+      {
+        "id": "pv3bnwr4f2bn6vgj8ysz7dfj",
+        "to": {
+          "groupId": "iyutz99033w8jrqbc9ogm147"
+        },
+        "from": {
+          "itemId": "o9vu02r6u1aw27qoeyr8k9jx",
+          "blockId": "l2d87c7wiyz67cabo38n27u9"
+        }
+      },
+      {
+        "id": "urgmvb1izg1x5bexcily8g4a",
+        "to": {
+          "groupId": "d1iw10d8xz5lxhmk4hegk49q"
+        },
+        "from": {
+          "itemId": "mt55m2t55orepf6zqy6dcsk5",
+          "blockId": "l2d87c7wiyz67cabo38n27u9"
+        }
+      },
+      {
+        "id": "o08mw97rv8rw9dm0b24vqy7t",
+        "to": {
+          "groupId": "bezv71rajcb4p1x4a2h345bt"
+        },
+        "from": {
+          "blockId": "qur328237rmvul42q2iem52b"
+        }
+      },
+      {
+        "id": "c3on5evoe2bg2lsjio8755gi",
+        "to": {
+          "groupId": "y9fjx2pzlxrgk0pcktz5byms"
+        },
+        "from": {
+          "itemId": "swp4trwzvh92k1n2qeq2kil3",
+          "blockId": "qur328237rmvul42q2iem52b"
+        }
+      },
+      {
+        "id": "g0uq6efmcozzxzv514pe1t0i",
+        "to": {
+          "groupId": "d1iw10d8xz5lxhmk4hegk49q"
+        },
+        "from": {
+          "blockId": "jx3bi5ebzi53fvp7j20yohkl"
+        }
+      },
+      {
+        "id": "ozzpznz6rn02uem56heghund",
+        "to": {
+          "groupId": "jpvssuwoly9x2303f6kosfxh"
+        },
+        "from": {
+          "blockId": "lerqpxaghl690d24slam8zk3"
+        }
+      },
+      {
+        "id": "jzpafjqoef151om2uo8nw14q",
+        "to": {
+          "groupId": "zcutcx0ovud9nhqlezn5tm8w"
+        },
+        "from": {
+          "itemId": "cxocoekqy1aunjjdcw1byff7",
+          "blockId": "lerqpxaghl690d24slam8zk3"
+        }
+      },
+      {
+        "id": "qw74msk7hgm37ce5kw20i6gs",
+        "to": {
+          "groupId": "tumovd0mcsddq771jfexe9x7"
+        },
+        "from": {
+          "itemId": "odif4vat58atvdpaam59ethy",
+          "blockId": "utnagzu1zya4t2jcggxti064"
+        }
+      },
+      {
+        "id": "v5d8l19ykba1p5klu6ndsr6c",
+        "to": {
+          "groupId": "w78mag7qzouukqic30j262yg"
+        },
+        "from": {
+          "eventId": "of0dllbh4pnxvds5l9po0v9f"
+        }
+      },
+      {
+        "id": "gsmgw3h1vw596g2h1w508xk5",
+        "to": {
+          "groupId": "dgutywd80t9k3rr6kg30ezkv"
+        },
+        "from": {
+          "blockId": "ujx4f7rie4vnnbzehp7fdhp0"
+        }
+      }
+    ],
+    "theme": {},
+    "settings": {
+      "typingEmulation": {
+        "enabled": true,
+        "delayBetweenBubbles": 1
+      }
+    },
+    "events": [
+      {
+        "id": "of0dllbh4pnxvds5l9po0v9f",
+        "type": "start",
+        "outgoingEdgeId": "v5d8l19ykba1p5klu6ndsr6c",
+        "graphCoordinates": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ]
+  },
+  "version": "6.1"
+}
