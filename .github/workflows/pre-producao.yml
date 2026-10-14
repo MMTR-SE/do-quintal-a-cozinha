@@ -92,6 +92,9 @@ jobs:
         env:
           GHCR_USERNAME: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Caminho do checkout na VPS. Era uma variavel do shell da VPS antiga;
+          # agora vem do environment Pre-Producao (vars.DEV_PATH) e e repassada
+          # ao shell remoto pela lista `envs` abaixo.
           DEV_PATH: ${{ vars.DEV_PATH }}
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -103,9 +106,11 @@ jobs:
           # O build da imagem na VPS passava de 10 min; o padrao do passo
           # cortava o deploy no meio.
           command_timeout: 30m
+          envs: GHCR_USERNAME,GHCR_TOKEN,DEV_PATH
           script: |
             set -eu
 
+            # Falha com mensagem clara se DEV_PATH nao chegar (ou vier vazio).
             : "${DEV_PATH:?DEV_PATH nao definido — configure vars.DEV_PATH no environment Pre-Producao}"
 
             cd "$DEV_PATH"
@@ -186,19 +191,6 @@ jobs:
               echo "Caddyfile não encontrado em $(pwd)" >&2
               exit 1
             fi
-<<<<<<< HEAD
-
-            # Remove blocos que chegaram a ser adicionados para o Typebot de teste
-            # e para o CMS em endereço novo (não existem mais). O Caddyfile é um
-            # bind mount de arquivo único: `sed -i` falha com "Resource busy",
-            # então reescrevemos o conteúdo por cima.
-            if grep -qF 'typebot-dev.mulheresrurais.com.br {' Caddyfile; then
-              docker compose exec -T --user root caddy sh -c \
-                "sed '/^typebot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^bot-dev\.mulheresrurais\.com\.br {/,/^}/d; /^conteudos-dev\.mulheresrurais\.com\.br {/,/^}/d' /etc/caddy/Caddyfile > /tmp/Caddyfile.novo && cat /tmp/Caddyfile.novo > /etc/caddy/Caddyfile && rm -f /tmp/Caddyfile.novo"
-              echo "Caddyfile: blocos do Typebot/CMS-dev removidos."
-            fi
-            if ! grep -qF 'conteudos.mulheresrurais.com.br' Caddyfile; then
-=======
             # O Caddyfile é um bind mount de arquivo único: `sed -i` falha com
             # "Resource busy", então os blocos são acrescentados por `cat >>`.
             # O backup permite voltar atrás se o arquivo ficar inválido.
@@ -206,7 +198,6 @@ jobs:
             # O domínio antigo do CMS continua de propósito: o container do CMS é o
             # mesmo e a aplicação de produção aponta para essa URL.
             if ! grep -qF 'conteudos.mulheresrurais.com.br {' Caddyfile; then
->>>>>>> ac4db1be (feat(pre-producao): CMS e Typebot de teste nos enderecos -dev)
               printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
                 | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
             fi
