@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
-import { parseIngredients, serializeIngredients } from "@/lib/ingredients";
+import { parseIngredients, serializeIngredients } from "@/lib/recipe";
 import { RecipeDifficulty, MediaType } from "@prisma/client";
 import { after } from "next/server";
 import { enviarReceitaParaCms, removerReceitaDoCms } from "@/lib/site-to-cms";
