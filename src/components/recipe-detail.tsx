@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageLightbox } from "@/components/image-lightbox";
 import { formatMinutes, formatRecipeDifficulty } from "@/lib/utils";
-import { parseIngredients } from "@/lib/ingredients";
+import { parseIngredients } from "@/lib/recipe";
 import { RecipeWithDetail } from "@/types/recipe";
 import { Clock, Users, ChefHat, ArrowLeft } from "lucide-react";
 import Link from "next/link";
