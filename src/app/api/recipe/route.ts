@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
-import { parseIngredients, serializeIngredients } from "@/lib/ingredients";
+import { parseIngredients, serializeIngredients, parseSteps } from "@/lib/recipe";
 import { after, type NextRequest } from "next/server";
 import { RecipeDifficulty, MediaType } from "@prisma/client";
 import { enviarReceitaParaCms } from "@/lib/site-to-cms";
@@ -24,10 +24,7 @@ export async function POST(request: Request) {
   const phoneNumber = body.phone_number?.trim() || undefined;
   const difficulty = body.difficulty?.trim() || undefined;
   const media: MediaItem[] = body.media || [];
-  const steps: RecipeStepItem[] = body.steps || [];
-  // Aceita lista ou texto (um ingrediente por linha): normalizamos antes de
-  // validar para nunca gravar string dentro de string — era isso que fazia a
-  // tela renderizar um caractere por linha.
+  const steps: RecipeStepItem[] = parseSteps(body.steps) || [];
   const ingredients = parseIngredients(body.ingredients);
 
   // Parse numeric fields
@@ -179,7 +176,7 @@ export async function POST(request: Request) {
     const stepNumbers = new Set<number>();
 
     for (let i = 0; i < steps.length; i++) {
-      const step = JSON.parse(steps[i]);
+      const step = steps[i];
 
       if (!Number.isInteger(step.step_number) || step.step_number <= 0) {
         return new Response(
