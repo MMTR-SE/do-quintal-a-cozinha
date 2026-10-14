@@ -179,7 +179,7 @@ export async function POST(request: Request) {
     const stepNumbers = new Set<number>();
 
     for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
+      const step = JSON.parse(steps[i]);
 
       if (!Number.isInteger(step.step_number) || step.step_number <= 0) {
         return new Response(
