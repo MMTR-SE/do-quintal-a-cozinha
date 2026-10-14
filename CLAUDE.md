@@ -53,6 +53,10 @@ Page ("use client") → React Query hook (src/hooks/) → Server Action (src/app
 
 ## Gotchas
 
+### O site não lê o CMS em runtime
+
+Todo o conteúdo do site vem do banco do próprio site, via Prisma, nas server actions de `src/app/actions/`. O painel do CMS (pasta `cms/`) é apenas o editor de conteúdo: o site **não** consulta a API do CMS em nenhuma requisição. Nada de `NEXT_PUBLIC_STRAPI_URL` no app.
+
 ### Prisma Decimal Serialization (CRITICAL)
 
 Prisma `Decimal` cannot be passed to client components. Server actions MUST convert to `number` before returning:
