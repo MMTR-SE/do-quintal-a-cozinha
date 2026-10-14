@@ -92,6 +92,10 @@ jobs:
         env:
           GHCR_USERNAME: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Caminho do checkout na VPS. Era uma variavel do shell da VPS antiga;
+          # agora vem do environment Pre-Producao (vars.DEV_PATH) e e repassada
+          # ao shell remoto pela lista `envs` abaixo.
+          DEV_PATH: ${{ vars.DEV_PATH }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -100,11 +104,14 @@ jobs:
           # O build da imagem na VPS passava de 10 min; o padrao do passo
           # cortava o deploy no meio.
           command_timeout: 30m
-          envs: GHCR_USERNAME,GHCR_TOKEN
+          envs: GHCR_USERNAME,GHCR_TOKEN,DEV_PATH
           script: |
             set -eu
 
-            cd $DEV_PATH
+            # Falha com mensagem clara se DEV_PATH nao chegar (ou vier vazio).
+            : "${DEV_PATH:?DEV_PATH nao definido — configure vars.DEV_PATH no environment Pre-Producao}"
+
+            cd "$DEV_PATH"
 
             available_kb="$(df --output=avail / | tail -n 1 | tr -d ' ')"
             if [ "$available_kb" -lt 5242880 ]; then
