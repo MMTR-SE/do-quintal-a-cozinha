@@ -2,6 +2,16 @@ interface RecipeStepItem {
   step_number: number;
   instruction: string;
 }
+/**
+ * Normaliza o campo `ingredients` da receita.
+ *
+ * O campo e `Json` no banco e a convencao do site e guardar a lista como string
+ * JSON (`JSON.stringify(array)`) — e o que o seed, a API e a sincronizacao com o
+ * CMS fazem. Conteudo antigo, porem, aparece em outros formatos: a string JSON
+ * de uma string (codificacao dupla, que fazia a tela renderizar um caractere por
+ * linha) ou o texto com um ingrediente por linha. Aceitar todos eles evita que a
+ * tela quebre por causa de um registro gravado errado.
+ */
 
 const listaDeTexto = (valor: unknown): string[] => {
   if (valor === null || valor === undefined) return [];
@@ -63,7 +73,7 @@ export function parseSteps(steps: string[]): RecipeStepItem[] {
       try {
         return JSON.parse(step);
       } catch {
-        return { step_number: 0, instruction: "" }; 
+        return { step_number: 0, instruction: "" };
       }
     }
     return step;
