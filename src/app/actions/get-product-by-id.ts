@@ -43,7 +43,6 @@ export async function getProductById(options: Options) {
   return {
     ...product,
     price: product.price ? Number(product.price) : null,
-    // Produtos nao guardam slug: ele e derivado da produtora + nome.
     slug: buildProductSlug({
       produtora: product.profile?.name,
       nome: product.product_name,

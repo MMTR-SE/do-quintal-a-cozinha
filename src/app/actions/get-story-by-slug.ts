@@ -2,9 +2,6 @@
 
 import { prisma } from "@/lib/prisma";
 
-/**
- * Busca uma historia pelo slug no banco Postgres (conteudo migrado do CMS).
- */
 export async function getStoryBySlug({ slug }: { slug: string }) {
   return prisma.story.findUnique({
     select: {

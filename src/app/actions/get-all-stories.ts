@@ -5,9 +5,6 @@ import { prisma } from "@/lib/prisma";
 
 interface Options { search?: string; tags?: string[]; profileId?: string; }
 
-/**
- * Lista as historias do banco Postgres (conteudo migrado do CMS).
- */
 export async function getAllStories(options?: Options) {
   const where: any = options?.search
     ? { name: { contains: options.search, mode: "insensitive" } }

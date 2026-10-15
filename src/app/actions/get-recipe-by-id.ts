@@ -2,9 +2,6 @@
 
 import { prisma } from "@/lib/prisma";
 
-/**
- * Busca uma receita pelo id no banco Postgres (conteudo migrado do CMS).
- */
 export async function getRecipeById({ id }: { id: string }) {
   return prisma.recipe.findUnique({
     select: {
