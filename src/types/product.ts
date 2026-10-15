@@ -28,6 +28,8 @@ export type ProductMedia = {
  */
 export interface Product {
   id: string;
+  /** Slug publico da URL: nome da produtora + nome do produto. */
+  slug: string;
   product_name: string;
   description: string | null;
   price: number | null;

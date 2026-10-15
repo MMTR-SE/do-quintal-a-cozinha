@@ -1,4 +1,5 @@
-import { RecipeDifficulty } from "@prisma/client"
+import type { RecipeDifficulty } from "@prisma/client"
+import { RECIPE_DIFFICULTY } from "@/lib/enums"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { intervalToDuration } from "date-fns";
@@ -14,9 +15,9 @@ export function cn(...inputs: ClassValue[]) {
  * Converts RecipeDifficulty enum to Portuguese display text.
  */
 export function formatRecipeDifficulty(difficulty: RecipeDifficulty) {
-  if (difficulty === RecipeDifficulty.EASY)
+  if (difficulty === RECIPE_DIFFICULTY.EASY)
     return "Fácil";
-  else if (difficulty === RecipeDifficulty.INTERMEDIARY)
+  else if (difficulty === RECIPE_DIFFICULTY.INTERMEDIARY)
     return "Intermediário";
   else
     return "Difícil";

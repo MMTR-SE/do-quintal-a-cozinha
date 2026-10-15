@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { buildProductSlug } from "@/lib/slug";
 
 /**
  * Fetches single product by ID with complete details.
@@ -42,5 +43,9 @@ export async function getProductById(options: Options) {
   return {
     ...product,
     price: product.price ? Number(product.price) : null,
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
   };
 }

@@ -19,6 +19,7 @@
       "type": "media",
       "multiple": true,
       "allowedTypes": ["images"]
-    }
+    },
+    "site_id": { "type": "string" }
   }
 }
