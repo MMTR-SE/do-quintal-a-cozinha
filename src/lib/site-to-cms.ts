@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { prisma } from "@/lib/prisma";
-import { parseIngredients } from "@/lib/ingredients";
+import { parseIngredients } from "@/lib/recipe";
 
 /**
  * Espelha no CMS (Strapi) o conteudo cadastrado pela API do site (fluxo do
