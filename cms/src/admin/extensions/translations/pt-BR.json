@@ -1,0 +1,16 @@
+{
+  "Auth.form.welcome.title": "Bem-vinda Companheira!",
+  "Auth.form.welcome.subtitle": "Acesse sua conta",
+  "global.content-manager": "Gerenciador de Conteúdo",
+  "app.components.LeftMenu.navbrand.title": "Painel de Controle",
+  "app.components.LeftMenu.navbrand.workplace": "Workspace",
+
+  "Auth.form.button.login": "Entrar",
+  
+  "content-manager.containers.Edit.delete": "Excluir",
+  "content-manager.containers.Edit.save": "Salvar",
+  "content-manager.containers.Edit.publish": "Publicar",
+  
+  "Notification.version.update.message": "Uma nova versão ({version}) está disponível!",
+  "components.FilterOptions.FILTER_TYPES.eq": "é igual a {value}"
+}
