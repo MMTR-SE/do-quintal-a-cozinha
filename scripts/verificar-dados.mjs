@@ -51,7 +51,10 @@ async function conferirListagem(nome, path, seletorItens) {
       els.map((e) => e.getAttribute("href")).filter(Boolean)
     );
     if (!(await page.innerText("body")).trim()) throw new Error("pagina vazia");
-    console.log(`${itens.length ? "OK   " : "AVISO"} ${nome} (${path}) — ${itens.length} item(ns) do banco`);
+    // Listagem vazia e justamente o que queremos pegar: significa que o site
+    // nao esta carregando os dados do Postgres. Nao pode passar como aviso.
+    if (itens.length === 0) throw new Error("nenhum item carregado do banco");
+    console.log(`OK    ${nome} (${path}) — ${itens.length} item(ns) do banco`);
     return itens[0] || null;
   } catch (e) {
     console.log(`FALHA ${nome} (${path}) — ${e.message}`);
@@ -63,7 +66,9 @@ async function conferirListagem(nome, path, seletorItens) {
 async function conferirDetalheHistoria(href) {
   const slug = href.replace(/^\/nossas-historias\//, "").replace(/\/$/, "");
   try {
-    const esperada = await prisma.story.findUnique({ where: { slug }, select: { title: true, name: true } });
+    const esperada = bancoOk
+      ? await prisma.story.findUnique({ where: { slug }, select: { title: true, name: true } })
+      : null;
     await abrir(href);
     const texto = await page.innerText("body");
     if (esperada?.title && texto.includes(esperada.title)) {
