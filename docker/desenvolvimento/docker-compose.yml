@@ -64,7 +64,7 @@ services:
       HOST: 0.0.0.0
       PORT: 1337
       DATABASE_CLIENT: postgres
-      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal?schema=public
       # Ao publicar no CMS, avisa o site para sincronizar com o Postgres
       SITE_SYNC_URL: http://dev-quintal:3000
       APP_KEYS: ${CMS_APP_KEYS:-dev-key-1,dev-key-2}
