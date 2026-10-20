@@ -136,6 +136,20 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/typebot/public/**",
       },
+      // Imagens enviadas pelo painel do CMS (Strapi) ficam em /uploads deste
+      // dominio e passam a ser gravadas no Postgres pelo cms-sync.
+      {
+        protocol: "https",
+        hostname: "conteudos.mulheresrurais.com.br",
+        port: "",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "conteudos-dev.mulheresrurais.com.br",
+        port: "",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };
