@@ -185,7 +185,7 @@ async function main() {
       description: p.description ?? null,
       price: p.price ?? null,
       category: String(p.category || "AGRICOLA").toUpperCase(),
-      profile_id: p.profile_id,
+      profile_id,
     };
     await prisma.product.upsert({ where: { id: p.id }, create: { id: p.id, ...data }, update: data });
     await prisma.productMedia.deleteMany({ where: { productId: p.id } });
