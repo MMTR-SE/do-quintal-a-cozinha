@@ -488,7 +488,6 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
         'frutas',
         'graos',
         'processado',
-        'processados',
         'artesanato',
         'outros',
       ]
