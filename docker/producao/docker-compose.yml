@@ -1,18 +1,19 @@
 services:
   quintal:
     container_name: quintal
-    # A imagem e construida no runner do GitHub e publicada no GHCR: a VPS tem
-    # ~1.9 GB de RAM e o `next build` la dentro derruba a maquina. O bloco
-    # `build` fica para quem quiser construir na mao.
+    # A imagem e construida no runner do GitHub e publicada no GHCR.
+    # O bloco `build` fica para quem quiser construir na mao.
     image: ghcr.io/mmtr-se/do-quintal-a-cozinha:producao
     build:
       context: $PROD_PATH
       dockerfile: $PROD_PATH/docker/producao/Dockerfile
+    # Todo o ambiente da aplicacao vem deste arquivo: e a unica fonte de
+    # verdade (DATABASE_URL, API_KEY, STRAPI_API_TOKEN, NEXT_PUBLIC_STRAPI_URL,
+    # CMS_*). Nao repetir essas variaveis em `environment:` -- variavel
+    # interpolada cujo valor nao esteja no .env do projeto chega VAZIA e
+    # sobrepoe o que veio do env_file.
     env_file:
       - $PROD_PATH/.env
-    environment:
-      NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
-      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/${POSTGRES_DB:-quintal}?schema=public
     ports:
       - "83:3000"
     restart: unless-stopped
@@ -39,7 +40,9 @@ services:
     env_file:
       - $PROD_PATH/.env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quintal} -d ${POSTGRES_DB:-quintal}"]
+      # $$ para o shell do container expandir em tempo de execucao (e nao o
+      # compose, que nao teria POSTGRES_* no .env do projeto).
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 5s
       retries: 10
