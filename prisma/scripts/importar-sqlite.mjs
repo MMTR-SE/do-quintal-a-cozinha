@@ -111,6 +111,19 @@ async function main() {
     });
   }
 
+  // Perfil padrao para itens sem produtora. O schema exige a relacao, e a
+  // sincronizacao do CMS usa o mesmo telefone sentinela, entao reaproveitamos o
+  // registro em vez de criar um perfil "MMTR-SE" duplicado.
+  const idsPerfis = new Set(rows("Profile").map((p) => p.id));
+  async function perfilPadrao() {
+    const perfil = await prisma.profile.upsert({
+      where: { phone_number: "sem-telefone-mmtr" },
+      create: { id: "sem-produtora-mmtr", name: "MMTR-SE", phone_number: "sem-telefone-mmtr" },
+      update: {},
+    });
+    return perfil.id;
+  }
+
   // 2) historias (+ midias)
   for (const s of rows("Story")) {
     const data = {
@@ -130,6 +143,8 @@ async function main() {
 
   // 3) receitas (+ passos e midias)
   for (const r of rows("Recipe")) {
+    // Receita sem produtora na origem: usa o perfil padrao (a relacao e exigida).
+    const profile_id = idsPerfis.has(r.profile_id) ? r.profile_id : await perfilPadrao();
     const data = {
       title: r.title,
       description: r.description,
@@ -138,7 +153,7 @@ async function main() {
       number_of_servings: Number(r.number_of_servings ?? 1),
       difficulty: String(r.difficulty || "INTERMEDIARY").toUpperCase(),
       ingredients: r.ingredients, // string JSON, como a UI espera
-      profile_id: r.profile_id,
+      profile_id,
       created_at: toDate(r.created_at),
     };
     await prisma.recipe.upsert({
@@ -163,12 +178,13 @@ async function main() {
 
   // 4) produtos (+ midias)
   for (const p of rows("Product")) {
+    const profile_id = idsPerfis.has(p.profile_id) ? p.profile_id : await perfilPadrao();
     const data = {
       product_name: p.product_name,
       description: p.description ?? null,
       price: p.price ?? null,
       category: String(p.category || "AGRICOLA").toUpperCase(),
-      profile_id: p.profile_id,
+      profile_id,
     };
     await prisma.product.upsert({ where: { id: p.id }, create: { id: p.id, ...data }, update: data });
     await prisma.productMedia.deleteMany({ where: { productId: p.id } });
