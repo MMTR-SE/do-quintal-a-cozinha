@@ -66,8 +66,9 @@ O deploy é o workflow `.github/workflows/producao.yml` — **merge/push na `mai
   docker compose exec -T quintal sh -c 'SQLITE_SRC=/app/prisma/prod.db node prisma/scripts/importar-sqlite.mjs'
   ```
   O `prod.db` fica em `$PROD_PATH/prisma/` e depois serve de backup.
-- O `/var/www/caddy/docker-compose.yml` interpola variáveis do `/var/www/caddy/.env` e o `environment:` **sobrepõe** o `env_file`: `POSTGRES_*` e `NEXT_PUBLIC_STRAPI_URL` precisam estar nesse arquivo, senão chegam vazias e anulam as do `$PROD_PATH/.env`.
-- O `$PROD_PATH/.env` precisa de `API_KEY`, `STRAPI_API_TOKEN` (token **Full access do CMS de produção**), `NEXT_PUBLIC_STRAPI_URL` e `GROQ_API_KEY`.
+- O compose do site (`docker/producao/docker-compose.yml`) roda dentro do projeto `/var/www/caddy` (que faz `include` dele), mas **não usa interpolação**: todo o ambiente vem de `$PROD_PATH/.env`. Esse mesmo arquivo alimenta o site **e** o `quintal-postgres` — então `DATABASE_URL` tem que apontar para o host `postgres` e a senha precisa ser igual a `POSTGRES_PASSWORD`. No `/var/www/caddy/.env` só precisa existir `PROD_PATH` (o caminho do checkout).
+  Não repita variáveis em `environment:` no compose: variável interpolada e ausente no `.env` do projeto chega **vazia** e sobrepõe o que veio do `env_file`.
+- O `$PROD_PATH/.env` precisa de `DATABASE_URL`, `POSTGRES_USER`/`POSTGRES_PASSWORD`/`POSTGRES_DB`, `TZ`, `API_KEY`, `STRAPI_API_TOKEN` (token **Full access do CMS de produção**), `NEXT_PUBLIC_STRAPI_URL` e `GROQ_API_KEY`.
 - O CMS de produção precisa rodar o mesmo código do `cms/` (content type `produtora` + hooks) e ter `SITE_SYNC_URL` (ex.: `http://quintal:3000`, se estiver na mesma rede, ou `https://mulheresrurais.com.br`) e `SITE_SYNC_API_KEY` = `API_KEY` do site.
 - Imagens enviadas pelo painel ficam em `https://conteudos.mulheresrurais.com.br/uploads/...`: os domínios `conteudos*.mulheresrurais.com.br` estão liberados em `next.config.ts`.
 
