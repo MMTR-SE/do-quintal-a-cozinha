@@ -193,14 +193,13 @@ jobs:
             # "Resource busy", então os blocos são acrescentados por `cat >>`.
             # O backup permite voltar atrás se o arquivo ficar inválido.
             cp Caddyfile /tmp/Caddyfile.do-quintal.bak
-            # O domínio antigo do CMS continua de propósito: o container do CMS é o
-            # mesmo e a aplicação de produção aponta para essa URL.
-            if ! grep -qF 'conteudos.mulheresrurais.com.br {' Caddyfile; then
-              printf '\nconteudos.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
-                | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
-            fi
+            # O domínio antigo do CMS (conteudos.mulheresrurais.com.br) NÃO é
+            # servido aqui: o DNS aponta para a VPS de produção. Além de forçar
+            # emissão de certificado num domínio que não é desta VPS, se o bloco
+            # já existir o Caddy recusa a configuração inteira ("ambiguous site
+            # definition") e o deploy cai.
             # Endereço próprio do CMS de pré-produção.
-            if ! grep -qF 'conteudos-dev.mulheresrurais.com.br {' Caddyfile; then
+            if ! grep -q 'conteudos-dev.mulheresrurais.com.br' Caddyfile; then
               printf '\nconteudos-dev.mulheresrurais.com.br {\n\treverse_proxy pre-quintal-cms:1337\n}\n' \
                 | docker compose exec -T --user root caddy sh -c 'cat >> /etc/caddy/Caddyfile'
             fi
