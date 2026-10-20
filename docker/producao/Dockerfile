@@ -17,6 +17,12 @@ COPY --from=deps /usr/bin/dumb-init /usr/bin/dumb-init
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# O Next embute os NEXT_PUBLIC_* no bundle durante o build (mesmo esquema da
+# pre-producao): o endereco do CMS chega por build-arg, nao por variavel de
+# ambiente em runtime. Sem isso o site nao consegue avisar o CMS (site-to-cms).
+ARG NEXT_PUBLIC_STRAPI_URL
+ENV NEXT_PUBLIC_STRAPI_URL=$NEXT_PUBLIC_STRAPI_URL
+
 # Migracoes nao rodam no build: `prisma migrate deploy` exige DATABASE_URL (que
 # so existe em runtime) e, com SQLite, o prod.db real e montado via volume — migrar
 # aqui nao afetaria o banco de producao. O `npm run build` abaixo ja roda

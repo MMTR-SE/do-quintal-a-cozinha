@@ -56,6 +56,21 @@ O deploy é feito pelo workflow `.github/workflows/pre-producao.yml` (push na br
 - **Importar os fluxos para o Typebot de pré-produção**: `bash docker/pre-producao/typebot-flows/importar-fluxos.sh` (na raiz do repositório, com `MAILPIT_USER`/`MAILPIT_PASSWORD` no ambiente — estão no `$DEV_PATH/.env`). Ele lê os `*.json` versionados em `docker/desenvolvimento/typebot-flows/` (uma cópia só no repositório), troca dentro do fluxo o endereço da API do site (padrão `https://dev.mulheresrurais.com.br/api`) e a `API_KEY` pelo valor do container `pre-quintal` (a chave nunca entra no repositório), faz login pelo Mailpit, importa, publica com `publicId` terminando em `-dev` e remapeia os links entre os fluxos. Variáveis: `TSB_FLUXOS_DIR`, `TSB_API_BASE`, `TSB_SUFIXO`, `TSB_DOCKER` (padrão `ssh quintal docker`), `TYPEBOT_EMAIL`.
 - O **primeiro login** no Typebot de dev cria o dono do workspace. O builder sobe com `DEFAULT_WORKSPACE_PLAN=UNLIMITED` — sem isso, fluxos com bloco de upload de arquivo não podem ser publicados (plano FREE).
 
+### Produção (VPS)
+
+O deploy é o workflow `.github/workflows/producao.yml` — **merge/push na `main` publica em produção**. Ele constrói a imagem no runner (com `NEXT_PUBLIC_STRAPI_URL` como build-arg), faz `pull` na VPS, roda `prisma migrate deploy` e falha se o site não responder.
+
+- Primeira subida (volume `postgres_data` vazio): depois do deploy, importar o SQLite antigo **uma vez** —
+  ```bash
+  docker compose exec -T quintal sh -c 'SQLITE_SRC=/app/prisma/prod.db node prisma/scripts/importar-sqlite.mjs --dry-run'
+  docker compose exec -T quintal sh -c 'SQLITE_SRC=/app/prisma/prod.db node prisma/scripts/importar-sqlite.mjs'
+  ```
+  O `prod.db` fica em `$PROD_PATH/prisma/` e depois serve de backup.
+- O `/var/www/caddy/docker-compose.yml` interpola variáveis do `/var/www/caddy/.env` e o `environment:` **sobrepõe** o `env_file`: `POSTGRES_*` e `NEXT_PUBLIC_STRAPI_URL` precisam estar nesse arquivo, senão chegam vazias e anulam as do `$PROD_PATH/.env`.
+- O `$PROD_PATH/.env` precisa de `API_KEY`, `STRAPI_API_TOKEN` (token **Full access do CMS de produção**), `NEXT_PUBLIC_STRAPI_URL` e `GROQ_API_KEY`.
+- O CMS de produção precisa rodar o mesmo código do `cms/` (content type `produtora` + hooks) e ter `SITE_SYNC_URL` (ex.: `http://quintal:3000`, se estiver na mesma rede, ou `https://mulheresrurais.com.br`) e `SITE_SYNC_API_KEY` = `API_KEY` do site.
+- Imagens enviadas pelo painel ficam em `https://conteudos.mulheresrurais.com.br/uploads/...`: os domínios `conteudos*.mulheresrurais.com.br` estão liberados em `next.config.ts`.
+
 ## Architecture
 
 Next.js App Router + TypeScript + PostgreSQL/Prisma + Tailwind CSS + React Query + shadcn/ui
@@ -82,7 +97,7 @@ Page ("use client") → React Query hook (src/hooks/) → Server Action (src/app
 
 ### O site não lê o CMS em runtime
 
-Todo o conteúdo do site vem do banco do próprio site, via Prisma, nas server actions de `src/app/actions/`. O painel do CMS (pasta `cms/`) é apenas o editor de conteúdo: o site **não** consulta a API do CMS em nenhuma requisição. Nada de `NEXT_PUBLIC_STRAPI_URL` no app.
+Todo o conteúdo do site vem do banco do próprio site, via Prisma, nas server actions de `src/app/actions/`. O painel do CMS (pasta `cms/`) é apenas o editor de conteúdo: o site **não** consulta a API do CMS em nenhuma requisição de leitura. `NEXT_PUBLIC_STRAPI_URL` aparece só na escrita (`src/lib/site-to-cms.ts`) e na sincronização (`src/lib/cms-sync.ts`), nunca para renderizar conteúdo.
 
 ### Prisma Decimal Serialization (CRITICAL)
 
@@ -177,4 +192,4 @@ PostgreSQL runs via the `postgres` service in `docker/desenvolvimento/docker-com
 ## Remote Image Domains
 
 New image sources require whitelisting in `next.config.ts`. Current allowed domains:
-`typebot.luisotee.com`, `storage.luisotee.com`, `md.coolab.org`, `typebot.mulheresrurais.com.br`, `storage.mulheresrurais.com.br`
+`typebot.luisotee.com`, `storage.luisotee.com`, `md.coolab.org`, `typebot.mulheresrurais.com.br`, `storage.mulheresrurais.com.br`, `conteudos.mulheresrurais.com.br` e `conteudos-dev.mulheresrurais.com.br` (ambos em `/uploads/**`, para as imagens enviadas pelo painel do CMS)
