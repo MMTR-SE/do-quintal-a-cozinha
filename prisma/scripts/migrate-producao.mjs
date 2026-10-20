@@ -310,10 +310,10 @@ async function migrateReceitas() {
 
 async function main() {
   console.log(`Origem: ${SRC_URL}${DRY_RUN ? "  [DRY-RUN: nada sera escrito]" : ""}`);
-  await migrateProdutoras();
-  await migrateProdutos();
-  await migrateHistorias();
-  await migrateReceitas();
+  migrateProdutoras();
+  migrateProdutos();
+  migrateHistorias();
+  migrateReceitas();
 
   console.log("\nResumo:", stats);
   if (!DRY_RUN) {
