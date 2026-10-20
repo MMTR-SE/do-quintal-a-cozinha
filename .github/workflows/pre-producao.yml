@@ -265,7 +265,7 @@ jobs:
         run: |
           for attempt in $(seq 1 18); do
             if curl --silent --show-error --output /dev/null --location --max-time 15 \
-              https://conteudos.mulheresrurais.com.br/; then
+              https://conteudos-dev.mulheresrurais.com.br/; then
               exit 0
             fi
             echo "Aguardando HTTPS ficar disponível (tentativa ${attempt}/18)..."
