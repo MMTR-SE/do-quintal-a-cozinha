@@ -60,7 +60,7 @@ services:
       PUBLIC_URL: ${NEXT_PUBLIC_STRAPI_URL:?error}
       DATABASE_CLIENT: postgres
       DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
-      SITE_SYNC_URL: ${CMS_SYNC_URL:?error}
+      SITE_SYNC_URL: ${SITE_SYNC_URL:?error}
     ports:
       - "1337:1337"
     restart: unless-stopped
