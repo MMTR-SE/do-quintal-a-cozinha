@@ -69,8 +69,6 @@ jobs:
           file: docker/pre-producao/Dockerfile
           push: true
           build-args: |
-            # O Next embute esta URL no bundle: e assim que o site encontra o CMS
-            # de pre-producao (leitura via cms-sync e escrita via site-to-cms).
             NEXT_PUBLIC_STRAPI_URL=https://conteudos-dev.mulheresrurais.com.br
           tags: |
             ${{ env.APP_IMAGE }}:pre-producao
