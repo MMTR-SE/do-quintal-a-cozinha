@@ -1,7 +1,7 @@
 services:
   quintal:
     container_name: quintal
-    # A imagem e construida no runner do GitHub e publicada no GHCR. 
+    # A imagem e construida no runner do GitHub e publicada no GHCR.
     # O bloco `build` fica para quem quiser construir na mao.
     image: ghcr.io/mmtr-se/do-quintal-a-cozinha:producao
     build:
@@ -47,6 +47,31 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  quintal-cms:
+    container_name: quintal-cms
+    image: ghcr.io/mmtr-se/do-quintal-a-cozinha-cms:producao
+    env_file:
+      - $PROD_PATH/.env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 1337
+      PUBLIC_URL: ${NEXT_PUBLIC_STRAPI_URL:?error}
+      DATABASE_CLIENT: postgres
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
+      SITE_SYNC_URL: ${CMS_SYNC_URL:?error}
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - $PROD_PATH/cms/public/uploads:/app/public/uploads
+      - $PROD_PATH/cms/.tmp:/app/.tmp
 
 networks:
   app_network:
