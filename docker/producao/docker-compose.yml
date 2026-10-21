@@ -1,22 +1,81 @@
 services:
   quintal:
     container_name: quintal
-    # A imagem e construida no runner do GitHub e publicada no GHCR. 
+    # A imagem e construida no runner do GitHub e publicada no GHCR.
     # O bloco `build` fica para quem quiser construir na mao.
     image: ghcr.io/mmtr-se/do-quintal-a-cozinha:producao
     build:
       context: $PROD_PATH
       dockerfile: $PROD_PATH/docker/producao/Dockerfile
+    # Todo o ambiente da aplicacao vem deste arquivo: e a unica fonte de
+    # verdade (DATABASE_URL, API_KEY, STRAPI_API_TOKEN, NEXT_PUBLIC_STRAPI_URL,
+    # CMS_*). Nao repetir essas variaveis em `environment:` -- variavel
+    # interpolada cujo valor nao esteja no .env do projeto chega VAZIA e
+    # sobrepoe o que veio do env_file.
     env_file:
       - $PROD_PATH/.env
+
     ports:
       - "83:3000"
     restart: unless-stopped
     networks:
       - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - $PROD_PATH/prisma:/app/prisma
+
+  postgres:
+    container_name: quintal-postgres
+    image: postgres:17-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - $PROD_PATH/docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app_network
+    # Usa o mesmo .env do site: a senha do banco precisa bater com o
+    # DATABASE_URL de la. O entrypoint so le estas variaveis na primeira
+    # inicializacao do volume -- depois, trocar a senha exige ALTER ROLE.
+    env_file:
+      - $PROD_PATH/.env
+    healthcheck:
+      # $$ para o shell do container expandir em tempo de execucao (e nao o
+      # compose, que nao teria POSTGRES_* no .env do projeto).
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  quintal-cms:
+    container_name: quintal-cms
+    image: ghcr.io/mmtr-se/do-quintal-a-cozinha-cms:producao
+    env_file:
+      - $PROD_PATH/.env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 1337
+      PUBLIC_URL: ${NEXT_PUBLIC_STRAPI_URL:?error}
+      DATABASE_CLIENT: postgres
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
+      SITE_SYNC_URL: ${CMS_SYNC_URL:?error}
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - $PROD_PATH/cms/public/uploads:/app/public/uploads
+      - $PROD_PATH/cms/.tmp:/app/.tmp
 
 networks:
   app_network:
     driver: bridge
+
+volumes:
+  postgres_data:

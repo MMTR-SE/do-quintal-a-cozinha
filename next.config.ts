@@ -1,4 +1,51 @@
 import type { NextConfig } from "next";
+import withPWAInit from "@ducanh2912/next-pwa";
+
+const withPWA = withPWAInit({
+  dest: "public",
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  disable: process.env.NODE_ENV === "development",
+  workboxOptions: {
+    disableDevLogs: true,
+    runtimeCaching: [
+      {
+        urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "image-cache",
+          expiration: {
+            maxEntries: 64,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "google-fonts-cache",
+          expiration: {
+            maxEntries: 16,
+            maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
+          },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/api\..*$/i,
+        handler: "StaleWhileRevalidate",
+        options: {
+          cacheName: "api-cache",
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 60 * 60, // 1 hour
+          },
+        },
+      },
+    ],
+  },
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -19,6 +66,40 @@ const nextConfig: NextConfig = {
         {
           key: "Access-Control-Allow-Headers",
           value: "Content-Type, API_KEY",
+        },
+      ],
+    },
+    {
+      source: '/(.*)',
+      headers: [
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff',
+        },
+        {
+          key: 'X-Frame-Options',
+          value: 'DENY',
+        },
+        {
+          key: 'Referrer-Policy',
+          value: 'strict-origin-when-cross-origin',
+        },
+      ],
+    },
+    {
+      source: '/sw.js',
+      headers: [
+        {
+          key: 'Content-Type',
+          value: 'application/javascript; charset=utf-8',
+        },
+        {
+          key: 'Cache-Control',
+          value: 'no-cache, no-store, must-revalidate',
+        },
+        {
+          key: 'Content-Security-Policy',
+          value: "default-src 'self'; script-src 'self'",
         },
       ],
     },
@@ -55,8 +136,22 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/typebot/public/**",
       },
+      // Imagens enviadas pelo painel do CMS (Strapi) ficam em /uploads deste
+      // dominio e passam a ser gravadas no Postgres pelo cms-sync.
+      {
+        protocol: "https",
+        hostname: "conteudos.mulheresrurais.com.br",
+        port: "",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "conteudos-dev.mulheresrurais.com.br",
+        port: "",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

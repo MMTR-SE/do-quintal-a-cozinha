@@ -1,19 +1,209 @@
 services:
   pre-quintal:
     container_name: pre-quintal
+    # A imagem e construida no runner do GitHub e publicada no GHCR: a VPS (1.9 GB
+    # de RAM) nao aguenta o `next build`. O bloco `build` fica para quem quiser
+    # construir na mao.
+    image: ghcr.io/mmtr-se/do-quintal-a-cozinha:pre-producao
     build:
       context: $DEV_PATH
       dockerfile: $DEV_PATH/docker/pre-producao/Dockerfile
+      args:
+        # O Next embute os NEXT_PUBLIC_* no bundle durante o build: e por este
+        # argumento (nao por variavel de ambiente) que o site descobre o CMS,
+        # tanto para ler (cms-sync) quanto para escrever (site-to-cms).
+        NEXT_PUBLIC_STRAPI_URL: https://conteudos-dev.mulheresrurais.com.br
     env_file:
       - $DEV_PATH/.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/${POSTGRES_DB:-quintal}?schema=public
     ports:
       - "82:3000"
     restart: unless-stopped
     networks:
       - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - $DEV_PATH/prisma:/app/prisma
+
+  postgres:
+    container_name: pre-quintal-postgres
+    image: postgres:17-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - $DEV_PATH/docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app_network
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quintal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quintal}
+      POSTGRES_DB: ${POSTGRES_DB:-quintal}
+      TZ: ${TZ:-America/Maceio}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quintal} -d ${POSTGRES_DB:-quintal}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pre-quintal-cms:
+    container_name: pre-quintal-cms
+    image: ghcr.io/mmtr-se/do-quintal-a-cozinha-cms:pre-producao
+    env_file:
+      - $DEV_PATH/.env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 1337
+      # Endereco proprio do CMS de pre-producao. O dominio antigo
+      # (conteudos.mulheresrurais.com.br) continua respondendo pelo Caddy porque a
+      # aplicacao de producao usa essa URL -- o CMS e o mesmo container.
+      PUBLIC_URL: https://conteudos-dev.mulheresrurais.com.br
+      # O CMS compartilha o mesmo servidor Postgres do app, em banco separado.
+      DATABASE_CLIENT: postgres
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/quintal_cms?schema=public
+      # Os segredos (CMS_APP_KEYS, CMS_API_TOKEN_SALT, CMS_ADMIN_JWT_SECRET,
+      # CMS_TRANSFER_TOKEN_SALT, CMS_JWT_SECRET, CMS_ENCRYPTION_KEY) chegam pelo
+      # env_file acima e sao lidos com prefixo CMS_ em cms/config/*.ts.
+      # Ao publicar no CMS, avisa o site para sincronizar com o Postgres.
+      SITE_SYNC_URL: http://pre-quintal:3000
+    ports:
+      - "127.0.0.1:1337:1337"
+    restart: unless-stopped
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - $DEV_PATH/cms/public/uploads:/app/public/uploads
+      # Diretorio de arquivos temporarios do Strapi. Tambem e por onde o
+      # conteudo legado (SQLite) foi exportado e importado no Postgres.
+      - $DEV_PATH/cms/.tmp:/app/.tmp
+
+  # ---------------------------------------------------------------------------
+  # Typebot + Mailpit (testes e validacao da pre-producao)
+  #
+  # O Typebot cadastra produtos/receitas chamando a API do site
+  # (/api/product, /api/recipe), que grava no Postgres e espelha no CMS.
+  #
+  # A VPS tem ~1,9 GB de RAM e ja roda o Typebot de producao, o site de producao
+  # e a pre-producao. Por isso estes servicos:
+  #   - usam o banco `typebot` do proprio pre-quintal-postgres (sem um Postgres a
+  #     mais) e as imagens que a VPS ja tem (mesmas tags do Typebot de producao);
+  #   - tem `mem_limit`: se algo estourar, o kernel mata o container do Typebot de
+  #     teste (que reinicia) em vez do Caddy ou do Typebot de producao;
+  #   - ficam com heap do Node limitado via NODE_OPTIONS.
+  # O login do Typebot e sempre por codigo enviado por e-mail, entao o Mailpit
+  # interno recebe esses codigos: a caixa de entrada sai em
+  # https://typebot-dev.mulheresrurais.com.br/mailpit, com HTTP basic auth.
+  # ---------------------------------------------------------------------------
+  pre-quintal-mailpit:
+    container_name: pre-quintal-mailpit
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    mem_limit: 192m
+    environment:
+      # A UI e a API ficam sob /mailpit no dominio do builder.
+      MP_WEBROOT: /mailpit
+      # O Typebot autentica no SMTP com usuario/senha proprios. O Mailpit recusa
+      # AUTH em conexao sem TLS a menos que ALLOW_INSECURE esteja ligado -- sem
+      # ele o container morre no start ("authentication requires STARTTLS").
+      MP_SMTP_AUTH_ACCEPT_ANY: "true"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "true"
+      MP_MAX_MESSAGES: "200"
+      MP_DATABASE: /data/mailpit.db
+    volumes:
+      - typebot_mailpit_data:/data
+    networks:
+      - app_network
+
+  pre-quintal-typebot-redis:
+    container_name: pre-quintal-typebot-redis
+    image: redis:alpine
+    restart: unless-stopped
+    mem_limit: 128m
+    command: --save 60 1 --loglevel warning
+    volumes:
+      - typebot_redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    networks:
+      - app_network
+
+  pre-quintal-typebot-builder:
+    container_name: pre-quintal-typebot-builder
+    image: baptistearno/typebot-builder:latest
+    restart: unless-stopped
+    mem_limit: 896m
+    # ENCRYPTION_SECRET (exatamente 32 caracteres; o workflow garante) e,
+    # opcionalmente, ADMIN_EMAIL e DISABLE_SIGNUP vem do .env do deploy.
+    env_file:
+      - $DEV_PATH/.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/typebot
+      REDIS_URL: redis://pre-quintal-typebot-redis:6379
+      NEXTAUTH_URL: https://typebot-dev.mulheresrurais.com.br
+      NEXTAUTH_URL_INTERNAL: http://pre-quintal-typebot-builder:3000
+      NEXT_PUBLIC_VIEWER_URL: https://bot-dev.mulheresrurais.com.br
+      # O workspace criado no primeiro login nasce com plano ilimitado: fluxos
+      # com bloco de upload de arquivo nao podem ser publicados no plano FREE.
+      DEFAULT_WORKSPACE_PLAN: ${DEFAULT_WORKSPACE_PLAN:-UNLIMITED}
+      # Mailpit interno: e dele que sai o codigo de login.
+      SMTP_HOST: pre-quintal-mailpit
+      SMTP_PORT: "1025"
+      SMTP_USERNAME: typebot
+      SMTP_PASSWORD: typebot
+      SMTP_SECURE: "false"
+      SMTP_IGNORE_TLS: "true"
+      SMTP_FROM: "Typebot <typebot@quintal.local>"
+      NEXT_PUBLIC_SMTP_FROM: "Typebot <typebot@quintal.local>"
+      # --no-node-snapshot e exigencia da imagem do builder; o limite de heap
+      # mantem o consumo abaixo do mem_limit (o resto e swap).
+      NODE_OPTIONS: --no-node-snapshot --max-old-space-size=512
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pre-quintal-typebot-redis:
+        condition: service_healthy
+      pre-quintal-mailpit:
+        condition: service_started
+
+  pre-quintal-typebot-viewer:
+    container_name: pre-quintal-typebot-viewer
+    image: baptistearno/typebot-viewer:latest
+    restart: unless-stopped
+    mem_limit: 512m
+    env_file:
+      - $DEV_PATH/.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quintal}:${POSTGRES_PASSWORD:-quintal}@postgres:5432/typebot
+      REDIS_URL: redis://pre-quintal-typebot-redis:6379
+      NEXTAUTH_URL: https://typebot-dev.mulheresrurais.com.br
+      NEXTAUTH_URL_INTERNAL: http://pre-quintal-typebot-viewer:3000
+      NEXT_PUBLIC_VIEWER_URL: https://bot-dev.mulheresrurais.com.br
+      NODE_OPTIONS: --no-node-snapshot --max-old-space-size=256
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pre-quintal-typebot-redis:
+        condition: service_healthy
 
 networks:
   app_network:
     driver: bridge
+
+volumes:
+  postgres_data:
+  typebot_mailpit_data:
+  typebot_redis_data:

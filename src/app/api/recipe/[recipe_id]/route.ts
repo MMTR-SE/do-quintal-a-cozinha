@@ -1,6 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/lib/prisma";
+import { parseIngredients, serializeIngredients } from "@/lib/recipe";
 import { RecipeDifficulty, MediaType } from "@prisma/client";
+import { after } from "next/server";
+import { enviarReceitaParaCms, removerReceitaDoCms } from "@/lib/site-to-cms";
 
 interface MediaItem {
   url: string;
@@ -25,7 +28,10 @@ export async function PUT(request: Request, { params }: params) {
   const media: MediaItem[] = body.media || [];
   const steps: RecipeStepItem[] = body.steps || [];
   const replaceMedia: boolean = body.replace_media ?? false;
-  const ingredients = body.ingredients;
+  // Normaliza antes de validar: aceita lista ou texto (um ingrediente por
+  // linha) e nunca grava string dentro de string.
+  const ingredients =
+    body.ingredients === undefined ? undefined : parseIngredients(body.ingredients);
 
   // Parse numeric fields (undefined if not provided)
   const preparationTime = body.preparation_time_in_minutes;
@@ -93,13 +99,6 @@ export async function PUT(request: Request, { params }: params) {
 
   // Validate ingredients if provided
   if (ingredients !== undefined) {
-    if (!Array.isArray(ingredients)) {
-      return new Response(
-        JSON.stringify({ error: "Ingredients must be an array" }),
-        { status: 400 }
-      );
-    }
-
     if (ingredients.length === 0) {
       return new Response(
         JSON.stringify({ error: "At least one ingredient is required" }),
@@ -234,7 +233,7 @@ export async function PUT(request: Request, { params }: params) {
       }
 
       if (ingredients !== undefined) {
-        updateData.ingredients = JSON.stringify(ingredients);
+        updateData.ingredients = serializeIngredients(ingredients);
       }
 
       // Update recipe details if any fields provided
@@ -336,6 +335,12 @@ export async function PUT(request: Request, { params }: params) {
       };
     });
 
+    after(() =>
+      enviarReceitaParaCms(recipe_id).catch((error) =>
+        console.error("[site->cms] receita:", error.message)
+      )
+    );
+
     return new Response(
       JSON.stringify({
         message: "Recipe successfully updated",
@@ -369,6 +374,13 @@ export async function DELETE(_request: Request, { params }: params) {
   }
 
   await prisma.recipe.delete({ where: { id: recipe_id } });
+
+  // Remove tambem o item espelhado no CMS
+  after(() =>
+    removerReceitaDoCms(recipe_id).catch((error) =>
+      console.error("[site->cms] remover receita:", error.message)
+    )
+  );
 
   return new Response(
     JSON.stringify({ message: "Recipe deleted successfully" }),
