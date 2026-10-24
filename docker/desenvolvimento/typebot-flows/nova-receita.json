@@ -1,0 +1,1921 @@
+{
+  "typebot": {
+    "id": "j7ztwie6qftg5rzmetijw1pe",
+    "name": "Nova Receita",
+    "publicId": "nova-receita-tijw1pe",
+    "version": "6.1",
+    "icon": null,
+    "groups": [
+      {
+        "id": "f48s8dbnzdzi4kv35fjc2y2i",
+        "title": "Nome da Receita",
+        "blocks": [
+          {
+            "id": "o58s3pyg30u0pgzljlbp7w3i",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "vgugQXInQj",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✨ Legal! Vamos começar a cadastrar sua receita"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "zo4yfk9vm4omk0f5swybcqrp",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "Hgfdq4qHJV",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📝 Qual é o nome da receita?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "mias5bic4i3pn9l7ce9bgskz",
+            "type": "text input",
+            "options": {
+              "variableId": "vh6syx1rlsnv1nh3x0gm05bm5"
+            }
+          },
+          {
+            "id": "t003y1laet2a0bt3o4jtg709",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "s183orUBtu",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔍 Só confirmando... o nome da sua receita é "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{recipeName}}"
+                    },
+                    {
+                      "text": ", certo?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ga9c8i535zbhcb8p5ubryb8r",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "sjhub3b7jt40h3o7gvgitv48",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "v26jldikvc8gni5qt2yq4b7s"
+              },
+              {
+                "id": "b8v2q87u7de0vkf783qgxy8i",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "w0rz2qisfl2w2zffii6rtzmk",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem, vamos tentar de novo! 💪  "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "n4q2lnsgx6zwsi55ioah3wq1"
+          }
+        ],
+        "graphCoordinates": {
+          "x": -196.76,
+          "y": -18.96
+        }
+      },
+      {
+        "id": "bbrrazckmcmxkoff5n60ekan",
+        "title": "Dificuldade",
+        "blocks": [
+          {
+            "id": "n1o7ppg1i869nj73yv3z3e7l",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "lcbPmlwzan",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🌾 Qual o nivel de dificuldade para preparar essa receita?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "c4udof0bq3dot0ic96i7er3r",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "vyf7cewucws616kse6gcffj5",
+                "content": "Facil",
+                "outgoingEdgeId": "bg7omds5ypycg9mbazb9i3ro"
+              },
+              {
+                "id": "lebvwae3uzd4df90prly37gd",
+                "content": "Intermediario",
+                "outgoingEdgeId": "tz0qwc82hlh31kawikir8ob5"
+              },
+              {
+                "id": "z2u0p678soun0w80h8mvp6um",
+                "content": "Difícil",
+                "outgoingEdgeId": "c8shxfonusp3vwir3q9hw33x"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1314.86,
+          "y": 798.06
+        }
+      },
+      {
+        "id": "m5e3cwzvnyauocd1jss2jw6l",
+        "title": "Foto da receita",
+        "blocks": [
+          {
+            "id": "e8fel4vr1mjdx97p202zdmoo",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "p--FgeUtK2",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📷 Você pode me enviar "
+                    },
+                    {
+                      "bold": true,
+                      "text": "uma"
+                    },
+                    {
+                      "text": " foto dessa receita? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xwzpdb86pkxrivm0woj31x6k",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "⚠️ Só pode ser "
+                    },
+                    {
+                      "bold": true,
+                      "text": "1 foto"
+                    },
+                    {
+                      "text": ", tá bom?  "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "wz5bmxp5e73k08tj3mgi4nbl",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Se tiver mais de uma, manda a que você acha mais bonita! 😊"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "jv2bycs020prsic44drergij",
+            "type": "file input",
+            "options": {
+              "isRequired": true,
+              "variableId": "vad4myju931deap8xvrf7sx9s",
+              "visibility": "Public",
+              "allowedFileTypes": {
+                "isEnabled": false
+              },
+              "isMultipleAllowed": false
+            },
+            "outgoingEdgeId": "zc5968jv9fo5iaavw6kzkcxe"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1823.8,
+          "y": 368.6
+        }
+      },
+      {
+        "id": "pnxiekudkpumd5x7cavkaauf",
+        "title": "Descricao da Receita",
+        "blocks": [
+          {
+            "id": "pxdygqm515ief0fxsp593u6h",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "4PIhOIpZp-",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📌 Agora me conta um pouquinho mais sobre a sua receita."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "hgg47thbx9n1yab3klv3tc3n",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "0k3EKLpvYk",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Pode ser uma frase simples, tá bom? 💕 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "wggqn8fg60p45wqj0aq109hv",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "sYCcvjDKYn",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✨ Exemplo: “Bolo de macaxeira, receita de minha mãe.”"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "v35ckzqq9j1txcxwh7l1k3e3",
+            "type": "text input",
+            "options": {
+              "variableId": "vecm8pczp5924wph2edr4n7cq"
+            }
+          },
+          {
+            "id": "b4poj9mhi06jtvkwo6n063l8",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "XEUeCJ4_t8",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Só pra confirmar... a descrição da sua receita é essa aqui?  "
+                    }
+                  ]
+                },
+                {
+                  "id": "fqNyq-n3RF",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": "{{recipeDescription}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "qhqquc4imnb6rkhwgypw04bb",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "uqsn0hzaxqyqfl5ziltw8dcw",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "e90iu9e0s21jddt666xmdx26"
+              },
+              {
+                "id": "mzsxqsxj6nz5xpbn3jlavcuy",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "yrfm7z0wcvgpjarscpu1vapv",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Sem problema! Vamos tentar de novo? 💪  "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "p4jylqzfeubthae3jsijfz8e",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "RXSyMgEO3d",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Me escreve de novo a descrição da sua receita 📝"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "stodcoe3l4gmuvi1vww586q2"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 219.69,
+          "y": -65.13
+        }
+      },
+      {
+        "id": "u8lvs8prn49psf98g6smuev4",
+        "title": "Modo de Preparo",
+        "blocks": [
+          {
+            "id": "q5th6ed322wmat9pv4lgrppe",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "RfrBb9CrUe",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Agora vamos ao modo de preparo "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "slvkjva25cvpz0yt05rlf7s3",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "1bW8s4AlKs",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Me manda uma mensagem pra cada etapa de preparo  👍"
+                    }
+                  ]
+                },
+                {
+                  "id": "BRcY9H2XRh",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "sbiy4bgq1slxo6ztnwzur0ta",
+            "type": "text input",
+            "options": {
+              "labels": {
+                "button": "Enviar",
+                "placeholder": "Descascar batatas"
+              },
+              "audioClip": {
+                "isEnabled": false
+              },
+              "variableId": "vypz3q8inrubbjcawl33vil1y",
+              "attachments": {
+                "isEnabled": false
+              }
+            }
+          },
+          {
+            "id": "whyia64xvybxuwrbwjmfctth",
+            "type": "Set variable",
+            "options": {
+              "item": "{{recipeStep}}",
+              "type": "Append value(s)",
+              "variableId": "vzvomh8bd21txuayjkr848uv2"
+            }
+          },
+          {
+            "id": "l9uh4efoyj1mtjw0hk63giae",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "1bW8s4AlKs",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Quer adicionar mais algum passo?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "rfgnpp0y12cxaf0bg3ir2jf3",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "s64w91mbjgzu17r2u3q980qe",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "q2j7lsy7oxl2wf9q6j7009n6"
+              },
+              {
+                "id": "x1caa2z2thv3ckzy6kk58t0l",
+                "content": "Não ❌",
+                "outgoingEdgeId": "we1aj417jxl3w3avcs9ms6es"
+              }
+            ]
+          },
+          {
+            "id": "wbhtky0gvjb0r386nqrxj8wm",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "9wrUN0wQsh",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Perfeito! Ficou assim o passo a passo: "
+                    }
+                  ]
+                },
+                {
+                  "id": "3hFH6U_tVD",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "{{recipeSteps}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "un137x9eorau9t340l2qi4py",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "1bW8s4AlKs",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Podemos salvar esse passo a passo?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xtg99zbbklkgpzvqvl3xg2vp",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "miaxdn31jtjfajhfs24a2rwf",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "cy4o1xqf2xsqoo0n4ronbnsa"
+              },
+              {
+                "id": "xybcwr0baq1970hhf73uxxri",
+                "content": "Não ❌",
+                "outgoingEdgeId": "wx0aughid0bts03wukx9oh93"
+              }
+            ]
+          },
+          {
+            "id": "ssilyx71f69lc2ovz2antwyu",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "1bW8s4AlKs",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos recomeçar o passo a passo..."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "k2hhv0pc2zm1ziwsmrbcm4ed",
+            "type": "Set variable",
+            "options": {
+              "type": "Empty",
+              "variableId": "vzvomh8bd21txuayjkr848uv2"
+            },
+            "outgoingEdgeId": "yw04tw9t042x6ue0hqhcn7lw"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3166.16,
+          "y": -129.31
+        }
+      },
+      {
+        "id": "wvw3ednpughu3wcevuloxdgb",
+        "title": "",
+        "blocks": [
+          {
+            "id": "sb6b25eytruts17hxib9018e",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "1bW8s4AlKs",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Vamos salvar sua receita... um instante... "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "aorkajzgll8121d7bq9cibam",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/recipe",
+                "body": "{\n  \"phone_number\": \"{{profilePhoneNumber}}\",\n  \"title\": \"{{recipeName}}\",\n  \"description\": \"{{recipeDescription}}\",\n  \"preparation_time_in_minutes\": \"{{recipePreparationTime}}\",\n  \"cooking_time_in_minutes\": \"{{recipeCookingTime}}\",\n  \"number_of_servings\": \"{{recipeNumberServing}}\",\n  \"difficulty\": \"{{recipeDifficulty}}\",\n  \"number_of_servings\": \"{{recipeNumberServing}}\",\n  \"ingredients\": \"{{recipeIngredients}}\",\n  \"steps\": \"{{recipeSteps}}\",\n  \"media\": [\n    {\n      \"url\": \"{{recipeImage}}\",\n      \"media_type\": \"IMAGE\"\n    }\n  ]\n}",
+                "headers": [
+                  {
+                    "id": "rg6xlwud75rmtjiqbmwoj9et",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": true,
+              "variablesForTest": [
+                {
+                  "id": "mcezxcatjlnv5f1f2u1akuis",
+                  "value": "Sufle",
+                  "variableId": "vh6syx1rlsnv1nh3x0gm05bm5"
+                },
+                {
+                  "id": "zu214xl4duhicqm7a819wgfn",
+                  "value": "+551220052948",
+                  "variableId": "wu0pwv4epes65h6t9ruv4v2x"
+                },
+                {
+                  "id": "fbel19849fjh8xj87hvlf3rx",
+                  "value": "Testando Sufle",
+                  "variableId": "vecm8pczp5924wph2edr4n7cq"
+                },
+                {
+                  "id": "ui2q8bwi2clrb9ehemvqx0uv",
+                  "value": "HARD",
+                  "variableId": "vz0lpnp029pfyoawbikpnn87n"
+                },
+                {
+                  "id": "ed9l6v1vj9f6zjnanmvntpke",
+                  "value": "[\"amassar tudo\"]",
+                  "variableId": "vzvomh8bd21txuayjkr848uv2"
+                },
+                {
+                  "id": "k1m7qzyrn6fep8uzyz9q627v",
+                  "value": "[\"2kg batatas\"]",
+                  "variableId": "vvmzpdp94d8aloh5vcllk9yc4"
+                },
+                {
+                  "id": "gwlhj4vtm78p6ob8x7xop2av",
+                  "value": "\"https://mulheresrurais.com.br/receitas/pe-de-moleque.webp\"",
+                  "variableId": "vad4myju931deap8xvrf7sx9s"
+                },
+                {
+                  "id": "y7gi55tmzj9k3p1awpa4z4kk",
+                  "value": "2",
+                  "variableId": "vpv7uiamxul3z8dv6l3y9tw6u"
+                },
+                {
+                  "id": "ekuci9psibf2vyiti0imwrl8",
+                  "value": "12",
+                  "variableId": "vhxv5jk1t73ci8h1azo6ra2gh"
+                },
+                {
+                  "id": "wqah0z1vprdiqqqtd56pnc72",
+                  "variableId": "vraainibje4yeg1cuibvou8oj"
+                }
+              ],
+              "responseVariableMapping": [
+                {
+                  "id": "fpbnjyr4n04nmabuoo43cfin",
+                  "bodyPath": "statusCode",
+                  "variableId": "vb3yjqjiz9ziyqexni2e8wlq"
+                },
+                {
+                  "id": "ygn4yz0wvqwfuz8sj39ibid1",
+                  "bodyPath": "data",
+                  "variableId": "vu91hewn42qt4p4ht3grzb9hj"
+                }
+              ]
+            }
+          },
+          {
+            "id": "nyujvtjli1mgglzq23iy9jx3",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "nr110imx4rnpjv7avjnema7y",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "jhgdbl0z27o678mb2jfzar53",
+                      "value": "200",
+                      "variableId": "vb3yjqjiz9ziyqexni2e8wlq",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "rrgr9ca8mhlnybpb7h49o8hk",
+                      "value": "299",
+                      "variableId": "vb3yjqjiz9ziyqexni2e8wlq",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "x3apgr3w0158pw0vb9vy0cc0"
+              }
+            ]
+          },
+          {
+            "id": "dx85fu6oe5aeir1ucnwdek50",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Opa! Parece que deu um probleminha pra cadastrar seu produto."
+                    },
+                    {
+                      "text": " "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "q1ek47gzo33u72xz5ops9swz",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔁 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Tenta de novo mais tarde, tá bom?"
+                    },
+                    {
+                      "text": " "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3539.96,
+          "y": 756.24
+        }
+      },
+      {
+        "id": "hmhjgrru3tfx2l9vfjefymzt",
+        "title": "Group #10",
+        "blocks": [
+          {
+            "id": "bqgi17q71vk2hipdy2138zlb",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "vz0lpnp029pfyoawbikpnn87n",
+              "expressionToEvaluate": "EASY"
+            },
+            "outgoingEdgeId": "zvckrwj3qvixnqoi28fy8ll0"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1817.83,
+          "y": -232.12
+        }
+      },
+      {
+        "id": "nt4blpk505ghh32ypzoskg1k",
+        "title": "Group #10",
+        "blocks": [
+          {
+            "id": "n3qvoc06tkxo67f8cmy6s271",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "vz0lpnp029pfyoawbikpnn87n",
+              "expressionToEvaluate": "INTERMEDIARY"
+            },
+            "outgoingEdgeId": "r0dl4qnyhb5c6juo33k51j6z"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1818.84,
+          "y": -55.76
+        }
+      },
+      {
+        "id": "vh11lkpeqlxllln06xf2drjw",
+        "title": "Group #10",
+        "blocks": [
+          {
+            "id": "n4zcbdewjybh8d20gnwnxujg",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "vz0lpnp029pfyoawbikpnn87n",
+              "expressionToEvaluate": "HARD"
+            },
+            "outgoingEdgeId": "ivfm0thwl6u073eo56e62rz0"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1815.03,
+          "y": 106.5
+        }
+      },
+      {
+        "id": "v0m3e5lj36r5xmzdqktke44h",
+        "title": "Sucesso",
+        "blocks": [
+          {
+            "id": "nfos0tb0havqjcr2czovm3w1",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "ZKovti0PeT",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🎉 Prontinho! Sua receita foi publicada com sucesso!  "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "n9vny89epec8mjvc78eu105l",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "9h_DjnLJWs",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Obrigada por cadastrar, ela já está visível para todo mundo! 💜"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3649.06,
+          "y": 284.03
+        }
+      },
+      {
+        "id": "jpjobyihf5tx7q07se6iq20y",
+        "title": "Group #19",
+        "blocks": [
+          {
+            "id": "vxc9va915orir4pfvmxj5j92",
+            "type": "Set variable",
+            "options": {
+              "variableId": "jzbtsk1psan1uqqvkzw322fp",
+              "expressionToEvaluate": "http://dev-quintal:3000/api"
+            }
+          },
+          {
+            "id": "bvdkfg86nrvkge9ig1zmdxme",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{userPhoneNumber}}",
+                "method": "GET",
+                "headers": [
+                  {
+                    "id": "vmtnz6rv7jlhhvq3jj2usjkv",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "variablesForTest": [
+                {
+                  "id": "eqr3stvpfpx81s9cdgy33bob",
+                  "value": "5579998115065",
+                  "variableId": "t1epwm1jgzxavrser8vkruzf"
+                }
+              ],
+              "responseVariableMapping": [
+                {
+                  "id": "r7nmh48cndft1pdltk7u18j0",
+                  "bodyPath": "statusCode",
+                  "variableId": "bzh03wxdbbcb2wt25bgcnx7e"
+                },
+                {
+                  "id": "d16zpmtoqvwumbz9q0n9u9y8",
+                  "bodyPath": "data.profile.name",
+                  "variableId": "vawrwb9dmwohxbxhcpnwyob3j"
+                },
+                {
+                  "id": "s443qsitx52c1eiz8u7rxlqy",
+                  "bodyPath": "data.profile.phone_number",
+                  "variableId": "wu0pwv4epes65h6t9ruv4v2x"
+                },
+                {
+                  "id": "mdm11y2tpi1jfbohjbvwdd0i",
+                  "bodyPath": "data.profile.social_name",
+                  "variableId": "vg9kx6v0yz5yreipzypm8x62t"
+                },
+                {
+                  "id": "wv8urkj31tx22fsjsyjqygtw",
+                  "bodyPath": "data.profile.instagram",
+                  "variableId": "vfgv9c6p9ylmxhhrdumh0kthy"
+                }
+              ]
+            },
+            "outgoingEdgeId": "y4imhsr2loxjky906zmqtgmh"
+          }
+        ],
+        "graphCoordinates": {
+          "x": -653.01,
+          "y": -17.3
+        }
+      },
+      {
+        "id": "pwcalokad4ay6cgya22rg1kt",
+        "title": "Tempo total de preparo",
+        "blocks": [
+          {
+            "id": "nw8fnyp6dh2yactny7m1mvsc",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "uzwCvkinTP",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Se eu for preparar essa receita, quanto tempo precisarei pra fazer ela todinha?  Coloque apenas números dos minutos. "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ptfirru50ruui5g22tqvrz0b",
+            "type": "text input",
+            "options": {
+              "labels": {
+                "placeholder": "Quantos minutos?"
+              },
+              "inputMode": "numeric",
+              "variableId": "vhxv5jk1t73ci8h1azo6ra2gh"
+            }
+          },
+          {
+            "id": "vzxwfpe2w9va9vdtw719f0ak",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "XEUeCJ4_t8",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Só pra confirmar... o tempo total para preparar essa receita é esse aqui?  "
+                    }
+                  ]
+                },
+                {
+                  "id": "fqNyq-n3RF",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": "{{recipePreparationTime}} minutos"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "aq5wuenaknjeqm5eyk0dhzbh",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "x6jcumu3cz9f0j92pyshyl99",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "pyk80wcn2702emndjgcwomlt"
+              },
+              {
+                "id": "ug3yos1k9demr48u2fo85b6m",
+                "content": "Não ❌",
+                "outgoingEdgeId": "qijccycw6eoyn3v9rx5fj190"
+              }
+            ]
+          },
+          {
+            "id": "pi93e0pgiky30gta131crq46",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "rHUdaVcQuv",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Sem problema! Vamos tentar novamente 💪"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ynwi89yn93d758rrqqq3tome",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "rHUdaVcQuv",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Escreva novamente quanto tempo leva para preparar essa receita?"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "pispyu0bvquyoti3k9pq9cmp"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 705.12,
+          "y": 29.81
+        }
+      },
+      {
+        "id": "sx101dvx99rv7el0ipexojwm",
+        "title": "Tempo de cozimento",
+        "blocks": [
+          {
+            "id": "n8psytw0d1mkkxi96baxdun0",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "uzwCvkinTP",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Quantos minutos precisarei de geladeira ou cozinhando?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "y3u38580qglmy2qmk3f0vlqp",
+            "type": "text input",
+            "options": {
+              "labels": {
+                "placeholder": "Quantos minutos?"
+              },
+              "inputMode": "numeric",
+              "variableId": "vraainibje4yeg1cuibvou8oj"
+            }
+          },
+          {
+            "id": "r7gyi8u3iib75gw3x2gbs8ip",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "XEUeCJ4_t8",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Só pra confirmar... o tempo total cozinhando é esse aqui?  "
+                    }
+                  ]
+                },
+                {
+                  "id": "fqNyq-n3RF",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": "{{recipeCookingTime}} minutos"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "n7z6unhjyn48ldzytaiegeuh",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "r4twewixd0gdn2ww9ecfqa0z",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "t4f3bzqzdshhn70jaxuub37z"
+              },
+              {
+                "id": "jfkv9auiw69tjxtf3fqvgg9e",
+                "content": "Não ❌",
+                "outgoingEdgeId": "q6wddoqqslvqmcnn5da5kpd9"
+              }
+            ]
+          },
+          {
+            "id": "wrokgwwpztvsbo1su2aqw1rd",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "rHUdaVcQuv",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Sem problema! Vamos tentar novamente 💪"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "eqppj4m0wb9uigeyeh146cek",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "rHUdaVcQuv",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Escreva novamente por quanto tempo vou cozinhar essa receita"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "t72arsvaoo3ooet93lkhswct"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1279.36,
+          "y": -27.64
+        }
+      },
+      {
+        "id": "szczfyjsskf71buzyvdww9tr",
+        "title": "Serve quantas pessoas?",
+        "blocks": [
+          {
+            "id": "zyzw83rnpub4jnc2sftvui39",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "lcbPmlwzan",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Essa receita serve até quantas porções, em média?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ot5x62gqdmyufu49xgnq2jbz",
+            "type": "text input",
+            "options": {
+              "labels": {
+                "placeholder": "Quantos pessoas comem?"
+              },
+              "inputMode": "numeric",
+              "variableId": "vpv7uiamxul3z8dv6l3y9tw6u"
+            },
+            "outgoingEdgeId": "javkofncf7uzeqyg3yuqhiyb"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2245.08,
+          "y": -125.58
+        }
+      },
+      {
+        "id": "w0ydt6xs3mh0gfgdr5vtk6tn",
+        "title": "Lista de Ingredientes",
+        "blocks": [
+          {
+            "id": "yssosc3z8jiftu0nvy65vooc",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "W6WuZVR_Lf",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Bora pra lista de ingredientes!"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "agms7yelbdzmwb4tukx5ria1",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "W6WuZVR_Lf",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Por favor, me envia a quantidade e o ingrediente, por exemplo: 3kg macaxeira"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xzw3z6yadagsvhq1joedfc5f",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "1bW8s4AlKs",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Me manda uma mensagem pra cada ingrediente 👍"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "e60fdgozw90m0l45imxskgdr",
+            "type": "text input",
+            "options": {
+              "labels": {
+                "button": "Enviar",
+                "placeholder": "Por exemplo, 2kg macaxeira"
+              },
+              "audioClip": {
+                "isEnabled": false
+              },
+              "variableId": "vn1ftdql036rykxwmlqb8qt6r",
+              "attachments": {
+                "isEnabled": false
+              }
+            }
+          },
+          {
+            "id": "j3fcjnxe8h348nx1y34ls3dj",
+            "type": "Set variable",
+            "options": {
+              "item": "{{recipeIngredient}}",
+              "type": "Append value(s)",
+              "variableId": "vvmzpdp94d8aloh5vcllk9yc4"
+            }
+          },
+          {
+            "id": "ymw8348nblr7zotceaplwpxw",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "utvPENFUyt",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Show! Tem mais ingredientes?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "dmxop608clrjoro8lxtit1nb",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "sr0wnfxp847pdus5jprql8ux",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "mfus151oiwas3x9a32wdqc12"
+              },
+              {
+                "id": "flhiuw7b6hdmzlujynbtp5zr",
+                "content": "Não ❌",
+                "outgoingEdgeId": "fa2qo4rgvm0cxwcutt9dcwjx"
+              }
+            ]
+          },
+          {
+            "id": "jmxemi3mn51ot96r9hhtsq6a",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "utvPENFUyt",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "A lista total ficou assim:"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xaz3qvcjx9xb0nxe86iyt2ce",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "eBdppKpKx8",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "{{recipeIngredients}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "qjbf7fwdzlwosm8bhu8txdw8",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "utvPENFUyt",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Essa lista de ingredientes está certa?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "lb4qm9oh1ux7k6z5tbpbrlqo",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "fmvjlduszozajz0msx31z13g",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "bx259ul1njxs440955oppdbd"
+              },
+              {
+                "id": "a0x93flvdqnlczy8rx4lh9ia",
+                "content": "Não ❌",
+                "outgoingEdgeId": "jgt2ww8terbvz3axu0ajc187"
+              }
+            ]
+          },
+          {
+            "id": "chy57h38oke7eskavi0pxuc9",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "VvsUWU32Ro",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Bora recomeçar, me mande novamente a lista de ingredientes ;)"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "ytjdyrvh5eg1jaef470c08hq"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2634.23,
+          "y": -131.51
+        }
+      },
+      {
+        "id": "vtxuop98ybk00wl08iks4qlp",
+        "title": "Voltar ao principio",
+        "blocks": [
+          {
+            "id": "wx785tt1g8hbkgpyt66rdh79",
+            "type": "Typebot link",
+            "options": {
+              "groupId": "ciac5hchq4mxgao3qxxnzvlq",
+              "typebotId": "cgwngldu7zivxntevzed4uhg"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 236.83,
+          "y": -270.84
+        }
+      }
+    ],
+    "variables": [
+      {
+        "id": "vu91hewn42qt4p4ht3grzb9hj",
+        "name": "recipeId",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vfgv9c6p9ylmxhhrdumh0kthy",
+        "name": "profileInstagram",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vg9kx6v0yz5yreipzypm8x62t",
+        "name": "profileSocialName",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vawrwb9dmwohxbxhcpnwyob3j",
+        "name": "profileName",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ra39s85tjxnu7pl7n54v2qj6",
+        "name": "blockId",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vgbdznlg9r75388pnmhbx12x6",
+        "name": "media",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vfappnc9ozgaejeqm4zjkn42j",
+        "name": "title",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vz0lpnp029pfyoawbikpnn87n",
+        "name": "recipeDifficulty",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vzvomh8bd21txuayjkr848uv2",
+        "name": "recipeSteps",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vypz3q8inrubbjcawl33vil1y",
+        "name": "recipeStep",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vn1ftdql036rykxwmlqb8qt6r",
+        "name": "recipeIngredient",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vvmzpdp94d8aloh5vcllk9yc4",
+        "name": "recipeIngredients",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vpv7uiamxul3z8dv6l3y9tw6u",
+        "name": "recipeNumberServing",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vad4myju931deap8xvrf7sx9s",
+        "name": "recipeImage",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vraainibje4yeg1cuibvou8oj",
+        "name": "recipeCookingTime",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vhxv5jk1t73ci8h1azo6ra2gh",
+        "name": "recipePreparationTime",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vecm8pczp5924wph2edr4n7cq",
+        "name": "recipeDescription",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vh6syx1rlsnv1nh3x0gm05bm5",
+        "name": "recipeName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "npy8jrgt497axoajbm1vyslk",
+        "name": "parsedPrice",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vikxgja7brhzp7vkft0zyot89",
+        "name": "price",
+        "isSessionVariable": false
+      },
+      {
+        "id": "jzbtsk1psan1uqqvkzw322fp",
+        "name": "baseUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "t1epwm1jgzxavrser8vkruzf",
+        "name": "phoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "bzh03wxdbbcb2wt25bgcnx7e",
+        "name": "profileCreatedStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vb3yjqjiz9ziyqexni2e8wlq",
+        "name": "apiStatus",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ao50oyzb6u3nri32qaedyxy0",
+        "name": "productCategory",
+        "isSessionVariable": true
+      },
+      {
+        "id": "wu0pwv4epes65h6t9ruv4v2x",
+        "name": "profilePhoneNumber",
+        "isSessionVariable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "v26jldikvc8gni5qt2yq4b7s",
+        "to": {
+          "groupId": "pnxiekudkpumd5x7cavkaauf"
+        },
+        "from": {
+          "itemId": "sjhub3b7jt40h3o7gvgitv48",
+          "blockId": "ga9c8i535zbhcb8p5ubryb8r"
+        }
+      },
+      {
+        "id": "bg7omds5ypycg9mbazb9i3ro",
+        "to": {
+          "groupId": "hmhjgrru3tfx2l9vfjefymzt"
+        },
+        "from": {
+          "itemId": "vyf7cewucws616kse6gcffj5",
+          "blockId": "c4udof0bq3dot0ic96i7er3r"
+        }
+      },
+      {
+        "id": "tz0qwc82hlh31kawikir8ob5",
+        "to": {
+          "groupId": "nt4blpk505ghh32ypzoskg1k"
+        },
+        "from": {
+          "itemId": "lebvwae3uzd4df90prly37gd",
+          "blockId": "c4udof0bq3dot0ic96i7er3r"
+        }
+      },
+      {
+        "id": "c8shxfonusp3vwir3q9hw33x",
+        "to": {
+          "groupId": "vh11lkpeqlxllln06xf2drjw"
+        },
+        "from": {
+          "itemId": "z2u0p678soun0w80h8mvp6um",
+          "blockId": "c4udof0bq3dot0ic96i7er3r"
+        }
+      },
+      {
+        "id": "fc0ouqutghsugsv3p4mm0ku1",
+        "to": {
+          "groupId": "wvw3ednpughu3wcevuloxdgb"
+        },
+        "from": {
+          "itemId": "jmh1fobwn8x1p6lxq4rvydv6",
+          "blockId": "ld57io1gfvwbxypl4xj3j4v1"
+        }
+      },
+      {
+        "id": "x3apgr3w0158pw0vb9vy0cc0",
+        "to": {
+          "groupId": "v0m3e5lj36r5xmzdqktke44h"
+        },
+        "from": {
+          "itemId": "nr110imx4rnpjv7avjnema7y",
+          "blockId": "nyujvtjli1mgglzq23iy9jx3"
+        }
+      },
+      {
+        "id": "jv2skhsmfvkg1zrl8bx2u9cl",
+        "to": {
+          "groupId": "jpjobyihf5tx7q07se6iq20y"
+        },
+        "from": {
+          "eventId": "dadcpn9s824xcfeepayo8zwp"
+        }
+      },
+      {
+        "id": "y4imhsr2loxjky906zmqtgmh",
+        "to": {
+          "groupId": "f48s8dbnzdzi4kv35fjc2y2i"
+        },
+        "from": {
+          "blockId": "bvdkfg86nrvkge9ig1zmdxme"
+        }
+      },
+      {
+        "id": "n4q2lnsgx6zwsi55ioah3wq1",
+        "to": {
+          "blockId": "zo4yfk9vm4omk0f5swybcqrp",
+          "groupId": "f48s8dbnzdzi4kv35fjc2y2i"
+        },
+        "from": {
+          "blockId": "w0rz2qisfl2w2zffii6rtzmk"
+        }
+      },
+      {
+        "id": "zd2o2672tqyrw6i6r4d1pa1r",
+        "to": {
+          "groupId": "wvw3ednpughu3wcevuloxdgb"
+        },
+        "from": {
+          "blockId": "n9wetm4q747myvaiuzyocfe6"
+        }
+      },
+      {
+        "id": "e90iu9e0s21jddt666xmdx26",
+        "to": {
+          "groupId": "pwcalokad4ay6cgya22rg1kt"
+        },
+        "from": {
+          "itemId": "uqsn0hzaxqyqfl5ziltw8dcw",
+          "blockId": "qhqquc4imnb6rkhwgypw04bb"
+        }
+      },
+      {
+        "id": "qijccycw6eoyn3v9rx5fj190",
+        "to": {
+          "blockId": "pi93e0pgiky30gta131crq46",
+          "groupId": "pwcalokad4ay6cgya22rg1kt"
+        },
+        "from": {
+          "itemId": "ug3yos1k9demr48u2fo85b6m",
+          "blockId": "aq5wuenaknjeqm5eyk0dhzbh"
+        }
+      },
+      {
+        "id": "stodcoe3l4gmuvi1vww586q2",
+        "to": {
+          "blockId": "v35ckzqq9j1txcxwh7l1k3e3",
+          "groupId": "pnxiekudkpumd5x7cavkaauf"
+        },
+        "from": {
+          "blockId": "p4jylqzfeubthae3jsijfz8e"
+        }
+      },
+      {
+        "id": "pispyu0bvquyoti3k9pq9cmp",
+        "to": {
+          "blockId": "ptfirru50ruui5g22tqvrz0b",
+          "groupId": "pwcalokad4ay6cgya22rg1kt"
+        },
+        "from": {
+          "blockId": "ynwi89yn93d758rrqqq3tome"
+        }
+      },
+      {
+        "id": "pyk80wcn2702emndjgcwomlt",
+        "to": {
+          "groupId": "sx101dvx99rv7el0ipexojwm"
+        },
+        "from": {
+          "itemId": "x6jcumu3cz9f0j92pyshyl99",
+          "blockId": "aq5wuenaknjeqm5eyk0dhzbh"
+        }
+      },
+      {
+        "id": "q6wddoqqslvqmcnn5da5kpd9",
+        "to": {
+          "blockId": "wrokgwwpztvsbo1su2aqw1rd",
+          "groupId": "sx101dvx99rv7el0ipexojwm"
+        },
+        "from": {
+          "itemId": "jfkv9auiw69tjxtf3fqvgg9e",
+          "blockId": "n7z6unhjyn48ldzytaiegeuh"
+        }
+      },
+      {
+        "id": "t72arsvaoo3ooet93lkhswct",
+        "to": {
+          "blockId": "y3u38580qglmy2qmk3f0vlqp",
+          "groupId": "sx101dvx99rv7el0ipexojwm"
+        },
+        "from": {
+          "blockId": "eqppj4m0wb9uigeyeh146cek"
+        }
+      },
+      {
+        "id": "t4f3bzqzdshhn70jaxuub37z",
+        "to": {
+          "groupId": "bbrrazckmcmxkoff5n60ekan"
+        },
+        "from": {
+          "itemId": "r4twewixd0gdn2ww9ecfqa0z",
+          "blockId": "n7z6unhjyn48ldzytaiegeuh"
+        }
+      },
+      {
+        "id": "javkofncf7uzeqyg3yuqhiyb",
+        "to": {
+          "groupId": "w0ydt6xs3mh0gfgdr5vtk6tn"
+        },
+        "from": {
+          "blockId": "ot5x62gqdmyufu49xgnq2jbz"
+        }
+      },
+      {
+        "id": "fa2qo4rgvm0cxwcutt9dcwjx",
+        "to": {
+          "blockId": "jmxemi3mn51ot96r9hhtsq6a",
+          "groupId": "w0ydt6xs3mh0gfgdr5vtk6tn"
+        },
+        "from": {
+          "itemId": "flhiuw7b6hdmzlujynbtp5zr",
+          "blockId": "dmxop608clrjoro8lxtit1nb"
+        }
+      },
+      {
+        "id": "bx259ul1njxs440955oppdbd",
+        "to": {
+          "groupId": "u8lvs8prn49psf98g6smuev4"
+        },
+        "from": {
+          "itemId": "fmvjlduszozajz0msx31z13g",
+          "blockId": "lb4qm9oh1ux7k6z5tbpbrlqo"
+        }
+      },
+      {
+        "id": "jgt2ww8terbvz3axu0ajc187",
+        "to": {
+          "blockId": "chy57h38oke7eskavi0pxuc9",
+          "groupId": "w0ydt6xs3mh0gfgdr5vtk6tn"
+        },
+        "from": {
+          "itemId": "a0x93flvdqnlczy8rx4lh9ia",
+          "blockId": "lb4qm9oh1ux7k6z5tbpbrlqo"
+        }
+      },
+      {
+        "id": "ytjdyrvh5eg1jaef470c08hq",
+        "to": {
+          "blockId": "agms7yelbdzmwb4tukx5ria1",
+          "groupId": "w0ydt6xs3mh0gfgdr5vtk6tn"
+        },
+        "from": {
+          "blockId": "chy57h38oke7eskavi0pxuc9"
+        }
+      },
+      {
+        "id": "mfus151oiwas3x9a32wdqc12",
+        "to": {
+          "blockId": "xzw3z6yadagsvhq1joedfc5f",
+          "groupId": "w0ydt6xs3mh0gfgdr5vtk6tn"
+        },
+        "from": {
+          "itemId": "sr0wnfxp847pdus5jprql8ux",
+          "blockId": "dmxop608clrjoro8lxtit1nb"
+        }
+      },
+      {
+        "id": "q2j7lsy7oxl2wf9q6j7009n6",
+        "to": {
+          "blockId": "slvkjva25cvpz0yt05rlf7s3",
+          "groupId": "u8lvs8prn49psf98g6smuev4"
+        },
+        "from": {
+          "itemId": "s64w91mbjgzu17r2u3q980qe",
+          "blockId": "rfgnpp0y12cxaf0bg3ir2jf3"
+        }
+      },
+      {
+        "id": "cy4o1xqf2xsqoo0n4ronbnsa",
+        "to": {
+          "blockId": "aorkajzgll8121d7bq9cibam",
+          "groupId": "wvw3ednpughu3wcevuloxdgb"
+        },
+        "from": {
+          "itemId": "miaxdn31jtjfajhfs24a2rwf",
+          "blockId": "xtg99zbbklkgpzvqvl3xg2vp"
+        }
+      },
+      {
+        "id": "we1aj417jxl3w3avcs9ms6es",
+        "to": {
+          "blockId": "wbhtky0gvjb0r386nqrxj8wm",
+          "groupId": "u8lvs8prn49psf98g6smuev4"
+        },
+        "from": {
+          "itemId": "x1caa2z2thv3ckzy6kk58t0l",
+          "blockId": "rfgnpp0y12cxaf0bg3ir2jf3"
+        }
+      },
+      {
+        "id": "wx0aughid0bts03wukx9oh93",
+        "to": {
+          "blockId": "ssilyx71f69lc2ovz2antwyu",
+          "groupId": "u8lvs8prn49psf98g6smuev4"
+        },
+        "from": {
+          "itemId": "xybcwr0baq1970hhf73uxxri",
+          "blockId": "xtg99zbbklkgpzvqvl3xg2vp"
+        }
+      },
+      {
+        "id": "yw04tw9t042x6ue0hqhcn7lw",
+        "to": {
+          "blockId": "slvkjva25cvpz0yt05rlf7s3",
+          "groupId": "u8lvs8prn49psf98g6smuev4"
+        },
+        "from": {
+          "blockId": "k2hhv0pc2zm1ziwsmrbcm4ed"
+        }
+      },
+      {
+        "id": "ivfm0thwl6u073eo56e62rz0",
+        "to": {
+          "groupId": "m5e3cwzvnyauocd1jss2jw6l"
+        },
+        "from": {
+          "blockId": "n4zcbdewjybh8d20gnwnxujg"
+        }
+      },
+      {
+        "id": "r0dl4qnyhb5c6juo33k51j6z",
+        "to": {
+          "groupId": "m5e3cwzvnyauocd1jss2jw6l"
+        },
+        "from": {
+          "blockId": "n3qvoc06tkxo67f8cmy6s271"
+        }
+      },
+      {
+        "id": "zvckrwj3qvixnqoi28fy8ll0",
+        "to": {
+          "groupId": "m5e3cwzvnyauocd1jss2jw6l"
+        },
+        "from": {
+          "blockId": "bqgi17q71vk2hipdy2138zlb"
+        }
+      },
+      {
+        "id": "zc5968jv9fo5iaavw6kzkcxe",
+        "to": {
+          "groupId": "szczfyjsskf71buzyvdww9tr"
+        },
+        "from": {
+          "blockId": "jv2bycs020prsic44drergij"
+        }
+      }
+    ],
+    "theme": {},
+    "settings": {},
+    "events": [
+      {
+        "id": "dadcpn9s824xcfeepayo8zwp",
+        "type": "start",
+        "outgoingEdgeId": "jv2skhsmfvkg1zrl8bx2u9cl",
+        "graphCoordinates": {
+          "x": -1029.17,
+          "y": -5.84
+        }
+      }
+    ]
+  },
+  "version": "6.1"
+}

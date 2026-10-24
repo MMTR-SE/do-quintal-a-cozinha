@@ -1,0 +1,910 @@
+{
+  "typebot": {
+    "id": "cgwngldu7zivxntevzed4uhg",
+    "name": "Mulheres Main",
+    "publicId": "mulheres-main-zed4uhg",
+    "version": "6.1",
+    "icon": null,
+    "groups": [
+      {
+        "id": "ciac5hchq4mxgao3qxxnzvlq",
+        "title": "Initial",
+        "blocks": [
+          {
+            "id": "j98us1onmtbw00khp58e6l00",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "OHSY2uA5NE",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Oi, como vai? 👋"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "pe19gadgdyhz6a3fqwogz6u3",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "iUkEwbykiD",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📌 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Dica importante:"
+                    },
+                    {
+                      "text": " A qualquer momento durante nossa conversa, você pode digitar "
+                    },
+                    {
+                      "bold": true,
+                      "text": "\"Voltar\""
+                    },
+                    {
+                      "text": " para retornar ao menu inicial e escolher outra opção. "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "qrfeemxhf2jrhe70fab4fslb",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Como posso te ajudar agora?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "bir5bjwf9gilmeajv2zbklbp",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "dtnk163ktix84k5p8jstnc6y",
+                "content": "Meu Perfil",
+                "outgoingEdgeId": "cb5w20dlssmumfyvloj7oz9e"
+              },
+              {
+                "id": "wpta6y1fb8sg291ubskrefyq",
+                "content": "Meus Produtos",
+                "outgoingEdgeId": "wtzhlu85jqj5sk1i115hj2mk"
+              },
+              {
+                "id": "lnqgjqq5ffdfvaqz5r31kt0c",
+                "content": "Minhas Receitas",
+                "outgoingEdgeId": "jxvcvjrz1amax33wi45ckdnh"
+              },
+              {
+                "id": "jxe38zmoni4um7etlt1fs2sj",
+                "content": "Cancelar",
+                "outgoingEdgeId": "nxb3zwfr2ctk55yy8hczu4ga"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1117.33,
+          "y": -319.07
+        }
+      },
+      {
+        "id": "ipw0q1dam3hkx0yt5p4cwomd",
+        "title": "Group #5 (1)",
+        "blocks": [
+          {
+            "id": "wstqi4vsp8e30emkw55eni5a",
+            "type": "Set variable",
+            "options": {
+              "isCode": false,
+              "variableId": "vvnu0hqc82crm958vbzcefvcc",
+              "expressionToEvaluate": "http://dev-quintal:3000/api"
+            }
+          },
+          {
+            "id": "g5v544h7co589km7phg4mlny",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/profile/{{userPhoneNumber}}",
+                "method": "GET",
+                "headers": [
+                  {
+                    "id": "vmtnz6rv7jlhhvq3jj2usjkv",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "variablesForTest": [
+                {
+                  "id": "eqr3stvpfpx81s9cdgy33bob",
+                  "value": "+557998561633",
+                  "variableId": "rsq4ioso2i7j3oo1rskk7no7"
+                },
+                {
+                  "id": "f7jlcwkw8ffhoqbblhnev6mn",
+                  "value": "Veronica",
+                  "variableId": "m9o3fxmajvh7pkf8awb847q3"
+                }
+              ],
+              "responseVariableMapping": [
+                {
+                  "id": "r7nmh48cndft1pdltk7u18j0",
+                  "bodyPath": "statusCode",
+                  "variableId": "vqfzzaq1ara1tyt2c3cxgbdck"
+                },
+                {
+                  "id": "d16zpmtoqvwumbz9q0n9u9y8",
+                  "bodyPath": "data.profile.name",
+                  "variableId": "m9o3fxmajvh7pkf8awb847q3"
+                },
+                {
+                  "id": "s443qsitx52c1eiz8u7rxlqy",
+                  "bodyPath": "data.profile.phone_number",
+                  "variableId": "rsq4ioso2i7j3oo1rskk7no7"
+                },
+                {
+                  "id": "mdm11y2tpi1jfbohjbvwdd0i",
+                  "bodyPath": "data.profile.social_name",
+                  "variableId": "xq18f2x6ui36cvquspw71si6"
+                },
+                {
+                  "id": "wv8urkj31tx22fsjsyjqygtw",
+                  "bodyPath": "data.profile.instagram",
+                  "variableId": "ogidpzg6aasbdu833155f68h"
+                }
+              ]
+            }
+          },
+          {
+            "id": "r0sizp4e8bdf4p9rnl2lhdbe",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "x64qes6bxu1re664m6sx1ujq",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "g9flgrpk52qu8dbsnr1e41cb",
+                      "value": "200",
+                      "variableId": "vqfzzaq1ara1tyt2c3cxgbdck",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "swh8ydeqla92wj1cg1c0702j",
+                      "value": "300",
+                      "variableId": "vqfzzaq1ara1tyt2c3cxgbdck",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "yudjloe6xtd3wcdamtkz94p9"
+              }
+            ],
+            "outgoingEdgeId": "j1g20qjzmhwnkodi4qmb2zlg"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 407.33,
+          "y": -2.31
+        }
+      },
+      {
+        "id": "ok7xrhznlx6vh00y56tq6vts",
+        "title": "Stop Talk (1)",
+        "blocks": [
+          {
+            "id": "txyg5klpedlo6qr7uniqp3ol",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "ffl6DiTqHm",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Para continuar conversando comigo, é só mandar uma nova mensagem. 🌱 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1110.65,
+          "y": 495.86
+        }
+      },
+      {
+        "id": "n1ye54kd6aa4zk3glmtzc3vj",
+        "title": "Menu Produtos",
+        "blocks": [
+          {
+            "id": "dazx16e1ycvtjwd52mvqiies",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "O que você deseja fazer? 👇 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "aaleg2sogs1kmmj5734x8gxx",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "i3p9930y8fydypofcad1xxxo",
+                "content": "Novo Produto",
+                "outgoingEdgeId": "o8a9gzaz5fiw0suq59z1zw3m"
+              },
+              {
+                "id": "pajx4oizqtt5v6m21m9sxk53",
+                "content": "Editar Produtos",
+                "outgoingEdgeId": "cmsjku9ujbqlzmggzpvw5u8e"
+              },
+              {
+                "id": "ivv1cl0xun84nqm2csmb6xw7",
+                "content": "Remover Produtos",
+                "outgoingEdgeId": "dx0ijkuhs6v97nha6tx8nyli"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1523.48,
+          "y": -235.71
+        }
+      },
+      {
+        "id": "bihcios050ap9kz4rj6n2uf5",
+        "title": "",
+        "blocks": [
+          {
+            "id": "w220k44wzse1xio6booggi32",
+            "type": "Typebot link",
+            "options": {
+              "typebotId": "xzoi0i3634kpux3uiwe03tws"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1485.49,
+          "y": -535.18
+        }
+      },
+      {
+        "id": "thfiug50hgxnfl3o1vcgs9wp",
+        "title": "",
+        "blocks": [
+          {
+            "id": "twqdbihqsvnnra3mhlhnhrmc",
+            "type": "Typebot link",
+            "options": {
+              "typebotId": "cketor63k011m9bole7usb06"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1877.24,
+          "y": -319.78
+        }
+      },
+      {
+        "id": "hnx05a7u7tpow09qfocejk7z",
+        "title": "Group #18",
+        "blocks": [
+          {
+            "id": "gw9lp8q6owy49eb9h1ajggor",
+            "type": "Typebot link",
+            "options": {
+              "typebotId": "v8pkr5xi5z6brvqquq5e6isk"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1875.88,
+          "y": -189.86
+        }
+      },
+      {
+        "id": "zvpwon8jg83sj8x4fhjrskyk",
+        "title": "Group #10",
+        "blocks": [
+          {
+            "id": "h33h086a7bc8v5p5dz3xiewg",
+            "type": "Typebot link",
+            "options": {
+              "typebotId": "s8zroah2ibxtax1yjhfzpz5u"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1871.24,
+          "y": -51.28
+        }
+      },
+      {
+        "id": "x4g0girprzr627rj8sbtcvat",
+        "title": "Group #9",
+        "blocks": [
+          {
+            "id": "ynjtfxg3rtdpdu1rqr02nupj",
+            "type": "Typebot link",
+            "options": {
+              "typebotId": "sir32x0nmvybe9i0xdlqa9rd"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 464,
+          "y": 695
+        }
+      },
+      {
+        "id": "q6vxnzhnvnurpcj1kiqgy73m",
+        "title": "Minhas Receitas",
+        "blocks": [
+          {
+            "id": "gmozrd75pyc33al74edgg5r5",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "W8I5-XWIxk",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "O que você deseja fazer? 👇 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ajdw14bghp41kdvmyxw7hpng",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "xy0exp8y2ys04a62715o2jtc",
+                "content": "Nova Receita",
+                "outgoingEdgeId": "oywp5dec3km62wut71bxdabl"
+              },
+              {
+                "id": "a9etmwduzkf47qrwb9axoeox",
+                "content": "Editar Receita",
+                "outgoingEdgeId": "tfnau4md036t7lg8dxghh8eg"
+              },
+              {
+                "id": "mlqtcca35ox9o4imdu71lemo",
+                "content": "Apagar Receita",
+                "outgoingEdgeId": "ain56bpptyq35ybvkjkw4c7h"
+              }
+            ]
+          },
+          {
+            "id": "ez1zbauppv4swiszu9w5wluu",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "W8I5-XWIxk",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Upsi "
+                    }
+                  ]
+                },
+                {
+                  "id": "Cj5jGYnoSw",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "essa funcionalidade não está pronta. 🌱 "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "xkuoraz120ob3ge2y3qrulbd"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1587,
+          "y": 244
+        }
+      },
+      {
+        "id": "uahue8qtdgtenzrl61cty89m",
+        "title": "",
+        "blocks": [
+          {
+            "id": "wn5ib60vfvscp4352m0by5wr",
+            "type": "Typebot link",
+            "options": {
+              "typebotId": "j7ztwie6qftg5rzmetijw1pe"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2032,
+          "y": 264
+        }
+      }
+    ],
+    "variables": [
+      {
+        "id": "vtzmskqtwr0w8mr9vwqi6olyc",
+        "name": "Serviços",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vvnu0hqc82crm958vbzcefvcc",
+        "name": "baseUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "f42i604zct2j9sjsirx2isbq",
+        "name": "getProductRequestStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "bcjhb0aqkfjo7gyasqpq7ld2",
+        "name": "newVideoURL",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vc4gx7jyrqn4qurwk3i5nz8p",
+        "name": "produtoIdEscolhido",
+        "isSessionVariable": true
+      },
+      {
+        "id": "u3k6pkenx63f9csrwlmb2es1",
+        "name": "produtoEscolhido",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vx03vzbnax8hvou6uoc9ja03",
+        "name": "productArrayId",
+        "isSessionVariable": true
+      },
+      {
+        "id": "tztq6g12kosmr0s6w47lrb1k",
+        "name": "nomesProdutos",
+        "isSessionVariable": true
+      },
+      {
+        "id": "twhmzbg09wp0gy5seyobo2fw",
+        "name": "listaFormatada",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vcaowme7k2kcyou8gzmci09g",
+        "name": "productArrayDescription",
+        "isSessionVariable": true
+      },
+      {
+        "id": "sbdmi0j8fb1wtj89ufal9vb8",
+        "name": "productArrayNames",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vdb8jm9w8vknobwf5ccotqw4",
+        "name": "newProductAudio",
+        "isSessionVariable": false
+      },
+      {
+        "id": "jrnxpvjlnhxyqyrc7iems8c9",
+        "name": "newPhotoURL",
+        "isSessionVariable": false
+      },
+      {
+        "id": "jfao7ukec2kuw954poiv7yac",
+        "name": "newProductDescription",
+        "isSessionVariable": false
+      },
+      {
+        "id": "l1ai6pantoe9r8nydkln15iz",
+        "name": "putStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "d38efr9t7snfas8wpmwccbmc",
+        "name": "newProductName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "pm6khgk2ihex72aeefilpr6w",
+        "name": "escolhaProduto",
+        "isSessionVariable": false
+      },
+      {
+        "id": "lka5v62y96vmegbfeol4ufra",
+        "name": "productAudio",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ald1dqprpr2aymbu882cwcyi",
+        "name": "productImage",
+        "isSessionVariable": false
+      },
+      {
+        "id": "ggldmz42dzk4h771gqoqj8h8",
+        "name": "userPhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "hj2hunmd5f3fwp9kxkczu0im",
+        "name": "productCategory",
+        "isSessionVariable": true
+      },
+      {
+        "id": "mjn5hlh0ygdtdyf44sjwtwyn",
+        "name": "apiStatus",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ki6d6i6txms0vakglff8ux6m",
+        "name": "productVideo",
+        "isSessionVariable": false
+      },
+      {
+        "id": "evig5jz7pnkz4kjx2pdsh5bf",
+        "name": "productDescription",
+        "isSessionVariable": false
+      },
+      {
+        "id": "d8j519k4fg8shldyuexv3txb",
+        "name": "productName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "rk7fnb59b7mjfuwrrww8z12a",
+        "name": "producerNickName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "emqg0l5kfmkhv6ifspnvu2ub",
+        "name": "instagramUser",
+        "isSessionVariable": false
+      },
+      {
+        "id": "sf9qz4xc684m44vmp942qujb",
+        "name": "createProfileStatus",
+        "isSessionVariable": true
+      },
+      {
+        "id": "uco4o8za0suc1td6vlm543us",
+        "name": "createProfileErrorMessage",
+        "isSessionVariable": true
+      },
+      {
+        "id": "fx2r7k8xf29lx2shv91xbrcd",
+        "name": "producerNameAudio",
+        "isSessionVariable": true
+      },
+      {
+        "id": "qti81yymafn3a70kknddne5c",
+        "name": "whatsappPhone",
+        "isSessionVariable": false
+      },
+      {
+        "id": "nsc4mznwoeohisfqnyr6uhyj",
+        "name": "producerName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vp6wxwfaakx49pwa0ms7cexrm",
+        "name": "httpRequestStatus",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vrqc8k0dbmbmdvk0spxajw4ou",
+        "name": "httpRequest",
+        "isSessionVariable": true
+      },
+      {
+        "id": "rsq4ioso2i7j3oo1rskk7no7",
+        "name": "profilePhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ogidpzg6aasbdu833155f68h",
+        "name": "profileInstagram",
+        "isSessionVariable": true
+      },
+      {
+        "id": "e44c98z73lul2sfh8795bmb6",
+        "name": "profileNewSocialName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "ljwik0ylybfwpjawo5smqzyi",
+        "name": "profilePutRequest",
+        "isSessionVariable": true
+      },
+      {
+        "id": "hpvah360ecng6o0szqofrvp0",
+        "name": "profilePutRequestError",
+        "isSessionVariable": true
+      },
+      {
+        "id": "znc7dvgikxgsoaylbktxz7ll",
+        "name": "profileNewInstagram",
+        "isSessionVariable": false
+      },
+      {
+        "id": "wm50m8f9jfzpet6va17400j8",
+        "name": "profileNewName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "dxxf0lu7jzhw7k4mo3cwjvjt",
+        "name": "editOption",
+        "isSessionVariable": false
+      },
+      {
+        "id": "xq18f2x6ui36cvquspw71si6",
+        "name": "profileSocialName",
+        "isSessionVariable": true
+      },
+      {
+        "id": "m9o3fxmajvh7pkf8awb847q3",
+        "name": "profileName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vqfzzaq1ara1tyt2c3cxgbdck",
+        "name": "profileCreatedStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vx4ymk9f2yspm2ngzk5ydte1z",
+        "name": "profileCreated",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vthbv3ie49gfqmjzim85egjlm",
+        "name": "phoneNumber",
+        "isSessionVariable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "s47tzx0t9izl54pmftfju6e6",
+        "to": {
+          "groupId": "ciac5hchq4mxgao3qxxnzvlq"
+        },
+        "from": {
+          "itemId": "ipwrk4q5id1tup3nbllo47di",
+          "blockId": "pkhewurxazs6exjbnh3sh5hb"
+        }
+      },
+      {
+        "id": "yudjloe6xtd3wcdamtkz94p9",
+        "to": {
+          "groupId": "ciac5hchq4mxgao3qxxnzvlq"
+        },
+        "from": {
+          "itemId": "x64qes6bxu1re664m6sx1ujq",
+          "blockId": "r0sizp4e8bdf4p9rnl2lhdbe"
+        }
+      },
+      {
+        "id": "nxb3zwfr2ctk55yy8hczu4ga",
+        "to": {
+          "groupId": "ok7xrhznlx6vh00y56tq6vts"
+        },
+        "from": {
+          "itemId": "jxe38zmoni4um7etlt1fs2sj",
+          "blockId": "bir5bjwf9gilmeajv2zbklbp"
+        }
+      },
+      {
+        "id": "wtzhlu85jqj5sk1i115hj2mk",
+        "to": {
+          "groupId": "n1ye54kd6aa4zk3glmtzc3vj"
+        },
+        "from": {
+          "itemId": "wpta6y1fb8sg291ubskrefyq",
+          "blockId": "bir5bjwf9gilmeajv2zbklbp"
+        }
+      },
+      {
+        "id": "uvlnuvy82izlj1uh5i0xoue7",
+        "to": {
+          "groupId": "ipw0q1dam3hkx0yt5p4cwomd"
+        },
+        "from": {
+          "eventId": "ldzty10cjniem2axrkeqeul1"
+        }
+      },
+      {
+        "id": "cb5w20dlssmumfyvloj7oz9e",
+        "to": {
+          "groupId": "bihcios050ap9kz4rj6n2uf5"
+        },
+        "from": {
+          "itemId": "dtnk163ktix84k5p8jstnc6y",
+          "blockId": "bir5bjwf9gilmeajv2zbklbp"
+        }
+      },
+      {
+        "id": "o8a9gzaz5fiw0suq59z1zw3m",
+        "to": {
+          "groupId": "thfiug50hgxnfl3o1vcgs9wp"
+        },
+        "from": {
+          "itemId": "i3p9930y8fydypofcad1xxxo",
+          "blockId": "aaleg2sogs1kmmj5734x8gxx"
+        }
+      },
+      {
+        "id": "cmsjku9ujbqlzmggzpvw5u8e",
+        "to": {
+          "groupId": "hnx05a7u7tpow09qfocejk7z"
+        },
+        "from": {
+          "itemId": "pajx4oizqtt5v6m21m9sxk53",
+          "blockId": "aaleg2sogs1kmmj5734x8gxx"
+        }
+      },
+      {
+        "id": "dx0ijkuhs6v97nha6tx8nyli",
+        "to": {
+          "groupId": "zvpwon8jg83sj8x4fhjrskyk"
+        },
+        "from": {
+          "itemId": "ivv1cl0xun84nqm2csmb6xw7",
+          "blockId": "aaleg2sogs1kmmj5734x8gxx"
+        }
+      },
+      {
+        "id": "j1g20qjzmhwnkodi4qmb2zlg",
+        "to": {
+          "groupId": "x4g0girprzr627rj8sbtcvat"
+        },
+        "from": {
+          "blockId": "r0sizp4e8bdf4p9rnl2lhdbe"
+        }
+      },
+      {
+        "id": "jxvcvjrz1amax33wi45ckdnh",
+        "to": {
+          "groupId": "q6vxnzhnvnurpcj1kiqgy73m"
+        },
+        "from": {
+          "itemId": "lnqgjqq5ffdfvaqz5r31kt0c",
+          "blockId": "bir5bjwf9gilmeajv2zbklbp"
+        }
+      },
+      {
+        "id": "oywp5dec3km62wut71bxdabl",
+        "to": {
+          "groupId": "uahue8qtdgtenzrl61cty89m"
+        },
+        "from": {
+          "itemId": "xy0exp8y2ys04a62715o2jtc",
+          "blockId": "ajdw14bghp41kdvmyxw7hpng"
+        }
+      },
+      {
+        "id": "tfnau4md036t7lg8dxghh8eg",
+        "to": {
+          "blockId": "ez1zbauppv4swiszu9w5wluu",
+          "groupId": "q6vxnzhnvnurpcj1kiqgy73m"
+        },
+        "from": {
+          "itemId": "a9etmwduzkf47qrwb9axoeox",
+          "blockId": "ajdw14bghp41kdvmyxw7hpng"
+        }
+      },
+      {
+        "id": "ain56bpptyq35ybvkjkw4c7h",
+        "to": {
+          "blockId": "ez1zbauppv4swiszu9w5wluu",
+          "groupId": "q6vxnzhnvnurpcj1kiqgy73m"
+        },
+        "from": {
+          "itemId": "mlqtcca35ox9o4imdu71lemo",
+          "blockId": "ajdw14bghp41kdvmyxw7hpng"
+        }
+      },
+      {
+        "id": "xkuoraz120ob3ge2y3qrulbd",
+        "to": {
+          "groupId": "q6vxnzhnvnurpcj1kiqgy73m"
+        },
+        "from": {
+          "blockId": "ez1zbauppv4swiszu9w5wluu"
+        }
+      }
+    ],
+    "theme": {
+      "general": {
+        "progressBar": {
+          "isEnabled": false
+        }
+      }
+    },
+    "settings": {
+      "general": {
+        "rememberUser": {
+          "isEnabled": false
+        },
+        "systemMessages": {
+          "invalidMessage": "Hummm.. acho que não compreendi. Podemos repetir?"
+        },
+        "isInputPrefillEnabled": false,
+        "isHideQueryParamsEnabled": false
+      },
+      "security": {
+        "allowedOrigins": []
+      },
+      "whatsApp": {
+        "isEnabled": true,
+        "sessionExpiryTimeout": 1
+      },
+      "typingEmulation": {
+        "enabled": false,
+        "delayBetweenBubbles": 1
+      }
+    },
+    "events": [
+      {
+        "id": "ldzty10cjniem2axrkeqeul1",
+        "type": "start",
+        "outgoingEdgeId": "uvlnuvy82izlj1uh5i0xoue7",
+        "graphCoordinates": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": "uohae0yagphee67wuncmgl0y",
+        "type": "reply",
+        "graphCoordinates": {
+          "x": 1633,
+          "y": 465
+        }
+      },
+      {
+        "id": "y6p5j2hbaly47i7svkpmcjyk",
+        "type": "reply",
+        "graphCoordinates": {
+          "x": 1600,
+          "y": 465
+        }
+      }
+    ]
+  },
+  "version": "6.1"
+}

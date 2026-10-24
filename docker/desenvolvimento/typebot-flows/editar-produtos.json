@@ -1,0 +1,1901 @@
+{
+  "typebot": {
+    "id": "v8pkr5xi5z6brvqquq5e6isk",
+    "name": "Editar Produtos",
+    "publicId": "editar-produtos-q5e6isk",
+    "version": "6.1",
+    "icon": null,
+    "groups": [
+      {
+        "id": "fgwmb0y5yweyofj9akn71q9n",
+        "title": "Group #2 (1)",
+        "blocks": [
+          {
+            "id": "pzqlhvmynuhajwwbk5556sjm",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📦 Esses são os seus produtos cadastrados até agora:"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "zmmzj2vazdhm6iza6vhpte82",
+            "type": "Code",
+            "options": {
+              "content": "const nomes = {{productArrayNames}}; // Ex: [\"Bolo de Cenoura\", \"Bolo de Fubá\"]\nconst descricoes = {{productArrayDescription}}; // Ex: [\"Delicioso...\", \"Feito com carinho...\"]\n\nconst listaFormatada = nomes\n  .map((nome, i) => `✨ *${i + 1}*: ${nome}\\n📝 _${descricoes[i]}_`)\n  .join(\"\\n\\n\");\n\nsetVariable(\"listaFormatada\", listaFormatada);\nsetVariable(\"nomesProdutos\", nomes);",
+              "isExecutedOnClient": false
+            }
+          },
+          {
+            "id": "qyn65krd135i2uviqtj6x0aw",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/product?phone_number={{profilePhoneNumber}}",
+                "method": "GET",
+                "headers": [
+                  {
+                    "id": "vmtnz6rv7jlhhvq3jj2usjkv",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "responseVariableMapping": [
+                {
+                  "id": "r7nmh48cndft1pdltk7u18j0",
+                  "bodyPath": "statusCode",
+                  "variableId": "kun1u9mufrwcizjgv34mlg1z"
+                },
+                {
+                  "id": "pne5c0c8bhqxczjejgtouuyc",
+                  "bodyPath": "data.data.flatMap(item => item.product_name)",
+                  "variableId": "vmtic3h9773vjli1j3ptdsalx"
+                },
+                {
+                  "id": "g4tssx90fgft5veevdexr87q",
+                  "bodyPath": "data.data.flatMap(item => item.description)",
+                  "variableId": "vxe2eihebe2bovoqz3rssdwyc"
+                },
+                {
+                  "id": "pkj0kxgzhkkgnlfsniy6iwrf",
+                  "bodyPath": "data.data.flatMap(item => item.id)",
+                  "variableId": "vgm708o4rnitecmbdndjgz8j5"
+                }
+              ]
+            }
+          },
+          {
+            "id": "fyg2tlq5t9vqy2860bbii414",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "{{listaFormatada}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ghwg5i31bf8awcvv1bwfo51q",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Digite o número do produto que você quer editar, tá bom? 😊"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "l85b1g1aysxumovjwn5cbqrp",
+            "type": "text input",
+            "options": {
+              "variableId": "f7suw5r9478v1fs0me0xxs5k"
+            }
+          },
+          {
+            "id": "drahscxnw0p2st47bid5geqr",
+            "type": "Code",
+            "options": {
+              "content": "const nomes = {{nomesProdutos}};\nconst ids = {{productArrayId}};\nconst input = parseInt({{escolhaProduto}});\nconst index = input - 1;\n\nif (isNaN(input) || index < 0 || index >= nomes.length) {\n  setVariable(\"produtoEscolhido\", null);\n  setVariable(\"produtoIdEscolhido\", null);\n} else {\n  setVariable(\"produtoEscolhido\", nomes[index]);\n  setVariable(\"produtoIdEscolhido\", ids[index]);\n}\n",
+              "isExecutedOnClient": false
+            }
+          },
+          {
+            "id": "h9r2nowbikkdyditqkvg9jax",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "zfbycf9m8b7l7iwxy6ptk53d",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "rpto38zzpw1b1c59f1dscze3",
+                      "variableId": "cakp27ls6233fhck3qcqqmxv",
+                      "comparisonOperator": "Is empty"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "xjr6sivwvaapkbwtzfdznz70"
+              }
+            ]
+          },
+          {
+            "id": "i43ke82g7mqv88fhy0juna48",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✅ Beleza! Você escolheu editar o produto "
+                    },
+                    {
+                      "bold": true,
+                      "text": "{{produtoEscolhido}}"
+                    },
+                    {
+                      "text": "."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "dlzkgfl5o1ef8bu4ttsig5qe",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "O que você gostaria de atualizar nele? ✏️"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ftretponx5jat8j1zq34h6eq",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "nlnb5gm7pchfw9joxuwwnmoy",
+                "content": "✏️ Nome",
+                "outgoingEdgeId": "fd7pj3ikiehyjiwfwscpnx1z"
+              },
+              {
+                "id": "ywm3y7e0rp78atyx1bbwnhf6",
+                "content": "💬 Descrição",
+                "outgoingEdgeId": "wgfwnxydjd1ipske04w4murw"
+              },
+              {
+                "id": "alxx1kztaxtf5ahp6k95j6ds",
+                "content": "🗂️ Categoria",
+                "outgoingEdgeId": "cp9ulv9fhut6avmun2o9mk0w"
+              },
+              {
+                "id": "l2ocdr7k3k77r5tfc7da5v3j",
+                "content": "🖼️ Imagem",
+                "outgoingEdgeId": "ytm1d4l3i27qrp91nr2ggril"
+              },
+              {
+                "id": "yydwrvfrrcackvk8pghls495",
+                "content": "🎥 Vídeo",
+                "outgoingEdgeId": "lvpvfsrdix3dm91ycge0nu18"
+              },
+              {
+                "id": "rw9nxrwli4oqt0txdcuklnfx",
+                "content": "🎙️ Áudio",
+                "outgoingEdgeId": "zvxuk3s5ge8krnji8wxrvf05"
+              },
+              {
+                "id": "gwrl61yt9cea1aw6n8chv4j2",
+                "content": "💵 Preço",
+                "outgoingEdgeId": "eghbr57j3c9ah50jvux5rz33"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1328.34,
+          "y": -44.43
+        }
+      },
+      {
+        "id": "pfyguepxfhivwr9jbj78xudq",
+        "title": "",
+        "blocks": [
+          {
+            "id": "gawxahoavtv3skcy0g4hgnsd",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "😕 Opa! Não entendi esse número..."
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "nmbahmiyblog4304do834ai6",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tenta de novo, por favor? Digita só o número do produto que você quer editar. 🔢"
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "hayxp1mzt1a3tm2kn403q4rw"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 985.63,
+          "y": 637.13
+        }
+      },
+      {
+        "id": "fms9ibs60r3vhj60pv541vv3",
+        "title": "Group #4 (1)",
+        "blocks": [
+          {
+            "id": "hlark10dsz44mvsebjtm2uum",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✏️ Como você quer chamar esse produto agora? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "a1v23f352xslg3clm03vf0k2",
+            "type": "text input",
+            "options": {
+              "variableId": "aectgw76hv2i88fzf3xv2c0s"
+            }
+          },
+          {
+            "id": "fyja6hzudmrddwzq61esqlfl",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "35wLJinzoT",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔍 Só pra confirmar... o novo nome vai ser:"
+                    }
+                  ]
+                },
+                {
+                  "id": "OmXQtEqH5k",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "FKXCGAA98a",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": "*{{newProductName}}*"
+                    }
+                  ]
+                },
+                {
+                  "id": "UDqWTf-96o",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "d_psgC9MEb",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tá certo? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "u3w1b8kkq62zv1hluwtifhfk",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "ey2oz8kh9r5jwjhvbaytgiyt",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "fizyiaf0ibocfhj3k5nua7y3"
+              },
+              {
+                "id": "t86lybpc4723nhj2v7drfedv",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "jyggc8ida6jjymco7wg114wm",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem, vamos tentar de novo! 💪  "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "d9mkqnhds0hyiqs33cxvx892"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1655.2,
+          "y": -49.17
+        }
+      },
+      {
+        "id": "njia30jv5gdog3p2x4rtammh",
+        "title": "",
+        "blocks": [
+          {
+            "id": "q3m8i9f7wmfhqwjuqmteba8j",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/product/{{produtoIdEscolhido}}",
+                "body": "{\n  \"product_name\": \"{{newProductName}}\",\n  \"description\": \"{{newProductDescription}}\",\n  \"category\": \"{{productCategory}}\",\n  \"price\": \"{{parsedPrice}}\",\n  \"media\": [\n    {\n      \"url\": \"{{newPhotoURL}}\",\n      \"media_type\": \"IMAGE\"\n    },\n    {\n      \"url\": \"{{newProductAudio}}\",\n      \"media_type\": \"AUDIO\"\n    },\n    {\n      \"url\": \"{{newVideoURL}}\",\n      \"media_type\": \"VIDEO\"\n    }\n  ],\n  \"replace_media\": false\n}\n",
+                "method": "PUT",
+                "headers": [
+                  {
+                    "id": "fsrb0wuxbbws474pln55nbvp",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "isCustomBody": true,
+              "responseVariableMapping": [
+                {
+                  "id": "jf6ymk27qavxoqle0th5qq4c",
+                  "bodyPath": "statusCode",
+                  "variableId": "jzkzbichb9sw0niq4ueb7yqa"
+                }
+              ]
+            }
+          },
+          {
+            "id": "oonzzdh17uvzdwc2wfd9m6xv",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "botfqeqaodk4op8p8mccxqkf",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "urbnmqspdfc2dbbspf0b4ze0",
+                      "value": "200",
+                      "variableId": "jzkzbichb9sw0niq4ueb7yqa",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "qfqm8alhvqo1f5lphbprhonp",
+                      "value": "299",
+                      "variableId": "jzkzbichb9sw0niq4ueb7yqa",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "wzzfswp7018li69h22selo7f"
+              }
+            ],
+            "outgoingEdgeId": "nhvfe5cdnr1av07g0wrvm4mh"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2172.79,
+          "y": 320.99
+        }
+      },
+      {
+        "id": "io12jgw761pzzgsv7v65dp1r",
+        "title": "Group #6 (1)",
+        "blocks": [
+          {
+            "id": "f8v9u66rlo8o557k9mmtyjon",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✅ Tudo certo por aqui! Atualizei as informações como você pediu. "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ry2g00uazxvkuorvrht6r66l",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Se quiser mudar mais alguma coisa, é só falar! 💜 "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "tprg8m6160aocrboxshssxml",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "1AIlUykrav",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "{{baseProductUrl}}/{{produtoIdEscolhido}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3023.14,
+          "y": 321.35
+        }
+      },
+      {
+        "id": "muotjyrto9odnuvsbdaaitvk",
+        "title": "Group #7 (1)",
+        "blocks": [
+          {
+            "id": "z12h0kdp9su0lrkh27ek0vfe",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Parece que algo deu errado na hora de atualizar. "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "iunxrhv3dlrgdft1z92da5ms",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tenta novamente mais tarde, tá bom? Se continuar o erro, me chama que te ajudo! 😉 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 3028.47,
+          "y": 747.1
+        }
+      },
+      {
+        "id": "d201flv4lwnmz1f7lptqn8vd",
+        "title": "Group #4 (1)",
+        "blocks": [
+          {
+            "id": "fmmqyhjg6z8kkpayynmgaqch",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "✏️ Como você quer que seja a descrição agora? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "itoozj4bcbeltu3xizleoge8",
+            "type": "text input",
+            "options": {
+              "variableId": "j4itrlnpnnk3nzj9nowkycx2"
+            }
+          },
+          {
+            "id": "z94iitogv54ni51u55t997rh",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "RGQj-XRF7p",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔍 Só pra confirmar... a nova descrição será: "
+                    }
+                  ]
+                },
+                {
+                  "id": "vwNqX5EziU",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "F53ovEwpCq",
+                  "type": "p",
+                  "children": [
+                    {
+                      "bold": true,
+                      "text": "*{{newProductDescription}}*"
+                    }
+                  ]
+                },
+                {
+                  "id": "fESpEfCrhq",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "nw26fRuZws",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tá certo? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "b2r7iues51fd7ispmbvf67h4",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "cuewma5itkw3eruabu5au46j",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "p2s0ej0dkadkiqhfgfqly25o"
+              },
+              {
+                "id": "d2wx0gpxi7ljq6igumsum31n",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "wemtylxmc6tivak5n4jbxzbq",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem, vamos tentar de novo! 💪  "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "s96eky91ul9tj813um5rzouy"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1656.97,
+          "y": 560.93
+        }
+      },
+      {
+        "id": "iy0l8q88toqewlkv1xnvgm4k",
+        "title": "Group #4 (1)",
+        "blocks": [
+          {
+            "id": "cmkojn08k1oevskaj5cmextn",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🌾 Em qual dessas categorias o seu produto se encaixa?"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "h73dzbq3e8i5mjz5d37w61s0",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "tjp4ch2qrfk0wk3yr3eguyfe",
+                "content": "🧑‍🌾 Agrícola",
+                "outgoingEdgeId": "m60hc5uh3gs78uguvlpancao"
+              },
+              {
+                "id": "h4m1t2zgk8tr2w4nwnyzd023",
+                "content": "🎨 Artesanato",
+                "outgoingEdgeId": "zjj9uhm9cycb5w4v5jdirwuk"
+              },
+              {
+                "id": "gfz6hhvsyxzd3naqbkmuciwc",
+                "content": "🏭 Processado",
+                "outgoingEdgeId": "q4k84tvz6guefrxtqyjvk732"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1688.55,
+          "y": 1789.52
+        }
+      },
+      {
+        "id": "fbo8e7qgbcng7g5dqr9ciess",
+        "title": "Group #10 (3)",
+        "blocks": [
+          {
+            "id": "omhc2vn5y6dalo0ptl046nil",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "yut8qasz0z09m3vr0n0yryn4",
+              "expressionToEvaluate": "AGRICOLA"
+            },
+            "outgoingEdgeId": "oghfz182rabn6z2rb1j7xfob"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2437.06,
+          "y": 1107.19
+        }
+      },
+      {
+        "id": "kr3l7zkua87ynq5zrbtgahf7",
+        "title": "Group #10 (3)",
+        "blocks": [
+          {
+            "id": "utxaw2p0vmn6yiq3osy5nbhd",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "yut8qasz0z09m3vr0n0yryn4",
+              "expressionToEvaluate": "ARTESANATO"
+            },
+            "outgoingEdgeId": "ywdu4l4y637ubptdr1yy2gzs"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2439.21,
+          "y": 1278.16
+        }
+      },
+      {
+        "id": "eiqvd5i7uvl2wn1fs3mrmphz",
+        "title": "Group #10 (3)",
+        "blocks": [
+          {
+            "id": "ttukntoktmelv3z17sk4y11a",
+            "type": "Set variable",
+            "options": {
+              "type": "Custom",
+              "variableId": "yut8qasz0z09m3vr0n0yryn4",
+              "expressionToEvaluate": "PROCESSADO"
+            },
+            "outgoingEdgeId": "ri1btzf8wdgm643jw69kj5hu"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2446.21,
+          "y": 1444.87
+        }
+      },
+      {
+        "id": "sn4iejav6eqlho1ari4wue3q",
+        "title": "",
+        "blocks": [
+          {
+            "id": "ut5pt2aki8adl6nagplk1u3e",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "9Diblv5ASU",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "📸 Me envia uma nova foto do seu produto, por favor? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "tqesskq2613ob33nzyjcvzoa",
+            "type": "file input",
+            "options": {
+              "variableId": "ziaxmkrsuyi6itsw4yhg4337",
+              "visibility": "Public"
+            }
+          },
+          {
+            "id": "j155rpdp5hlsecqpu23fphk6",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔍 Só pra confirmar… essa aqui é a nova foto, certo? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "zp7996x67qzijqwk1d5pyttx",
+            "type": "image",
+            "content": {
+              "url": "{{newPhotoURL}}"
+            }
+          },
+          {
+            "id": "ciaui4ljaepdba7af4iab99n",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "y2es48woqu5pv57uacwys71w",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "zlalkj9wfx2rhkm6jzm2yet2"
+              },
+              {
+                "id": "xb2nlm6q5cjgyx8og5tjzghl",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "bix5hsqpybhkl4l3xx541ssd",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem, vamos tentar de novo! 💪  "
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "pkpumw31ozeet6jtqtizdtf0"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1663.51,
+          "y": 1187.44
+        }
+      },
+      {
+        "id": "vx723dad1wyjp6wcugquf80c",
+        "title": "",
+        "blocks": [
+          {
+            "id": "rmet57apv3bqtcwkd8bbk3l7",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🎬 Me envia um novo vídeo do seu produto, por favor? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "qw389tmsqywa4624situo07p",
+            "type": "file input",
+            "options": {
+              "variableId": "tbn81p6s0r185bw1iudt8gyh",
+              "visibility": "Public"
+            },
+            "outgoingEdgeId": "nv9x2a1nwygsyldwl6fsqxm2"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1326.88,
+          "y": 1332.7
+        }
+      },
+      {
+        "id": "l56y5w5qch923imnx5lcccqm",
+        "title": "Group #4 (1)",
+        "blocks": [
+          {
+            "id": "xlwoxmzjp1rtgy7w8ijf43pj",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🎤 Como você quer que seja o novo áudio do seu produto? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "o98ekxdlqqdgqy37bn7mr4uv",
+            "type": "text input",
+            "options": {
+              "audioClip": {
+                "isEnabled": true
+              },
+              "variableId": "za5ztzawj2zb22b7afefrjzi"
+            }
+          },
+          {
+            "id": "eqdvphoo5a7rklawfxh744hc",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "🔍 Só pra confirmar… esse será o novo áudio, tá certo? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "qoywb8o4ydt0uoarf7aut1c1",
+            "type": "audio",
+            "content": {
+              "url": "{{newProductAudio}}"
+            }
+          },
+          {
+            "id": "sgkpfyqd25bvo8b46cjdiyzx",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "b1wpzuwi7tgj7dvlf7qc93qg",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "rxy94f99wjey4ybtq427974e"
+              },
+              {
+                "id": "fb4cywg9ctn3kr42d7yirg9g",
+                "content": "Não ❌"
+              }
+            ]
+          },
+          {
+            "id": "ygcejf7a1c381ljqfvmrt1y5",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Tudo bem, vamos tentar de novo! 💪  "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 1359.13,
+          "y": 1560.84
+        }
+      },
+      {
+        "id": "wwl1we6i3e9gy6vre2n79177",
+        "title": "",
+        "blocks": [
+          {
+            "id": "u2unl6y17tpr3rxf2ld1l20d",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "jh7qq4ozh7jga2nus7ew3xtt",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "jfcnh7y8xygmvnae8k3houft",
+                      "variableId": "y0i7q7rlonpsbsajna56ni43",
+                      "comparisonOperator": "Is empty"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "usg0cfq1jmj851pelvm5k17z"
+              }
+            ],
+            "outgoingEdgeId": "tbd55dz0vux6wwvdvtvznujd"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 805.91,
+          "y": -9.84
+        }
+      },
+      {
+        "id": "bbqa49v0b5mp11573utyh461",
+        "title": "Group #9 (1)",
+        "blocks": [
+          {
+            "id": "bqdzbysrut6pl02jwo4y3fzg",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "💬 Parece que você ainda não tem nenhum produto cadastrado no seu perfil."
+                    }
+                  ]
+                }
+              ]
+            },
+            "outgoingEdgeId": "n9rs7w6qyzlo2091n5ap2jzp"
+          }
+        ],
+        "graphCoordinates": {
+          "x": 813.42,
+          "y": 206.9
+        }
+      },
+      {
+        "id": "h0zczncbacw7b8s5h8xbl3df",
+        "title": "",
+        "blocks": [
+          {
+            "id": "a4bre2yafa5u21baljkfalna",
+            "type": "Set variable",
+            "options": {
+              "variableId": "oq2zcnhiyhq9gy493w4pwztd",
+              "expressionToEvaluate": "http://dev-quintal:3000/api"
+            }
+          },
+          {
+            "id": "a7kweiw8ij41hq5iwq1oqdfr",
+            "type": "Set variable",
+            "options": {
+              "variableId": "vdaeqf1rvefr0retq3ekqxjps",
+              "expressionToEvaluate": "https://mulheresrurais.com.br/nossa-producao"
+            }
+          },
+          {
+            "id": "qwu2y8kccwoazejp5oavtb0i",
+            "type": "Webhook",
+            "options": {
+              "webhook": {
+                "url": "{{baseUrl}}/product?phone_number={{userPhoneNumber}}",
+                "method": "GET",
+                "headers": [
+                  {
+                    "id": "vmtnz6rv7jlhhvq3jj2usjkv",
+                    "key": "API_KEY",
+                    "value": "TROCAR-PELA-API-KEY-LOCAL"
+                  }
+                ]
+              },
+              "responseVariableMapping": [
+                {
+                  "id": "r7nmh48cndft1pdltk7u18j0",
+                  "bodyPath": "statusCode",
+                  "variableId": "kun1u9mufrwcizjgv34mlg1z"
+                },
+                {
+                  "id": "pne5c0c8bhqxczjejgtouuyc",
+                  "bodyPath": "data.data.flatMap(item => item.product_name)",
+                  "variableId": "y0i7q7rlonpsbsajna56ni43"
+                },
+                {
+                  "id": "g4tssx90fgft5veevdexr87q",
+                  "bodyPath": "data.data.flatMap(item => item.description)",
+                  "variableId": "uv3tf5r0t42ozrbsm1dnqr3z"
+                },
+                {
+                  "id": "pkj0kxgzhkkgnlfsniy6iwrf",
+                  "bodyPath": "data.data.flatMap(item => item.id)",
+                  "variableId": "cj5xsqakwyu149hjbfmcc99c"
+                }
+              ]
+            }
+          },
+          {
+            "id": "jcnxty69aqg3mv1jo9tbmcus",
+            "type": "Condition",
+            "items": [
+              {
+                "id": "hok33217i7uu8gqd730le9nu",
+                "content": {
+                  "comparisons": [
+                    {
+                      "id": "g9flgrpk52qu8dbsnr1e41cb",
+                      "value": "200",
+                      "variableId": "kun1u9mufrwcizjgv34mlg1z",
+                      "comparisonOperator": "Greater or equal to"
+                    },
+                    {
+                      "id": "swh8ydeqla92wj1cg1c0702j",
+                      "value": "299",
+                      "variableId": "kun1u9mufrwcizjgv34mlg1z",
+                      "comparisonOperator": "Less or equal to"
+                    }
+                  ]
+                },
+                "outgoingEdgeId": "in35yil7e2aq8i26qt4hnagm"
+              }
+            ]
+          },
+          {
+            "id": "fvnnpy6vik0c09zqftbm9a7x",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "❌ Opa! Aconteceu um probleminha aqui.\n"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "bs4te93e8nwt0fwn566dz0si",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": " Tenta de novo em alguns minutinhos, tá bom? 💜 "
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 492,
+          "y": -15
+        }
+      },
+      {
+        "id": "r6x2aghu9m96j4382a38j2r5",
+        "title": "Group #18",
+        "blocks": [
+          {
+            "id": "wb8qli24sk42x3az3ymayzdq",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "qOMS_zdwVN",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "💰 "
+                    },
+                    {
+                      "bold": true,
+                      "text": "Perfeito! Agora me envia o preço do produto."
+                    }
+                  ]
+                },
+                {
+                  "id": "1ONYa35ySK",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "jMnWbtfCdN",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Você pode digitar no formato que quiser, por exemplo:"
+                    }
+                  ]
+                },
+                {
+                  "id": "kWNYdbG6kx",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "q0ICCsWczg",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "- 25,90\n- 25"
+                    }
+                  ]
+                },
+                {
+                  "id": "ZR4q_QiFN5",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "2Z7c780qjG",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Não precisa colocar "
+                    },
+                    {
+                      "text": "R$",
+                      "italic": true
+                    },
+                    {
+                      "text": ", eu cuido disso depois 😉"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xyoyhd806dti69t5dlzrwliw",
+            "type": "text input",
+            "options": {
+              "variableId": "vl87uvmf4j9yvicuigq9okwv3"
+            }
+          },
+          {
+            "id": "uxrqk00xsobdsh5jrrditn9k",
+            "type": "Code",
+            "options": {
+              "content": "// value received from Typebot variable\nconst price = {{price}};\n\n// Function to parse price formats like: R$25,90 / 25,9 / 25.900,50 / 25\nfunction parseToDecimal(value) {\n  if (!value) return null;\n\n  return Number(\n    value\n      .toString()\n      .replace(/[R$\\s]/gi, \"\") // remove R$, $\n      .replace(/\\./g, \"\")      // remove thousand separators\n      .replace(\",\", \".\")       // convert decimal comma to dot\n  );\n}\n\n// Parse and store in Typebot variable\nconst parsedPrice = parseToDecimal(price);\n\nsetVariable(\"parsedPrice\", parsedPrice);\n",
+              "isExecutedOnClient": false
+            }
+          },
+          {
+            "id": "u23dzk4151yedp4teetvv7v0",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "W29qbd3VLK",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Então, só confirmando...\n O novo preço será "
+                    },
+                    {
+                      "text": "R${{price}}",
+                      "italic": true
+                    },
+                    {
+                      "text": ", certo? "
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "xy1vwtqgt167m86lqes7mp5x",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "c18gqcphhzevto7tyqj2lvo6",
+                "content": "Sim 👍",
+                "outgoingEdgeId": "d47nv58c3j9uc4jsvkgpnc05"
+              },
+              {
+                "id": "zpuwwl8aqbi2zaopxim5qjwh",
+                "content": "Não ❌",
+                "outgoingEdgeId": "c6926akgrpwup9w9anuqh914"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 848.92,
+          "y": 1027.38
+        }
+      },
+      {
+        "id": "o2oevv17wh4ij2kyemtpk6vs",
+        "title": "Voltar ao menu Produtos",
+        "blocks": [
+          {
+            "id": "la0e96d1mhnrex555bl5jhwa",
+            "type": "Typebot link",
+            "options": {
+              "groupId": "n1ye54kd6aa4zk3glmtzc3vj",
+              "typebotId": "cgwngldu7zivxntevzed4uhg"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 827.01,
+          "y": 427
+        }
+      },
+      {
+        "id": "iutq6oinjevo1ab1cp9o8feu",
+        "title": "Ups-Funcionaliade nao Implementada",
+        "blocks": [
+          {
+            "id": "sw6847eb4fuabdfbtgzhgkag",
+            "type": "text",
+            "content": {
+              "richText": [
+                {
+                  "id": "4lFSntEaC6",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Ups... "
+                    }
+                  ]
+                },
+                {
+                  "id": "cr9i2B8bvL",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Isso ainda está em construção "
+                    }
+                  ]
+                },
+                {
+                  "id": "L1ZZ0UjOVx",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ]
+                },
+                {
+                  "id": "SkA6lnZaa8",
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "👩🏿‍💻👨🏼‍💻👨🏽‍💻👩🏽‍💻"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ejueqxq59tdpsp0vwtbe4ozj",
+            "type": "choice input",
+            "items": [
+              {
+                "id": "j22vwyun45hqh7f85zvdo8uz",
+                "content": "Voltar aos produtos",
+                "outgoingEdgeId": "r3b41ttj43gpyx9bajtmliag"
+              },
+              {
+                "id": "ba83g5q3ei41ov6lke10lbyp",
+                "content": "Voltar  menu inicial",
+                "outgoingEdgeId": "dqgmtq0kqudkkfrvtg94cvam"
+              }
+            ]
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2102.01,
+          "y": 675
+        }
+      },
+      {
+        "id": "p4kue770nis2dcjs74jbwity",
+        "title": "Voltar menu principal",
+        "blocks": [
+          {
+            "id": "njj55l9r1c0x25djile5sw7l",
+            "type": "Typebot link",
+            "options": {
+              "groupId": "ciac5hchq4mxgao3qxxnzvlq",
+              "typebotId": "cgwngldu7zivxntevzed4uhg"
+            }
+          }
+        ],
+        "graphCoordinates": {
+          "x": 2536.01,
+          "y": 910
+        }
+      }
+    ],
+    "variables": [
+      {
+        "id": "vnfobloll3poytods75lku9qq",
+        "name": "loadStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vdaeqf1rvefr0retq3ekqxjps",
+        "name": "baseProductUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vzalwubwgcpe62t8zcsg4lwki",
+        "name": "baseProdutoUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vnmkm2nvqjgcnkkntytsrqij6",
+        "name": "parsedPrice",
+        "isSessionVariable": true
+      },
+      {
+        "id": "vl87uvmf4j9yvicuigq9okwv3",
+        "name": "price",
+        "isSessionVariable": false
+      },
+      {
+        "id": "vv6nc4n4hx71ec40m7tx721mn",
+        "name": "userPhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "oq2zcnhiyhq9gy493w4pwztd",
+        "name": "baseUrl",
+        "isSessionVariable": true
+      },
+      {
+        "id": "kun1u9mufrwcizjgv34mlg1z",
+        "name": "getProductRequestStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "f7suw5r9478v1fs0me0xxs5k",
+        "name": "escolhaProduto",
+        "isSessionVariable": false
+      },
+      {
+        "id": "cakp27ls6233fhck3qcqqmxv",
+        "name": "produtoEscolhido",
+        "isSessionVariable": true
+      },
+      {
+        "id": "aectgw76hv2i88fzf3xv2c0s",
+        "name": "newProductName",
+        "isSessionVariable": false
+      },
+      {
+        "id": "jzkzbichb9sw0niq4ueb7yqa",
+        "name": "putStatusCode",
+        "isSessionVariable": true
+      },
+      {
+        "id": "j4itrlnpnnk3nzj9nowkycx2",
+        "name": "newProductDescription",
+        "isSessionVariable": false
+      },
+      {
+        "id": "yut8qasz0z09m3vr0n0yryn4",
+        "name": "productCategory",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ziaxmkrsuyi6itsw4yhg4337",
+        "name": "newPhotoURL",
+        "isSessionVariable": false
+      },
+      {
+        "id": "tbn81p6s0r185bw1iudt8gyh",
+        "name": "newVideoURL",
+        "isSessionVariable": false
+      },
+      {
+        "id": "za5ztzawj2zb22b7afefrjzi",
+        "name": "newProductAudio",
+        "isSessionVariable": false
+      },
+      {
+        "id": "y0i7q7rlonpsbsajna56ni43",
+        "name": "productArrayNames",
+        "isSessionVariable": true
+      },
+      {
+        "id": "uv3tf5r0t42ozrbsm1dnqr3z",
+        "name": "productArrayDescription",
+        "isSessionVariable": true
+      },
+      {
+        "id": "cj5xsqakwyu149hjbfmcc99c",
+        "name": "productArrayId",
+        "isSessionVariable": true
+      },
+      {
+        "id": "hsv9c1eksvyc6yhomxtp6mv0",
+        "name": "profilePhoneNumber",
+        "isSessionVariable": true
+      },
+      {
+        "id": "hmm761q3jz3gjr9h2o3bm4cv",
+        "name": "listaFormatada",
+        "isSessionVariable": true
+      },
+      {
+        "id": "ev48d6q9du5j79e3suhheamc",
+        "name": "nomesProdutos",
+        "isSessionVariable": true
+      },
+      {
+        "id": "qu728vky3yjs66ilyf4ma8wm",
+        "name": "produtoIdEscolhido",
+        "isSessionVariable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "xjr6sivwvaapkbwtzfdznz70",
+        "to": {
+          "groupId": "pfyguepxfhivwr9jbj78xudq"
+        },
+        "from": {
+          "itemId": "zfbycf9m8b7l7iwxy6ptk53d",
+          "blockId": "h9r2nowbikkdyditqkvg9jax"
+        }
+      },
+      {
+        "id": "fd7pj3ikiehyjiwfwscpnx1z",
+        "to": {
+          "groupId": "fms9ibs60r3vhj60pv541vv3"
+        },
+        "from": {
+          "itemId": "nlnb5gm7pchfw9joxuwwnmoy",
+          "blockId": "ftretponx5jat8j1zq34h6eq"
+        }
+      },
+      {
+        "id": "wgfwnxydjd1ipske04w4murw",
+        "to": {
+          "groupId": "d201flv4lwnmz1f7lptqn8vd"
+        },
+        "from": {
+          "itemId": "ywm3y7e0rp78atyx1bbwnhf6",
+          "blockId": "ftretponx5jat8j1zq34h6eq"
+        }
+      },
+      {
+        "id": "cp9ulv9fhut6avmun2o9mk0w",
+        "to": {
+          "groupId": "iy0l8q88toqewlkv1xnvgm4k"
+        },
+        "from": {
+          "itemId": "alxx1kztaxtf5ahp6k95j6ds",
+          "blockId": "ftretponx5jat8j1zq34h6eq"
+        }
+      },
+      {
+        "id": "ytm1d4l3i27qrp91nr2ggril",
+        "to": {
+          "groupId": "sn4iejav6eqlho1ari4wue3q"
+        },
+        "from": {
+          "itemId": "l2ocdr7k3k77r5tfc7da5v3j",
+          "blockId": "ftretponx5jat8j1zq34h6eq"
+        }
+      },
+      {
+        "id": "zvxuk3s5ge8krnji8wxrvf05",
+        "to": {
+          "groupId": "l56y5w5qch923imnx5lcccqm"
+        },
+        "from": {
+          "itemId": "rw9nxrwli4oqt0txdcuklnfx",
+          "blockId": "ftretponx5jat8j1zq34h6eq"
+        }
+      },
+      {
+        "id": "fizyiaf0ibocfhj3k5nua7y3",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "itemId": "ey2oz8kh9r5jwjhvbaytgiyt",
+          "blockId": "u3w1b8kkq62zv1hluwtifhfk"
+        }
+      },
+      {
+        "id": "nhvfe5cdnr1av07g0wrvm4mh",
+        "to": {
+          "groupId": "muotjyrto9odnuvsbdaaitvk"
+        },
+        "from": {
+          "blockId": "oonzzdh17uvzdwc2wfd9m6xv"
+        }
+      },
+      {
+        "id": "wzzfswp7018li69h22selo7f",
+        "to": {
+          "groupId": "io12jgw761pzzgsv7v65dp1r"
+        },
+        "from": {
+          "itemId": "botfqeqaodk4op8p8mccxqkf",
+          "blockId": "oonzzdh17uvzdwc2wfd9m6xv"
+        }
+      },
+      {
+        "id": "p2s0ej0dkadkiqhfgfqly25o",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "itemId": "cuewma5itkw3eruabu5au46j",
+          "blockId": "b2r7iues51fd7ispmbvf67h4"
+        }
+      },
+      {
+        "id": "m60hc5uh3gs78uguvlpancao",
+        "to": {
+          "groupId": "fbo8e7qgbcng7g5dqr9ciess"
+        },
+        "from": {
+          "itemId": "tjp4ch2qrfk0wk3yr3eguyfe",
+          "blockId": "h73dzbq3e8i5mjz5d37w61s0"
+        }
+      },
+      {
+        "id": "zjj9uhm9cycb5w4v5jdirwuk",
+        "to": {
+          "groupId": "kr3l7zkua87ynq5zrbtgahf7"
+        },
+        "from": {
+          "itemId": "h4m1t2zgk8tr2w4nwnyzd023",
+          "blockId": "h73dzbq3e8i5mjz5d37w61s0"
+        }
+      },
+      {
+        "id": "q4k84tvz6guefrxtqyjvk732",
+        "to": {
+          "groupId": "eiqvd5i7uvl2wn1fs3mrmphz"
+        },
+        "from": {
+          "itemId": "gfz6hhvsyxzd3naqbkmuciwc",
+          "blockId": "h73dzbq3e8i5mjz5d37w61s0"
+        }
+      },
+      {
+        "id": "oghfz182rabn6z2rb1j7xfob",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "blockId": "omhc2vn5y6dalo0ptl046nil"
+        }
+      },
+      {
+        "id": "ywdu4l4y637ubptdr1yy2gzs",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "blockId": "utxaw2p0vmn6yiq3osy5nbhd"
+        }
+      },
+      {
+        "id": "ri1btzf8wdgm643jw69kj5hu",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "blockId": "ttukntoktmelv3z17sk4y11a"
+        }
+      },
+      {
+        "id": "zlalkj9wfx2rhkm6jzm2yet2",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "itemId": "y2es48woqu5pv57uacwys71w",
+          "blockId": "ciaui4ljaepdba7af4iab99n"
+        }
+      },
+      {
+        "id": "rxy94f99wjey4ybtq427974e",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "itemId": "b1wpzuwi7tgj7dvlf7qc93qg",
+          "blockId": "sgkpfyqd25bvo8b46cjdiyzx"
+        }
+      },
+      {
+        "id": "tbd55dz0vux6wwvdvtvznujd",
+        "to": {
+          "groupId": "fgwmb0y5yweyofj9akn71q9n"
+        },
+        "from": {
+          "blockId": "u2unl6y17tpr3rxf2ld1l20d"
+        }
+      },
+      {
+        "id": "usg0cfq1jmj851pelvm5k17z",
+        "to": {
+          "groupId": "bbqa49v0b5mp11573utyh461"
+        },
+        "from": {
+          "itemId": "jh7qq4ozh7jga2nus7ew3xtt",
+          "blockId": "u2unl6y17tpr3rxf2ld1l20d"
+        }
+      },
+      {
+        "id": "in35yil7e2aq8i26qt4hnagm",
+        "to": {
+          "groupId": "wwl1we6i3e9gy6vre2n79177"
+        },
+        "from": {
+          "itemId": "hok33217i7uu8gqd730le9nu",
+          "blockId": "jcnxty69aqg3mv1jo9tbmcus"
+        }
+      },
+      {
+        "id": "hgvy5bwfav641h1owe3yx7rd",
+        "to": {
+          "groupId": "h0zczncbacw7b8s5h8xbl3df"
+        },
+        "from": {
+          "eventId": "nmpfbozvc55a4toc78b93bz7"
+        }
+      },
+      {
+        "id": "hayxp1mzt1a3tm2kn403q4rw",
+        "to": {
+          "blockId": "l85b1g1aysxumovjwn5cbqrp",
+          "groupId": "fgwmb0y5yweyofj9akn71q9n"
+        },
+        "from": {
+          "blockId": "nmbahmiyblog4304do834ai6"
+        }
+      },
+      {
+        "id": "nv9x2a1nwygsyldwl6fsqxm2",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "blockId": "qw389tmsqywa4624situo07p"
+        }
+      },
+      {
+        "id": "c6926akgrpwup9w9anuqh914",
+        "to": {
+          "blockId": "wb8qli24sk42x3az3ymayzdq",
+          "groupId": "r6x2aghu9m96j4382a38j2r5"
+        },
+        "from": {
+          "itemId": "zpuwwl8aqbi2zaopxim5qjwh",
+          "blockId": "xy1vwtqgt167m86lqes7mp5x"
+        }
+      },
+      {
+        "id": "d47nv58c3j9uc4jsvkgpnc05",
+        "to": {
+          "groupId": "njia30jv5gdog3p2x4rtammh"
+        },
+        "from": {
+          "itemId": "c18gqcphhzevto7tyqj2lvo6",
+          "blockId": "xy1vwtqgt167m86lqes7mp5x"
+        }
+      },
+      {
+        "id": "n9rs7w6qyzlo2091n5ap2jzp",
+        "to": {
+          "blockId": "la0e96d1mhnrex555bl5jhwa",
+          "groupId": "o2oevv17wh4ij2kyemtpk6vs"
+        },
+        "from": {
+          "blockId": "bqdzbysrut6pl02jwo4y3fzg"
+        }
+      },
+      {
+        "id": "eghbr57j3c9ah50jvux5rz33",
+        "to": {
+          "groupId": "iutq6oinjevo1ab1cp9o8feu"
+        },
+        "from": {
+          "itemId": "gwrl61yt9cea1aw6n8chv4j2",
+          "blockId": "ftretponx5jat8j1zq34h6eq"
+        }
+      },
+      {
+        "id": "lvpvfsrdix3dm91ycge0nu18",
+        "to": {
+          "groupId": "iutq6oinjevo1ab1cp9o8feu"
+        },
+        "from": {
+          "itemId": "yydwrvfrrcackvk8pghls495",
+          "blockId": "ftretponx5jat8j1zq34h6eq"
+        }
+      },
+      {
+        "id": "r3b41ttj43gpyx9bajtmliag",
+        "to": {
+          "groupId": "fgwmb0y5yweyofj9akn71q9n"
+        },
+        "from": {
+          "itemId": "j22vwyun45hqh7f85zvdo8uz",
+          "blockId": "ejueqxq59tdpsp0vwtbe4ozj"
+        }
+      },
+      {
+        "id": "dqgmtq0kqudkkfrvtg94cvam",
+        "to": {
+          "groupId": "p4kue770nis2dcjs74jbwity"
+        },
+        "from": {
+          "itemId": "ba83g5q3ei41ov6lke10lbyp",
+          "blockId": "ejueqxq59tdpsp0vwtbe4ozj"
+        }
+      },
+      {
+        "id": "s96eky91ul9tj813um5rzouy",
+        "to": {
+          "groupId": "d201flv4lwnmz1f7lptqn8vd"
+        },
+        "from": {
+          "blockId": "wemtylxmc6tivak5n4jbxzbq"
+        }
+      },
+      {
+        "id": "pkpumw31ozeet6jtqtizdtf0",
+        "to": {
+          "groupId": "sn4iejav6eqlho1ari4wue3q"
+        },
+        "from": {
+          "blockId": "bix5hsqpybhkl4l3xx541ssd"
+        }
+      },
+      {
+        "id": "d9mkqnhds0hyiqs33cxvx892",
+        "to": {
+          "groupId": "fms9ibs60r3vhj60pv541vv3"
+        },
+        "from": {
+          "blockId": "jyggc8ida6jjymco7wg114wm"
+        }
+      }
+    ],
+    "theme": {},
+    "settings": {},
+    "events": [
+      {
+        "id": "nmpfbozvc55a4toc78b93bz7",
+        "type": "start",
+        "outgoingEdgeId": "hgvy5bwfav641h1owe3yx7rd",
+        "graphCoordinates": {
+          "x": 108.01,
+          "y": -14
+        }
+      }
+    ]
+  },
+  "version": "6.1"
+}
