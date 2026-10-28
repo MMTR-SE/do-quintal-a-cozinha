@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_receita_passos",
+  "info": {
+    "displayName": "Passo",
+    "icon": "list"
+  },
+  "options": {},
+  "attributes": {
+    "step_number": {
+      "type": "integer",
+      "required": true
+    },
+    "instruction": {
+      "type": "text",
+      "required": true
+    }
+  }
+}
