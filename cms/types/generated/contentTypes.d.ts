@@ -506,7 +506,6 @@ export interface ApiNossaHistoriaNossaHistoria
       Schema.Attribute.Private;
   };
 }
-
 export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
   collectionName: 'produtos';
   info: {
@@ -536,10 +535,7 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    imagem: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    > &
+    imagem: Schema.Attribute.Media<'images' | 'videos', true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -560,7 +556,7 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::produtora.produtora'
     >;
-    Nome: Schema.Attribute.String &
+    product_name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -568,6 +564,37 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProdutoraProdutora extends Struct.CollectionTypeSchema {
+  collectionName: 'produtoras';
+  info: {
+    displayName: 'Produtora';
+    pluralName: 'produtoras';
+    singularName: 'produtora';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    instagram: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::produtora.produtora'
+    > &
+      Schema.Attribute.Private;
+    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    produtos: Schema.Attribute.Relation<'oneToMany', 'api::produto.produto'>;
+    publishedAt: Schema.Attribute.DateTime;
+    telefone: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -616,36 +643,6 @@ export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiProdutoraProdutora extends Struct.CollectionTypeSchema {
-  collectionName: 'produtoras';
-  info: {
-    displayName: 'Produtora';
-    pluralName: 'produtoras';
-    singularName: 'produtora';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    instagram: Schema.Attribute.String;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::produtora.produtora'
-    > &
-      Schema.Attribute.Private;
-    nome: Schema.Attribute.String & Schema.Attribute.Required;
-    produtos: Schema.Attribute.Relation<'oneToMany', 'api::produto.produto'>;
-    publishedAt: Schema.Attribute.DateTime;
-    telefone: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
