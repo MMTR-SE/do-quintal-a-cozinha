@@ -430,8 +430,50 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiHistoriaHistoria extends Struct.CollectionTypeSchema {
-  collectionName: 'historias';
+export interface ApiCategoriaCategoria extends Struct.CollectionTypeSchema {
+  collectionName: 'categorias';
+  info: {
+    displayName: 'Categorias';
+    pluralName: 'categorias';
+    singularName: 'categoria';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::categoria.categoria'
+    >;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    products: Schema.Attribute.Relation<'oneToMany', 'api::produto.produto'>;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNossaHistoriaNossaHistoria
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'nossas_historias';
   info: {
     description: 'Hist\u00F3rias das mulheres e dos territ\u00F3rios';
     displayName: 'Hist\u00F3ria';
@@ -442,11 +484,11 @@ export interface ApiHistoriaHistoria extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    conteudo: Schema.Attribute.RichText;
+    content: Schema.Attribute.RichText;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    descricao: Schema.Attribute.Text;
+    description: Schema.Attribute.Text;
     imagem: Schema.Attribute.Media<'images', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -454,9 +496,9 @@ export interface ApiHistoriaHistoria extends Struct.CollectionTypeSchema {
       'api::historia.historia'
     > &
       Schema.Attribute.Private;
-    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    author: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    regiao: Schema.Attribute.String;
+    region: Schema.Attribute.String;
     slug: Schema.Attribute.UID<'nome'> & Schema.Attribute.Required;
     titulo: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -468,7 +510,7 @@ export interface ApiHistoriaHistoria extends Struct.CollectionTypeSchema {
 export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
   collectionName: 'produtos';
   info: {
-    displayName: 'produto';
+    displayName: 'Nossa Produ\u00E7\u00E3o';
     pluralName: 'produtos';
     singularName: 'produto';
   };
@@ -481,27 +523,14 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    categoria: Schema.Attribute.Enumeration<
-      [
-        'agricola',
-        'hortalicas',
-        'frutas',
-        'graos',
-        'processado',
-        'artesanato',
-        'outros',
-      ]
-    > &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
+    category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::categoria.categoria'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    descricao: Schema.Attribute.Blocks &
+    description: Schema.Attribute.Text &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -521,14 +550,7 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::produto.produto'
     >;
-    Nome: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    preco: Schema.Attribute.Decimal &
+    price: Schema.Attribute.Decimal &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -538,13 +560,56 @@ export interface ApiProdutoProduto extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::produtora.produtora'
     >;
-    publishedAt: Schema.Attribute.DateTime;
-    telefone: Schema.Attribute.String &
+    Nome: Schema.Attribute.String &
+      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
+  collectionName: 'receitas';
+  info: {
+    displayName: 'Nossas Receitas';
+    pluralName: 'receitas';
+    singularName: 'receita';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    author_name: Schema.Attribute.String;
+    cooking_time_in_minutes: Schema.Attribute.Integer &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    difficulty: Schema.Attribute.Enumeration<
+      ['F\u00E1cil', 'M\u00E9dia', 'D\u00EDficil']
+    > &
+      Schema.Attribute.Required;
+    imagem: Schema.Attribute.Media<'images', true>;
+    ingredients: Schema.Attribute.JSON & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::receita.receita'
+    > &
+      Schema.Attribute.Private;
+    number_of_servings: Schema.Attribute.Integer & Schema.Attribute.Required;
+    preparation_time_in_minutes: Schema.Attribute.Integer &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    steps: Schema.Attribute.Component<'receita.passo', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -581,47 +646,6 @@ export interface ApiProdutoraProdutora extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
   };
 }
-
-export interface ApiReceitaReceita extends Struct.CollectionTypeSchema {
-  collectionName: 'receitas';
-  info: {
-    description: 'Receitas do movimento';
-    displayName: 'Receita';
-    pluralName: 'receitas';
-    singularName: 'receita';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    descricao: Schema.Attribute.Text;
-    dificuldade: Schema.Attribute.Enumeration<
-      ['facil', 'intermediaria', 'dificil']
-    > &
-      Schema.Attribute.DefaultTo<'facil'>;
-    imagem: Schema.Attribute.Media<'images', true>;
-    ingredientes: Schema.Attribute.JSON;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::receita.receita'
-    > &
-      Schema.Attribute.Private;
-    passos: Schema.Attribute.Component<'receita.passo', true>;
-    porcoes: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<1>;
-    publishedAt: Schema.Attribute.DateTime;
-    tempo_cozimento: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    tempo_preparo: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    titulo: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1132,9 +1156,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::historia.historia': ApiHistoriaHistoria;
-      'api::produto.produto': ApiProdutoProduto;
       'api::produtora.produtora': ApiProdutoraProdutora;
+      'api::categoria.categoria': ApiCategoriaCategoria;
+      'api::nossa-historia.nossa-historia': ApiNossaHistoriaNossaHistoria;
+      'api::produto.produto': ApiProdutoProduto;
       'api::receita.receita': ApiReceitaReceita;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
