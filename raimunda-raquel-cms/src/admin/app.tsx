@@ -1,7 +1,11 @@
 import type { StrapiApp } from '@strapi/strapi/admin';
+
 import AuthLogo from './extensions/auth-logo.png';
 import MenuLogo from './extensions/menu-logo.png';
 import Favicon from './extensions/favicon.ico';
+
+import ptBR from './extensions/translations/pt-BR.json';
+
 
 const GOOGLE_FONTS_HREF =
   'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&display=swap';
@@ -11,21 +15,53 @@ export default {
     locales: ['pt-BR'],
     translations: {
       'pt-BR': {
-         "plugin.name": "Painel de Conteúdo MMTR-SE",
+        ...ptBR,
+        'plugin.name': 'Painel MMTR-SE',
         Users: "Companheiras",
-        User: "Companheira", 
-        // Tradução de Content Type Builder plugin 
-        "content-type-builder.plugin.name": "Seções",
-        "content-type-builder.components.ListView.empty": "Nenhuma seção encontrada",
-        "content-type-builder.components.ListView.search": "Pesquisar seção",
-        "content-type-builder.components.ListView.search.placeholder": "Pesquisar por nome da seção",
-        "content-type-builder.components.ListView.search.no-results": "Nenhuma seção encontrada",
-        "Auth.form.welcome.title": "Bem-vinda Companheira!",
-        "Auth.form.welcome.subtitle": "Acesse sua conta",
-        
-        "app.components.LeftMenu.navbrand.title": "Painel de Controle",
-        "global.content-manager": "Gerenciador de Conteúdo",
+        User: "Companheira",
+      
+        //Traduzindo a página de produtos
+        'content-manager.content-types.api::produto.produto.product_name': 'Nome do produto',
+        'content-manager.content-types.api::produto.produto.description': 'Descrição',
+        'content-manager.content-types.api::produto.produto.price': 'Preço',
+        'content-manager.content-types.api::produto.produto.producer_name': 'Nome da produtora',
+        'content-manager.content-types.api::produto.produto.gallery':'Galeria de imagens',
+        'content-manager.content-types.api::produto.produto.slug':'Link',
+        'content-manager.content-types.api::produto.produto.category':'Categoria',
 
+
+        //Traduzindo a página de história
+        'content-manager.content-types.api::nossa-historia.nossa-historia.title': 'Título da história',
+        'content-manager.content-types.api::nossa-historia.nossa-historia.description': 'Resumo da história',
+        'content-manager.content-types.api::nossa-historia.nossa-historia.content': 'Conteúdo da história',
+        'content-manager.content-types.api::nossa-historia.nossa-historia.author': 'Autora',
+        'content-manager.content-types.api::nossa-historia.nossa-historia.gallery':'Galeria',
+        'content-manager.content-types.api::nossa-historia.nossa-historia.slug':'Link',
+
+        //Traduzindo a página de receitas
+        'content-manager.content-types.api::receita.receita.title': 'Nome da receita',
+        'content-manager.content-types.api::receita.receita.description': 'Descrição da receita',
+        'content-manager.content-types.api::receita.receita.ingredients': 'Ingredientes',
+        'content-manager.content-types.api::receita.receita.instructions': 'Instruções',
+        'content-manager.content-types.api::receita.receita.preparation_time_in_minutes': 'Tempo de preparo',
+        'content-manager.content-types.api::receita.receita.cooking_time_in_minutes': 'Cozinhamento',
+        'content-manager.content-types.api::receita.receita.number_of_servings': 'Porções',
+        'content-manager.content-types.api::receita.receita.author_name': 'Autora da receita',
+        'content-manager.content-types.api::receita.receita.steps': 'Passos',
+        'content-manager.content-types.api::receita.receita.gallery': 'Galeria de imagens',
+        'content-manager.content-types.api::receita.receita.difficulty': 'Dificuldade',
+        
+        //Traduzindo a página de categorias
+        'content-manager.content-types.api::categoria.categoria.category_name': 'Nome da categoria',
+
+        // Traduzindo a página administrativa de usuárias
+        'content-manager.content-types.plugin::users-permissions.user.username': 'Nome da Companheira',
+        'content-manager.content-types.plugin::users-permissions.user.email': 'E-mail',
+        'content-manager.content-types.plugin::users-permissions.user.password': 'Senha',
+        'content-manager.content-types.plugin::users-permissions.user.confirmed': 'Confirmado',
+        'content-manager.content-types.plugin::users-permissions.user.blocked': 'Bloqueado',
+        'content-manager.content-types.plugin::users-permissions.user.role': 'Perfil',
+        
       }
     },
     auth: {
