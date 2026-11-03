@@ -3,8 +3,8 @@ import { Geist_Mono, Montserrat } from "next/font/google";
 import Providers from "./providers";
 import "./globals.css";
 import { Suspense } from "react";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 
 /**
  * Root layout with providers, fonts, metadata, and skip-to-content link.

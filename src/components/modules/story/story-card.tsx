@@ -1,7 +1,7 @@
-import { GridCard } from "@/components/grid-card";
+import { GridCard } from "@/components/ui/grid-card";
 import { Story } from "@/types/story";
 
-const PLACEHOLDER_IMAGE = "/images/stories/placeholder.png";
+const PLACEHOLDER_IMAGE = "/images/story/placeholder.png";
 
 interface StoryCardProps {
   story: Story;

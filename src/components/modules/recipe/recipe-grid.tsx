@@ -3,7 +3,7 @@ import { Search, ChefHat } from "lucide-react";
 import { Recipe } from "@/types/recipe";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { RecipeCard } from "@/components/recipe-card";
+import { RecipeCard } from "@/components/modules/recipe/recipe-card";
 
 interface RecipeGridProps {
   recipes: Recipe[];

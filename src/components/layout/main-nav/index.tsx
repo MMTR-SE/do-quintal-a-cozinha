@@ -30,6 +30,19 @@ export function MainNav() {
       </Link>
 	<NavigationMenu className="flex items-center gap-4 text-sm xl:gap-6">
 	  <NavigationMenuList>
+      <NavigationMenuItem>
+	      <NavigationMenuLink
+                href="/"
+                className={cn(
+                  "transition-colors hover:text-foreground/80",
+                  pathname?.startsWith("/")
+                    ? "text-foreground"
+                    : "text-foreground/80"
+                )}
+                >
+                Home
+	      </NavigationMenuLink>
+	    </NavigationMenuItem>
 	    <NavigationMenuItem>
 	      <NavigationMenuTrigger>MMTR-SE</NavigationMenuTrigger>
 	      <NavigationMenuContent>

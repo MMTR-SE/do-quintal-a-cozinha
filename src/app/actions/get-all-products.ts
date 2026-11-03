@@ -1,13 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { prisma } from "@/lib/prisma";
 import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
 
+/**
+ * Fetches products with filtering by category, price range, and search.
+ * CRITICAL: Converts Prisma Decimal prices to numbers for client serialization.
+ */
+
 interface Options {
   search?: string
-  categories?: string[]
+  categories?: Category[]
   price?: string[]
 }
 
@@ -34,7 +38,7 @@ interface Where {
  * BUSINESS RULE: Price filtering uses OR logic to support multiple ranges.
  * Price ranges: under-50, 50-100, 100-200, over-200
  *
- * Fonte unica: banco Postgres via Prisma (conteudo migrado do CMS).
+ * Fonte unica: banco do site via Prisma.
  *
  * @param options - Filter options (search, categories, price ranges)
  * @returns Array of products matching the criteria
@@ -44,7 +48,7 @@ export async function getAllProducts(options?: Options) {
 
   if (options?.categories) {
     where.category = {
-      in: options.categories as Category[]
+      in: options.categories
     }
   }
 
@@ -55,7 +59,7 @@ export async function getAllProducts(options?: Options) {
     }
   }
 
-  // Implement price range filtering
+  // OR logic allows users to select multiple price brackets
   if (options?.price && options.price.length > 0) {
     const priceConditions: Array<{ price: PriceCondition }> = [];
 
@@ -106,13 +110,14 @@ export async function getAllProducts(options?: Options) {
     where
   });
 
-  // Convert Decimal to number for client component serialization
+  // Convert Decimal to number for client component serialization.
+  // The public URL slug is derived (produtora + nome), never stored.
   return products.map(product => ({
     ...product,
-    price: product.price ? Number(product.price) : null,
     slug: buildProductSlug({
       produtora: product.profile?.name,
       nome: product.product_name,
     }),
+    price: product.price ? Number(product.price) : null,
   }));
 }

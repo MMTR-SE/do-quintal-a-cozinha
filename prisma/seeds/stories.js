@@ -55,7 +55,7 @@ Meu sítio  fica aqui mesmo, na Matatas. Quando eu comprei, só era terra. Mas a
     regionId: "ARA",
     mediaUrls: ["/images/stories/dita.webp", "/images/stories/dita-2.webp"],
     content:`
-  <p class="text-lg leading-relaxed text-gray-800 mb-6>Vamos conhecer a história de vida de Silvia Helena, 56 anos, ou Dita como é conhecida, mulher negra moradora há mais de 30 do Assentamento Vitória da União, no município de Santa Luzia do Itanhy (SE). Arupemba Dita é agricultora não assentada, fez sua vida trabalhando na terra de sua mãe e irmãos assentados, passou por uma infância difícil e a superação veio na conquista de sua autonomia. Ela nos conta com orgulho tudo que conquistou com a organização coletiva.
+  <p class="text-lg leading-relaxed text-gray-800 mb-6">Vamos conhecer a história de vida de Silvia Helena, 56 anos, ou Dita como é conhecida, mulher negra moradora há mais de 30 do Assentamento Vitória da União, no município de Santa Luzia do Itanhy (SE). Arupemba Dita é agricultora não assentada, fez sua vida trabalhando na terra de sua mãe e irmãos assentados, passou por uma infância difícil e a superação veio na conquista de sua autonomia. Ela nos conta com orgulho tudo que conquistou com a organização coletiva.
   Sócia e militante do MMTR-SE, ela ocupa a  diretoria da Associação do seu  Assentamento.
 </p>
 

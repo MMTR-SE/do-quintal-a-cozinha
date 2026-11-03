@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPrice } from "@/lib/utils";

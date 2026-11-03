@@ -35,6 +35,8 @@ export function GridCard({
   imageHeight = "fixed",
   children,
 }: GridCardProps) {
+  const safeImageUrl = imageUrl.startsWith('http') || imageUrl.startsWith('/') || imageUrl.startsWith('data:') ? imageUrl : `/${imageUrl}`;
+
   return (
     <Link href={href}>
       <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-border hover:border-primary/30 overflow-hidden h-full">
@@ -48,7 +50,7 @@ export function GridCard({
           }`}
         >
           <Image
-            src={imageUrl}
+            src={safeImageUrl}
             alt={imageAlt}
             fill
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

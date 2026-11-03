@@ -4,9 +4,6 @@ import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Counter from "yet-another-react-lightbox/plugins/counter";
-import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/thumbnails.css";
-import "yet-another-react-lightbox/plugins/counter.css";
 
 interface ImageLightboxProps {
   images: Array<{ url: string; alt: string }>;

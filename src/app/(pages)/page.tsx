@@ -1,5 +1,5 @@
-import { HeroImage } from "@/components/hero-image";
-import { HomeIcon } from "@/components/home-icon";
+import { HeroImage } from "@/components/layout/hero-image";
+import { HomeIcon } from "@/components/layout/home-icon";
 import Link from "next/link";
 
 /**

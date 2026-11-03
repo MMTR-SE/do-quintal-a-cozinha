@@ -1,6 +1,6 @@
 "use client";
 
-import { RecipeDetail } from "@/components/recipe-detail";
+import { RecipeDetail } from "@/components/modules/recipe/recipe-detail";
 import { useGetRecipeById } from "@/hooks/use-get-recipe-by-id";
 import { use } from "react";
 

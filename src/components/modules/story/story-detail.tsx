@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 import {
   Carousel,
   CarouselContent,
@@ -74,10 +74,14 @@ export default function StoryDetail({ story, isLoading }: StoryDetailProps) {
 
   if (!story) return notFound();
 
-  const images = story.media.map((m) => ({
-    url: m.media.url,
-    alt: story.name,
-  }));
+  const images = story.media.map((m) => {
+    const rawUrl = m.media.url;
+    const safeUrl = rawUrl.startsWith('http') || rawUrl.startsWith('/') || rawUrl.startsWith('data:') ? rawUrl : `/${rawUrl}`;
+    return {
+      url: safeUrl,
+      alt: story.name,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-background">

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { PageHeader } from "@/components/page-header";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { PageHeader } from "@/components/layout/page-header";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 
@@ -55,7 +55,7 @@ export default function Sobre() {
 
               <div className="space-y-4 text-gray-700 leading-relaxed">
                 <p>
-                  Somos um movimento auto organizado de mulheres que constroem o feminismo
+                  Somos um movimento auto-organizado de mulheres que constroem o feminismo
                   rural em Sergipe a partir das suas diversas identidades e territórios.
                 </p>
 

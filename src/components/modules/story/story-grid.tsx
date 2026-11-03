@@ -5,7 +5,7 @@ import { BookOpen, Search } from "lucide-react";
 import { Story } from "@/types/story";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { StoryCard } from "@/components/story-card";
+import { StoryCard } from "@/components/modules/story/story-card";
 
 interface StoryGridProps {
   stories: Story[];

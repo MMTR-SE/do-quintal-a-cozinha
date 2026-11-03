@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag } from "lucide-react";
 import { Product } from "@/types/product";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/modules/production/product-card";
 
 interface ProductGridProps {
   products: Product[];

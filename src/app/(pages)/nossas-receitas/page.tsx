@@ -3,10 +3,10 @@
 import { useState } from "react";
 import type { IFuseOptions } from "fuse.js";
 
-import { PageHeader } from "@/components/page-header";
-import { SearchBar } from "@/components/search-bar";
-import { FeaturedRecipes } from "@/components/featured-recipes";
-import { RecipeGrid } from "@/components/recipe-grid";
+import { PageHeader } from "@/components/layout/page-header";
+import { SearchBar } from "@/components/ui/search-bar";
+import { FeaturedRecipes } from "@/components/modules/recipe/featured-recipes";
+import { RecipeGrid } from "@/components/modules/recipe/recipe-grid";
 import { useGetAllRecipes } from "@/hooks/use-get-all-recipes";
 import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
 import type { Recipe } from "@/types/recipe";

@@ -11,9 +11,7 @@
       "Bash(cwebp:*)",
       "Bash(npx prisma migrate dev:*)",
       "WebFetch(domain:github.com)",
-      "Bash(npm run db:seed:*)",
-      "Bash(ls:*)",
-      "Bash(grep:*)"
+      "Bash(npm run db:seed:*)"
     ],
     "deny": [],
     "ask": []

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 
 const HERO_IMAGE = {
   url: "/home-image.webp",

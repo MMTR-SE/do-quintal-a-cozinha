@@ -5,8 +5,8 @@ import type { IFuseOptions } from "fuse.js";
 
 import { useGetAllStories } from "@/hooks/use-get-all-stories";
 import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
-import { StoryGrid } from "@/components/story-grid";
-import { SearchBar } from "@/components/search-bar";
+import { StoryGrid } from "@/components/modules/story/story-grid";
+import { SearchBar } from "@/components/ui/search-bar";
 import type { Story } from "@/types/story";
 
 const STORY_FUSE_OPTIONS: IFuseOptions<Story> = {
@@ -33,7 +33,6 @@ export default function StoriesPage() {
         >
           Nossas Histórias
         </h1>
-
         <p className="text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed">
           Conheça a história das mulheres que constroem os seus territórios e o nosso movimento!
         </p>

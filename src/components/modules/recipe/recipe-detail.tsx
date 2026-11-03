@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 import { formatMinutes, formatRecipeDifficulty } from "@/lib/utils";
 import { parseIngredients } from "@/lib/recipe";
 import { RecipeWithDetail } from "@/types/recipe";
@@ -128,6 +128,9 @@ export function RecipeDetail({ recipe, isLoading }: RecipeDetailProps) {
 
   if (!recipe) return notFound();
 
+  const rawUrl = recipe.media[0]?.media.url;
+  const imageUrl = rawUrl ? (rawUrl.startsWith('http') || rawUrl.startsWith('/') || rawUrl.startsWith('data:') ? rawUrl : `/${rawUrl}`) : "/icone-receitas.webp";
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b">
@@ -190,7 +193,7 @@ export function RecipeDetail({ recipe, isLoading }: RecipeDetailProps) {
               aria-label="Ver imagem em tamanho completo"
             >
               <Image
-                src={recipe.media[0]?.media.url || "/icone-receitas.webp"}
+                src={imageUrl}
                 alt={recipe.title}
                 fill
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -246,7 +249,7 @@ export function RecipeDetail({ recipe, isLoading }: RecipeDetailProps) {
       <ImageLightbox
         images={[
           {
-            url: recipe.media[0]?.media.url || "/icone-receitas.webp",
+            url: imageUrl,
             alt: recipe.title,
           },
         ]}

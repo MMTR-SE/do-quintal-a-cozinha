@@ -27,7 +27,7 @@ export function EarthstarChat() {
   // Carregar dados iniciais apenas uma vez
   useEffect(() => {
     if (typeof window === "undefined" || hasLoadedData.current) return;
-    
+
     const storedMessages = localStorage.getItem("chat_messages");
     if (storedMessages) {
       try {
@@ -42,7 +42,7 @@ export function EarthstarChat() {
       setUsername(storedUsername);
       setIsUsernameConfirmed(true);
     }
-    
+
     hasLoadedData.current = true;
   }, []);
 

@@ -3,9 +3,9 @@
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
-import { MainNav } from "@/components/main-nav";
+import { MainNav } from "@/components/layout/main-nav";
 import { Button } from "@/components/ui/button";
-import { MobileNav } from "@/components/mobile-nav";
+import { MobileNav } from "@/components/layout/mobile-nav";
 
 import InstagramIcon from "@mui/icons-material/Instagram";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";

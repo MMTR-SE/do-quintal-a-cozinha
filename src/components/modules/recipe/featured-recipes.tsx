@@ -68,12 +68,16 @@ export function FeaturedRecipes({
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
-        {featured_recipes.map((recipe) => (
+        {featured_recipes.map((recipe) => {
+          const rawUrl = recipe.media[0]?.media.url;
+          const imageUrl = rawUrl ? (rawUrl.startsWith('http') || rawUrl.startsWith('/') || rawUrl.startsWith('data:') ? rawUrl : `/${rawUrl}`) : "/icone-receitas.webp";
+
+          return (
           <Link key={recipe.id} href={`/nossas-receitas/${recipe.id}`}>
             <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-primary/20 overflow-hidden">
               <div className="relative h-64 overflow-hidden">
                 <Image
-                  src={recipe.media[0]?.media.url || "/icone-receitas.webp"}
+                  src={imageUrl}
                   alt={recipe.title}
                   fill
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -108,7 +112,8 @@ export function FeaturedRecipes({
               </CardContent>
             </Card>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
