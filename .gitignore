@@ -79,6 +79,9 @@ dev.db
 /cms/.strapi-updater.json
 /cms/public/uploads
 
+# Projeto Strapi de rascunho commitado por engano (nao deve existir no repo)
+/raimunda-raquel-cms/
+
 *.http
 *storybook.log
 test-whatsapp-api.js
