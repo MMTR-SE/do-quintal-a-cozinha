@@ -55,6 +55,7 @@ export async function getAllProducts(options?: Options) {
   if (options?.search) {
     where.product_name = {
       contains: options.search,
+      mode: "insensitive",
     }
   }
 

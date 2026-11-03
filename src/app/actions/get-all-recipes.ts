@@ -10,7 +10,7 @@ interface Options { search?: string; tags?: string[]; profileId?: string; }
  */
 export async function getAllRecipes(options?: Options) {
   const where: Prisma.RecipeWhereInput = options?.search
-    ? { title: { contains: options.search } }
+    ? { title: { contains: options.search, mode: "insensitive" } }
     : {};
 
   return prisma.recipe.findMany({

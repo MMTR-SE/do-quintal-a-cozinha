@@ -10,7 +10,7 @@ interface Options { search?: string; tags?: string[]; profileId?: string; }
  */
 export async function getAllStories(options?: Options) {
   const where: Prisma.StoryWhereInput = options?.search
-    ? { name: { contains: options.search } }
+    ? { name: { contains: options.search, mode: "insensitive" } }
     : {};
 
   return prisma.story.findMany({

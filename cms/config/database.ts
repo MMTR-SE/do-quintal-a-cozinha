@@ -1,9 +1,9 @@
 import path from 'path';
 
-export default ({ env }) => {
+export default ({ env }: { env: any }) => {
   const client = env('DATABASE_CLIENT', 'sqlite');
 
-  const connections = {
+  const connections: Record<string, any> = {
     mysql: {
       connection: {
         host: env('DATABASE_HOST', 'localhost'),

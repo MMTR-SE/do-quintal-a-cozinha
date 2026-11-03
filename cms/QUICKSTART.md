@@ -87,7 +87,7 @@ Adicione os seguintes campos:
 1. No menu lateral, vá em **Settings** (ícone de engrenagem)
 2. Em **Users & Permissions Plugin**, clique em **Roles**
 3. Clique em **Public**
-4. Expanda **Produto**
+4. Expanda **Produto**, **Receita** e **História**
 5. Marque as seguintes permissões:
    - ✅ find
    - ✅ findOne

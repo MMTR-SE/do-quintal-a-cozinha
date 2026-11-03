@@ -91,7 +91,7 @@ O site estará disponível em: http://localhost:3001
 
 ## 📝 CMS - Gerenciamento de Conteúdo
 
-O projeto utiliza **Strapi** como CMS headless para gerenciar conteúdos dinâmicos.
+O projeto utiliza **Strapi** como CMS headless para gerenciar conteúdos dinâmicos (produtos, receitas e histórias).
 
 ### Iniciar o Strapi
 
@@ -108,7 +108,7 @@ Acesse o painel administrativo em: http://localhost:1337/admin
 2. Configure os tipos de conteúdo (Content Types) conforme necessário
 3. Crie um API Token em **Settings → API Tokens** para integrar com o Next.js
 
-Para mais detalhes, consulte a [documentação do CMS](./cms/README.md).
+Para a configuração dos campos, permissões e integração com o Next.js, consulte [`cms/README.md`](cms/README.md) e [`cms/INTEGRATION.md`](cms/INTEGRATION.md).
 
 ## 🤝 Contribuidores
 
@@ -121,4 +121,3 @@ Agradecemos a todas as pessoas que contribuíram para este projeto:
 - [henmohr](https://github.com/henmohr)
 - Cris
 - telemias
-
