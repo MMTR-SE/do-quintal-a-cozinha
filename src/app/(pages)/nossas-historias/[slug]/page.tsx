@@ -3,6 +3,7 @@
 import StoryDetail from "@/components/modules/story/story-detail";
 import { useGetStoryBySlug } from "@/hooks/use-get-story-by-slug";
 import { use } from "react";
+import { notFound } from "next/navigation";
 
 interface StoryPageProps {
   params: Promise<{

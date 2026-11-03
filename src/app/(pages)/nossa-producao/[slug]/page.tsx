@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductDetail } from "@/components/product-detail";
+import { ProductDetail } from "@/components/modules/production/product-detail";
 import { useGetProductBySlug } from "@/hooks/use-get-product-by-slug";
 import { use } from "react";
 

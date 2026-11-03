@@ -5,8 +5,8 @@ import type { IFuseOptions } from "fuse.js";
 
 import { useGetAllStories } from "@/hooks/use-get-all-stories";
 import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
-import { StoryGrid } from "@/components/story-grid";
-import { SearchBar } from "@/components/search-bar";
+import { StoryGrid } from "@/components/modules/story/story-grid";
+import { SearchBar } from "@/components/ui/search-bar";
 import type { Story } from "@/types/story";
 
 const STORY_FUSE_OPTIONS: IFuseOptions<Story> = {

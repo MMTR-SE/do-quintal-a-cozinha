@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { buildProductSlug } from "@/lib/slug";
 
 /**
  * Fetches single product by ID with complete details.
@@ -38,9 +39,14 @@ export async function getProductById(options: Options) {
     return null;
   }
 
-  // CRITICAL: Convert Decimal to number for Next.js client serialization
+  // CRITICAL: Convert Decimal to number for Next.js client serialization.
+  // The public URL slug is derived (produtora + nome), never stored.
   return {
     ...product,
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
     price: product.price ? Number(product.price) : null,
   };
 }

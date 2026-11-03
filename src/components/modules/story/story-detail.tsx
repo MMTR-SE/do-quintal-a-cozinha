@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 import {
   Carousel,
   CarouselContent,

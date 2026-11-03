@@ -1,5 +1,4 @@
 import { GridCard } from "@/components/ui/grid-card";
-import { MapPin } from "lucide-react";
 import { Story } from "@/types/story";
 
 const PLACEHOLDER_IMAGE = "/images/story/placeholder.png";

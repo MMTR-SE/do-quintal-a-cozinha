@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { buildProductSlug } from "@/lib/slug";
 import { Category } from "@prisma/client";
 
 /**
@@ -27,7 +28,6 @@ interface PriceCondition {
 
 interface Where {
   category?: CategorySearch
-  product_name?: { contains: string; mode?: "insensitive" }
   product_name?: { contains: string; mode?: "insensitive" }
   OR?: Array<{ price: PriceCondition }>
 }
@@ -109,10 +109,14 @@ export async function getAllProducts(options?: Options) {
     where
   });
 
-  // Convert Decimal to number for client component serialization
-  return products.map(product => ({
+  // Convert Decimal to number for client component serialization.
+  // The public URL slug is derived (produtora + nome), never stored.
   return products.map(product => ({
     ...product,
+    slug: buildProductSlug({
+      produtora: product.profile?.name,
+      nome: product.product_name,
+    }),
     price: product.price ? Number(product.price) : null,
   }));
 }
