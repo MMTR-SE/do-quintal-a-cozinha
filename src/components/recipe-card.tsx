@@ -1,4 +1,4 @@
-import { GridCard } from "@/components/ui/grid-card";
+import { GridCard } from "@/components/grid-card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Users } from "lucide-react";
 import { Recipe } from "@/types/recipe";

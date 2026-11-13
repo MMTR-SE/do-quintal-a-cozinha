@@ -91,30 +91,60 @@ O site estará disponível em: http://localhost:3001
 
 ## 📝 CMS - Gerenciamento de Conteúdo
 
-O projeto utiliza **Strapi** como CMS headless para gerenciar conteúdos dinâmicos (produtos, receitas e histórias).
-
-### Iniciar o Strapi
+O projeto utiliza Strapi para gerenciar produtos, receitas e histórias.
 
 ```bash
-# Na raiz do projeto
 npm run cms:dev
 ```
 
-Acesse o painel administrativo em: http://localhost:1337/admin
+Acesse `http://localhost:1337/admin`, crie e publique os registros nos content types `Produto`, `Receita` e `História`. Para a configuração dos campos, permissões e integração com o Next.js, consulte [`cms/README.md`](cms/README.md) e [`cms/INTEGRATION.md`](cms/INTEGRATION.md).
 
-### Primeiro Acesso
 
-1. No primeiro acesso, você precisará criar uma conta de administrador
-2. Configure os tipos de conteúdo (Content Types) conforme necessário
-3. Crie um API Token em **Settings → API Tokens** para integrar com o Next.js
+## Como funciona
 
-Para a configuração dos campos, permissões e integração com o Next.js, consulte [`cms/README.md`](cms/README.md) e [`cms/INTEGRATION.md`](cms/INTEGRATION.md).
+![](https://md.coolab.org/uploads/upload_122e84e11ea4901d32b1e0307c692e01.png)
 
-## 🤝 Contribuidores
+A aplicação está dividida em 4 grandes sessões:
+- Nossa Produção
+- Nossas Histórias
+- Nossas Receitas
+- Nosso Espaço
+
+### Nossa Produção
+Está é uma sessão publica, que lista a produção feita pelas mulheres. O cadastro dos produtos é feito via API. Estamos usando o projeto
+[typebot](https://typebot.io/) como ferramenta de CMS, onde uma conversa entre a produtora e um bot hospedado na nossa infraestrutura captura e preenche o banco de dados com as informações.
+O typebot está conectado com esta outra ferramenta, [typebot-client-whatsapp](https://github.com/Luisotee/typebot-client-whatsapp), que a cada etapa da conversa envia os dados para API de **Nossa Produçao**.
+Mais detalhes na wiki.
+
+### Nossas Histórias
+
+Assim como **Nossa Produçao** visa amostrar a produção, **Nossas Histórias** tem o intuito de amostrar as histórias das mulheres que fazem parte do movimento para assim inspirar outras mulheres além de ser uma ferramenta de documentação e empoderamento. Contar e ouvir nossa própria história nos ajuda a rever o caminho por onde passamos, como foi o desdobramento e isso é um alicerce para o futuro.
+Os dados apresentados nessa sessão também segue a linha de **Nossa Produção**, os dados são enviados via API através de uma conversa com a ajudante virtual (chatbot)
+Veja na wiki como configurar o chatbot.
+Seguimos trabalhando em uma interface de CMS agnostica ao chatbot.
+
+### Nossas Receitas
+
+Este é um espaço dedicado para apresentar as receitas selecionadas pelas mulheres do movimento.
+Receitas caseiras e tradicionais, pertencente às suas famílias e ao território que elas ocupam.
+No mesmo princípio de facilitar a inserção dos dados, essas receitas são alimentadas via chatbot e também prevemos uma interface de CMS separada do bot.
+
+### Nosso Espaço
+
+Ainda em processo de exploração e testes, esta sessão incorporará um software externo à plataforma, oferecendo um espaço privado para a fuxicagem. Uma área onde a interação possa ser dada tanto através da voz quanto por texto. Um lugar onde possa ser um porto fora do uso do WhatsApp.
+
+## Licença
+
+Este projeto esta sob a licença [AGPL](https://pt.wikipedia.org/wiki/GNU_Affero_General_Public_License)
+Fique a vontade em baixar, reproduzir, alterar e distribuir.
+
+## 🤝 Contribuições
+
+Quer mexer no código? Adicionar alguma funcionalidade? Encontrou algo quebrado? Da uma olhada na documentação na nossa wiki. 
 
 Agradecemos a todas as pessoas que contribuíram para este projeto:
 
-- [@joanasouza](https://github.com/joanasouza)
+- [@josantostd](https://github.com/josantostd)
 - [@gustavogalo](https://github.com/gustavogalo)
 - [@Luisotee](https://github.com/Luisotee)
 - Jullie

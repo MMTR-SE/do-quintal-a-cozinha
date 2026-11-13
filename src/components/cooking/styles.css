@@ -1,0 +1,35 @@
+@keyframes steam {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes boil {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+}
+
+.steam {
+  animation: steam 2s infinite ease-in-out;
+}
+
+.panela {
+  animation: boil 1.2s infinite ease-in-out;
+  display: inline-block;
+}

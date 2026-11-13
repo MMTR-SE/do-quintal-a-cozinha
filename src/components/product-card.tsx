@@ -1,6 +1,6 @@
 "use client";
 
-import { GridCard } from "@/components/ui/grid-card";
+import { GridCard } from "@/components/grid-card";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { Product } from "@/types/product";

@@ -1,4 +1,4 @@
-import { Cooking } from "@/components/modules/nosso-espaco/cooking";
+import { Cooking } from "@/components/cooking";
 
 export default function Sobre() {
   return <Cooking />;

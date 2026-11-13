@@ -39,14 +39,13 @@ export async function getProductById(options: Options) {
     return null;
   }
 
-  // CRITICAL: Convert Decimal to number for Next.js client serialization.
-  // The public URL slug is derived (produtora + nome), never stored.
+  // CRITICAL: Convert Decimal to number for Next.js client serialization
   return {
     ...product,
+    price: product.price ? Number(product.price) : null,
     slug: buildProductSlug({
       produtora: product.profile?.name,
       nome: product.product_name,
     }),
-    price: product.price ? Number(product.price) : null,
   };
 }
