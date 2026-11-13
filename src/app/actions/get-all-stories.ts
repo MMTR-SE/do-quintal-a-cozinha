@@ -1,15 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
 
 interface Options { search?: string; tags?: string[]; profileId?: string; }
 
-/**
- * Lista as historias do banco do site (Prisma/SQLite).
- */
 export async function getAllStories(options?: Options) {
-  const where: Prisma.StoryWhereInput = options?.search
+  const where: any = options?.search
     ? { name: { contains: options.search, mode: "insensitive" } }
     : {};
 

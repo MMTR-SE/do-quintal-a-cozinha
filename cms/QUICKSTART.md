@@ -186,34 +186,6 @@ cd cms && npm run console
 - Delete a pasta `cms/.cache` e tente novamente
 - Verifique se a porta 1337 não está em uso
 
-### Esqueci a senha do admin
-
-**Opção 1: Via CLI (Recomendado)**
-```bash
-cd cms
-npm run strapi admin:reset-user-password -- --email=seu-email@exemplo.com --password=nova-senha
-```
-
-**Opção 2: Deletar e recriar o banco (apenas desenvolvimento)**
-```bash
-rm cms/.tmp/data.db
-# Depois reinicie o Strapi e crie um novo admin
-npm run cms:dev
-```
-
-**Opção 3: Via banco de dados SQLite**
-```bash
-sqlite3 cms/.tmp/data.db
-# No prompt do SQLite:
-DELETE FROM admin_users WHERE email = 'seu-email@exemplo.com';
-.quit
-# Depois reinicie o Strapi
-```
-
-**Opção 4: Interface web**
-- Na tela de login do admin, clique em "Forgot your password?"
-- Siga as instruções no email (requer configuração de SMTP)
-
 ---
 
 **Pronto para começar!** 🚀

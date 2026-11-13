@@ -5,9 +5,9 @@ import type { IFuseOptions } from "fuse.js";
 
 import { useGetAllProducts } from "@/hooks/use-get-all-products";
 import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
-import { ProductGrid } from "@/components/modules/production/product-grid";
-import { PageHeader } from "@/components/layout/page-header";
-import { SearchBar } from "@/components/ui/search-bar";
+import { ProductGrid } from "@/components/product-grid";
+import { PageHeader } from "@/components/page-header";
+import { SearchBar } from "@/components/search-bar";
 import { CategoryFilter } from "@/components/category-filter";
 import { PRODUCT_CATEGORIES } from "@/config/categories";
 import type { Category } from "@prisma/client";
@@ -22,9 +22,6 @@ const PRODUCT_FUSE_OPTIONS: IFuseOptions<Product> = {
   ],
 };
 
-/**
- * Product listing page with search and filter support via URL params.
- */
 export default function Page() {
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
