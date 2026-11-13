@@ -1,4 +1,3 @@
 {
-    "git.ignoreLimitWarning": true,
     "prisma.pinToPrisma6": true
 }

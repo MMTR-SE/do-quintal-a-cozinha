@@ -86,6 +86,3 @@ test-whatsapp-api.js
 
 # Config local do Docker usado nos builds (DOCKER_CONFIG=$PWD/.docker)
 /.docker
-
-# Documentation
-OVERVIEW.md

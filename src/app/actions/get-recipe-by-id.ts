@@ -2,9 +2,6 @@
 
 import { prisma } from "@/lib/prisma";
 
-/**
- * Busca uma receita pelo id no banco do site (Prisma/SQLite).
- */
 export async function getRecipeById({ id }: { id: string }) {
   return prisma.recipe.findUnique({
     select: {

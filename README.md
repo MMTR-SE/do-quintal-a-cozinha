@@ -140,7 +140,7 @@ Fique a vontade em baixar, reproduzir, alterar e distribuir.
 
 ## 🤝 Contribuições
 
-Quer mexer no código? Adicionar alguma funcionalidade? Encontrou algo quebrado? Da uma olhada na documentação na nossa wiki. 
+Quer mexer no código? Adicionar alguma funcionalidade? Encontrou algo quebrado? Da uma olhada na documentação na nossa wiki.
 
 Agradecemos a todas as pessoas que contribuíram para este projeto:
 
